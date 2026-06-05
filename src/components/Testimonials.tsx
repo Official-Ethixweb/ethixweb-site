@@ -2,8 +2,10 @@ import { useRef } from "react";
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { Star, ExternalLink } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { useTheme } from "./ThemeProvider";
 
-const BRAND = "#00b67a";
+const BRAND_DARK = "#ffffff";
+const BRAND_LIGHT = "#c0272d";
 
 const REVIEWS = [
   {
@@ -26,36 +28,37 @@ const REVIEWS = [
   },
 ];
 
-function StarRow({ count }: { count: number }) {
+function StarRow({ count, brand, total = count }: { count: number; brand: string; total?: number }) {
   return (
     <div className="flex gap-0.5">
-      {Array.from({ length: count }).map((_, i) => (
-        <Star key={i} className="h-4 w-4" style={{ fill: BRAND, color: BRAND }} />
-      ))}
+      {Array.from({ length: total }).map((_, i) => {
+        const color = i < count ? brand : "#6b7280";
+        return <Star key={i} className="h-4 w-4" style={{ fill: color, color }} />;
+      })}
     </div>
   );
 }
 
-function TrustpilotLogo() {
+function TrustpilotLogo({ brand, filled = 5 }: { brand: string; filled?: number }) {
+  const starColor = brand === BRAND_DARK ? "#0c0d10" : "#ffffff";
   return (
     <div className="flex flex-col items-end gap-1">
       <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="flex h-5 w-5 items-center justify-center"
-            style={{ background: BRAND }}
-          >
-            <Star className="h-3 w-3 fill-white text-white" />
-          </div>
-        ))}
+        {[...Array(5)].map((_, i) => {
+          const bg = i < filled ? brand : "#6b7280";
+          return (
+            <div key={i} className="flex h-5 w-5 items-center justify-center" style={{ background: bg }}>
+              <Star className="h-3 w-3" style={{ fill: starColor, color: starColor }} />
+            </div>
+          );
+        })}
       </div>
       <span className="text-xs font-bold tracking-tight text-foreground">Trustpilot</span>
     </div>
   );
 }
 
-function ReviewCard({ review }: { review: (typeof REVIEWS)[number] }) {
+function ReviewCard({ review, brand }: { review: (typeof REVIEWS)[number]; brand: string }) {
   return (
     <motion.div
       whileHover={{ y: -4, scale: 1.015 }}
@@ -64,10 +67,10 @@ function ReviewCard({ review }: { review: (typeof REVIEWS)[number] }) {
     >
       <div
         className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl"
-        style={{ background: `${BRAND}18` }}
+        style={{ background: `${brand}18` }}
       />
 
-      <StarRow count={review.stars} />
+      <StarRow count={review.stars} brand={brand} />
 
       <p className="mt-4 text-sm leading-7 text-muted-foreground">&ldquo;{review.text}&rdquo;</p>
 
@@ -78,13 +81,13 @@ function ReviewCard({ review }: { review: (typeof REVIEWS)[number] }) {
             Verified Client · {review.date}
           </p>
         </div>
-        <TrustpilotLogo />
+        <TrustpilotLogo brand={brand} />
       </div>
     </motion.div>
   );
 }
 
-function InfiniteCarousel() {
+function InfiniteCarousel({ brand }: { brand: string }) {
   const x = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +104,7 @@ function InfiniteCarousel() {
     <div className="overflow-x-hidden overflow-y-visible py-4">
       <motion.div ref={trackRef} className="flex gap-5" style={{ x }}>
         {duplicated.map((r, i) => (
-          <ReviewCard key={i} review={r} />
+          <ReviewCard key={i} review={r} brand={brand} />
         ))}
       </motion.div>
     </div>
@@ -109,19 +112,20 @@ function InfiniteCarousel() {
 }
 
 export function Testimonials() {
+  const { theme } = useTheme();
+  const brand = theme === "light" ? BRAND_LIGHT : BRAND_DARK;
+
   return (
     <section className="relative overflow-hidden px-6 py-24">
       <div
         className="pointer-events-none absolute left-1/4 top-1/2 h-144 w-xl -translate-y-1/2 rounded-full blur-[140px]"
-        style={{ background: `${BRAND}0d` }}
+        style={{ background: `${brand}0d` }}
       />
       <div className="pointer-events-none absolute right-1/4 top-1/2 h-112 w-md -translate-y-1/2 rounded-full bg-primary/8 blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Header row */}
         <Reveal>
           <div className="flex flex-col items-center gap-6 text-center lg:flex-row lg:justify-between lg:text-left">
-            {/* Left */}
             <div className="max-w-xl">
               <p className="mb-3 text-sm font-bold uppercase tracking-[0.24em] text-primary">
                 Client Reviews
@@ -135,15 +139,14 @@ export function Testimonials() {
               </p>
             </div>
 
-            {/* Right: trust score card */}
             <div className="premium-card shrink-0 rounded-2xl p-6 text-center lg:min-w-55">
-              <TrustpilotLogo />
+              <TrustpilotLogo brand={brand} filled={4} />
               <div className="mt-4 flex items-end justify-center gap-1">
                 <span className="text-5xl font-extrabold text-foreground">4.0</span>
                 <span className="mb-1.5 text-lg text-muted-foreground">/5</span>
               </div>
               <div className="mt-2 flex justify-center">
-                <StarRow count={5} />
+                <StarRow count={4} total={5} brand={brand} />
               </div>
               <p className="mt-2 text-[11px] uppercase tracking-widest text-muted-foreground/60">
                 Trustpilot Rating
@@ -161,12 +164,10 @@ export function Testimonials() {
           </div>
         </Reveal>
 
-        {/* Carousel */}
         <div className="mt-12">
-          <InfiniteCarousel />
+          <InfiniteCarousel brand={brand} />
         </div>
 
-        {/* CTA */}
         <Reveal delay={0.12}>
           <div className="mt-10 text-center">
             <a
