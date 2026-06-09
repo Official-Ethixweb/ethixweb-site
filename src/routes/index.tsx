@@ -268,8 +268,8 @@ const heroBadges = [
   { label: "More booked jobs", style: { top: "5%", left: "1%" }, icon: PhoneCall, radius: "42% 58% 53% 47% / 48% 42% 58% 52%" },
   { label: "More conversions", style: { top: "10%", right: "-1%" }, icon: TrendingUp, radius: "55% 45% 48% 52% / 44% 56% 44% 56%" },
   { label: "UI/UX Systems", style: { top: "44%", left: "-3%" }, icon: Layers3, radius: "48% 52% 56% 44% / 52% 48% 52% 48%" },
-  { label: "Revenue tracked", style: { bottom: "20%", right: "-2%" }, icon: DollarSign, radius: "52% 48% 44% 56% / 48% 56% 44% 52%" },
-  { label: "Design that converts", style: { bottom: "1%", left: "10%" }, icon: Palette, radius: "46% 54% 58% 42% / 56% 44% 56% 44%" },
+  { label: "Revenue tracked", style: { bottom: "35%", right: "-2%" }, icon: DollarSign, radius: "52% 48% 44% 56% / 48% 56% 44% 52%" },
+  { label: "Design that converts", style: { bottom: "8%", left: "10%" }, icon: Palette, radius: "46% 54% 58% 42% / 56% 44% 56% 44%" },
 ];
 
 function OperationsVisual() {
@@ -404,7 +404,7 @@ function OperationsVisual() {
           heroBadges.map((badge, i) => (
             <motion.div
               key={badge.label}
-              className="absolute z-20 flex cursor-default items-center gap-2 sm:gap-2.5 rounded-full px-3 py-2 sm:px-5 sm:py-3 backdrop-blur-xl"
+              className="absolute z-20 flex cursor-default items-center justify-center gap-2 sm:gap-2.5 rounded-full px-3.5 py-3 sm:px-5 sm:py-3 backdrop-blur-xl"
               style={{
                 ...badge.style,
                 border: "1px solid rgba(220,80,90,0.16)",
