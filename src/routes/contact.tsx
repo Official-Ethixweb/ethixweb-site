@@ -27,16 +27,8 @@ const TIMELINES = [
   { id: "planning", label: "Just planning", sub: "3+ months out" },
 ] as const;
 
-const BUDGETS = [
-  { id: "starter",    label: "$500 – $2k", sub: "Starter project" },
-  { id: "growth",     label: "$2k – $5k",  sub: "Growth build" },
-  { id: "scale",      label: "$5k – $15k", sub: "Full-scale system" },
-  { id: "enterprise", label: "$15k+",      sub: "Enterprise scope" },
-] as const;
-
 type ServiceId  = typeof SERVICES[number]["id"];
 type TimelineId = typeof TIMELINES[number]["id"];
-type BudgetId   = typeof BUDGETS[number]["id"];
 
 // ── Variants ─────────────────────────────────────────────────────────────────
 
@@ -69,29 +61,26 @@ function Contact() {
   const [sel,  setSel]  = useState<{
     service:  ServiceId  | null;
     timeline: TimelineId | null;
-    budget:   BudgetId   | null;
     other:    string;
     dcName:   string;
     dcPhone:  string;
     dcEmail:  string;
-  }>({ service: null, timeline: null, budget: null, other: "", dcName: "", dcPhone: "", dcEmail: "" });
+  }>({ service: null, timeline: null, other: "", dcName: "", dcPhone: "", dcEmail: "" });
 
   const isOther    = sel.service === "other";
   // Direct-contact path: bottom fields filled, no card selected
   const isDirect   = !sel.service && !!(sel.dcName.trim() && sel.dcEmail.trim());
 
   const stepLabels = isOther
-    ? ["What do you need", "Tell us more",   "Your details"]
-    : ["What do you need", "Your timeline",  "Your budget", "Your details"];
+    ? ["What do you need", "Tell us more",  "Your details"]
+    : ["What do you need", "Your timeline", "Your details"];
   const totalSteps = stepLabels.length;
 
   const canContinue =
     (step === 1 && (!!sel.service || isDirect)) ||
     (step === 2 && !isOther && !!sel.timeline) ||
     (step === 2 &&  isOther && !!sel.other.trim()) ||
-    (step === 3 && !isOther && !!sel.budget) ||
-    (step === 3 &&  isOther) ||
-    (step === 4);
+    (step === 3);
 
   const go = (next: number) => { setDir(next > step ? 1 : -1); setStep(next); };
 
@@ -244,12 +233,11 @@ function Contact() {
                           {step === 1 && "What do you need help with?"}
                           {step === 2 && !isOther && "When do you want to start?"}
                           {step === 2 &&  isOther && "Tell us more about your idea"}
-                          {step === 3 && !isOther && "What's your budget range?"}
-                          {(step === 4 || (step === 3 && isOther)) && "Almost there — your details"}
+                          {step === 3 && "Almost there — your details"}
                         </h3>
                         <p className="mt-1 text-sm text-white/50">
                           Step {step} of {totalSteps} —{" "}
-                          {(step === 4 || (step === 3 && isOther)) ? "enter your info" : "pick one"}
+                          {step === 3 ? "enter your info" : "pick one"}
                         </p>
                       </motion.div>
                     </AnimatePresence>
@@ -362,38 +350,8 @@ function Contact() {
                           </motion.div>
                         )}
 
-                        {/* Step 3 — budget */}
-                        {step === 3 && !isOther && (
-                          <motion.div key="s3" custom={dir} variants={slide} initial="enter" animate="center" exit="exit" transition={{ duration: 0.24, ease: "easeOut" }}>
-                            <div className="grid grid-cols-2 gap-3">
-                              {BUDGETS.map(({ id, label, sub }) => {
-                                const active = sel.budget === id;
-                                return (
-                                  <motion.button
-                                    key={id}
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={() => setSel(s => ({ ...s, budget: id }))}
-                                    className={`relative rounded-2xl border p-5 text-left transition-all duration-200 ${
-                                      active
-                                        ? "border-primary/60 bg-primary/12"
-                                        : "border-white/8 bg-white/3 hover:border-primary/30 hover:bg-white/5"
-                                    }`}
-                                  >
-                                    {active && (
-                                      <motion.div layoutId="sel-ring-3" className="absolute inset-0 rounded-2xl border-2 border-primary/60" transition={{ type: "spring", stiffness: 340, damping: 28 }} />
-                                    )}
-                                    <p className="font-semibold text-white">{label}</p>
-                                    <p className="mt-1 text-xs text-white/45">{sub}</p>
-                                  </motion.button>
-                                );
-                              })}
-                            </div>
-                          </motion.div>
-                        )}
-
                         {/* Final step — contact details */}
-                        {(step === 4 || (step === 3 && isOther)) && (
+                        {step === 3 && (
                           <motion.div key="s4" custom={dir} variants={slide} initial="enter" animate="center" exit="exit" transition={{ duration: 0.24, ease: "easeOut" }}>
                             <p className="mb-5 text-sm text-white/50 leading-relaxed">
                               Enter your details and we'll send a personalised plan within one business day.
@@ -425,7 +383,7 @@ function Contact() {
                         </button>
                       ) : <div />}
 
-                      {(step === 4 || (step === 3 && isOther)) ? (
+                      {step === 3 ? (
                         <button
                           type="submit"
                           form="contact-form"
