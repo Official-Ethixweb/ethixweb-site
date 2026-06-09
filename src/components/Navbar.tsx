@@ -55,7 +55,7 @@ export function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
       <div
         className={`mx-auto max-w-7xl rounded-2xl transition-all duration-500 ${
-          scrolled ? "glass-strong shadow-elegant" : "bg-transparent"
+          scrolled || open ? "glass-strong shadow-elegant" : "bg-transparent"
         }`}
       >
         <div className="flex items-center justify-between px-5 py-3">
@@ -103,7 +103,7 @@ export function Navbar() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden overflow-hidden border-t border-white/5"
+              className="lg:hidden overflow-hidden border-t border-white/8 backdrop-blur-2xl"
             >
               <div className="flex flex-col gap-1 p-4">
                 {links.map((l) => (

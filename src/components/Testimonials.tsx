@@ -63,7 +63,7 @@ function ReviewCard({ review, brand }: { review: (typeof REVIEWS)[number]; brand
     <motion.div
       whileHover={{ y: -4, scale: 1.015 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      className="premium-card relative min-w-[320px] max-w-90 shrink-0 overflow-hidden rounded-2xl p-6"
+      className="premium-card relative min-w-60 sm:min-w-75 max-w-72 sm:max-w-90 shrink-0 overflow-hidden rounded-2xl p-6"
     >
       <div
         className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl"

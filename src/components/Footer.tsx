@@ -4,6 +4,21 @@ import { ArrowUpRight, Mail, Clock } from "lucide-react";
 
 const FOOTER_MASCOT = "/Ethan%20view%20%201.png";
 
+const COMPANY_LINKS: [string, string][] = [
+  ["About", "/about"],
+  ["Industries", "/industries"],
+  ["Our Work", "/portfolio"],
+  ["Blog", "/blog"],
+  ["Contact", "/contact"],
+];
+
+const USEFUL_LINKS: [string, string][] = [
+  ["Cancellation & Refunds", "/policies/refunds"],
+  ["Shipping Policy", "/policies/shipping"],
+  ["Terms & Conditions", "/policies/terms"],
+  ["Privacy Policy", "/policies/privacy"],
+];
+
 function Facebook({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -28,10 +43,25 @@ function Instagram({ className }: { className?: string }) {
   );
 }
 
+const SOCIAL_LINKS = [
+  { Icon: Facebook, href: "#", label: "Facebook" },
+  { Icon: Linkedin, href: "https://www.linkedin.com/company/ethixweb/", label: "LinkedIn" },
+  { Icon: Instagram, href: "https://www.instagram.com/ethix.web/", label: "Instagram" },
+] as const;
+
 export function Footer() {
   return (
-    <footer className="relative mt-32 border-t border-border">
+    <footer className="relative mt-32 border-t border-border overflow-hidden">
       <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+      <img
+        src={FOOTER_MASCOT}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute hidden h-69.5 w-auto object-contain object-bottom opacity-95 sm:block lg:h-77.5"
+        loading="lazy"
+        decoding="async"
+        style={{ right: "-25px", bottom: "-40px" }}
+      />
       <div className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
@@ -40,15 +70,7 @@ export function Footer() {
               Revamp your online presence with bespoke designs crafted for your business success.
             </p>
             <div className="mt-6 flex gap-2">
-              {[
-                { Icon: Facebook, href: "#", label: "Facebook" },
-                {
-                  Icon: Linkedin,
-                  href: "https://www.linkedin.com/company/ethixweb/",
-                  label: "LinkedIn",
-                },
-                { Icon: Instagram, href: "#", label: "Instagram" },
-              ].map(({ Icon, href, label }) => (
+              {SOCIAL_LINKS.map(({ Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -84,39 +106,22 @@ export function Footer() {
             </ul>
           </div>
 
-          <FooterCol
-            title="Company"
-            links={[
-              ["About", "/about"],
-              ["Industries", "/industries"],
-              ["Our Work", "/portfolio"],
-              ["Blog", "/blog"],
-              ["Contact", "/contact"],
-            ]}
-          />
-          <FooterCol
-            title="Useful Links"
-            links={[
-              ["Cancellation & Refunds", "/policies/refunds"],
-              ["Shipping Policy", "/policies/shipping"],
-              ["Terms & Conditions", "/policies/terms"],
-              ["Privacy Policy", "/policies/privacy"],
-            ]}
-          />
+          <FooterCol title="Company" links={COMPANY_LINKS} />
+          <FooterCol title="Useful Links" links={USEFUL_LINKS} />
         </div>
         <div className="footer-divider relative mt-16 flex flex-col gap-4 sm:flex-row items-center justify-between border-t border-border pt-8">
-          <img
-            src={FOOTER_MASCOT}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute hidden h-[211px] w-auto object-contain object-bottom opacity-95 sm:block lg:h-[250px]"
-            loading="lazy"
-            decoding="async"
-            style={{ right: "calc(-2rem - 100px)", bottom: "-100px" }}
-          />
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Ethixweb. All rights reserved.
           </p>
+          <img
+            src="/Ethan%20view%208.png"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute block sm:hidden w-auto object-contain"
+            style={{ height: "202px", right: "-70px", bottom: "-110px" }}
+            loading="lazy"
+            decoding="async"
+          />
           <Link
             to="/contact"
             className="group relative z-10 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"

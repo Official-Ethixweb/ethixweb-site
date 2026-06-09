@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
@@ -21,10 +21,11 @@ import {
 } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
-import { GlobalNetwork } from "@/components/GlobalNetwork";
 import { Testimonials } from "@/components/Testimonials";
 import { useTheme } from "@/components/ThemeProvider";
 import operatorCharacter from "@/assets/operator-character.png";
+
+const GlobalNetwork = lazy(() => import("@/components/GlobalNetwork").then((m) => ({ default: m.GlobalNetwork })));
 
 const SLEEP_SRC = "/Untitled%20design%20(38).png";
 const CLOUD_LIGHT = "/LIGHT%20MODE.svg";
@@ -48,6 +49,22 @@ function useIsSleeping() {
   return sleeping;
 }
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    const handler = () => {
+      clearTimeout(t);
+      t = setTimeout(() => setMobile(window.innerWidth < 1024), 150);
+    };
+    window.addEventListener("resize", handler, { passive: true });
+    return () => { window.removeEventListener("resize", handler); clearTimeout(t); };
+  }, []);
+  return mobile;
+}
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -63,7 +80,16 @@ export const Route = createFileRoute("/")({
         content:
           "AI automation, websites, web applications, CRM integrations, SEO, ads, maintenance, and digital operations.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Ethixweb - We run the tech. You run the business." },
+      { name: "twitter:description", content: "We manage your digital operation, from AI booking agents and CRM integrations to websites, SEO and ads." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
     ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/" }],
   }),
   component: Home,
 });
@@ -134,7 +160,9 @@ function Home() {
       <Hero />
       <SignalStrip />
       <Services />
-      <GlobalNetwork />
+      <Suspense fallback={null}>
+        <GlobalNetwork />
+      </Suspense>
       <Testimonials />
       <OperatingSystem />
       <Proof />
@@ -208,6 +236,34 @@ function Hero() {
   );
 }
 
+const STARFIELD_DOTS = [
+  { top: "8%", left: "12%", color: "#3b82f6", size: 5, blur: 6 },
+  { top: "18%", left: "78%", color: "#ef4444", size: 4, blur: 5 },
+  { top: "30%", left: "88%", color: "#3b82f6", size: 6, blur: 8 },
+  { top: "42%", left: "70%", color: "#ef4444", size: 3, blur: 4 },
+  { top: "55%", left: "82%", color: "#3b82f6", size: 5, blur: 7 },
+  { top: "65%", left: "15%", color: "#ef4444", size: 4, blur: 5 },
+  { top: "72%", left: "60%", color: "#3b82f6", size: 7, blur: 10 },
+  { top: "25%", left: "22%", color: "#3b82f6", size: 3, blur: 4 },
+  { top: "50%", left: "30%", color: "#ef4444", size: 5, blur: 6 },
+  { top: "80%", left: "40%", color: "#3b82f6", size: 4, blur: 5 },
+  { top: "10%", left: "55%", color: "#ef4444", size: 3, blur: 4 },
+  { top: "38%", left: "8%", color: "#3b82f6", size: 6, blur: 8 },
+  { top: "60%", left: "92%", color: "#ef4444", size: 4, blur: 6 },
+  { top: "85%", left: "72%", color: "#3b82f6", size: 5, blur: 7 },
+  { top: "15%", left: "40%", color: "#ef4444", size: 3, blur: 4 },
+] as const;
+
+const ZZZ_PARTICLES = [
+  { delay: "0s", dur: "6.2s", size: "1.05rem", weight: 600, opacity: 0.42, left: "0px", bottom: "0px", glow: "red" },
+  { delay: "1.3s", dur: "6.8s", size: "0.82rem", weight: 500, opacity: 0.32, left: "17px", bottom: "26px", glow: "blue" },
+  { delay: "2.6s", dur: "7.1s", size: "0.7rem", weight: 500, opacity: 0.26, left: "-11px", bottom: "32px", glow: "red" },
+  { delay: "3.9s", dur: "7.6s", size: "0.58rem", weight: 500, opacity: 0.2, left: "25px", bottom: "56px", glow: "blue" },
+  { delay: "5.2s", dur: "8s", size: "0.5rem", weight: 500, opacity: 0.16, left: "5px", bottom: "62px", glow: "red" },
+] as const;
+
+const CLOUD_FILL = "linear-gradient(150deg, rgba(40,24,30,0.7), rgba(18,16,24,0.66))";
+
 const heroBadges = [
   { label: "More booked jobs", style: { top: "5%", left: "1%" }, icon: PhoneCall, radius: "42% 58% 53% 47% / 48% 42% 58% 52%" },
   { label: "More conversions", style: { top: "10%", right: "-1%" }, icon: TrendingUp, radius: "55% 45% 48% 52% / 44% 56% 44% 56%" },
@@ -219,6 +275,7 @@ const heroBadges = [
 function OperationsVisual() {
   const sleeping = useIsSleeping();
   const { theme } = useTheme();
+  const isMobile = useIsMobile();
 
   // While sleeping, cycle through the services inside the single dream cloud
   const [dreamIndex, setDreamIndex] = useState(0);
@@ -262,33 +319,15 @@ function OperationsVisual() {
     };
   }, [sleeping, mx, my]);
 
-  const sleepSrc = SLEEP_SRC;
-
   return (
     <motion.div className="relative mx-auto w-full max-w-130" style={{ perspective: "900px" }}>
       <div className="absolute inset-6 rounded-full bg-primary/20 blur-[110px]" />
       <motion.div
-        className="relative h-155 sm:h-170"
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative h-112 sm:h-155 lg:h-170"
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d", willChange: "transform" }}
       >
         {/* starfield dots */}
-        {[
-          { top: "8%", left: "12%", color: "#3b82f6", size: 5, blur: 6 },
-          { top: "18%", left: "78%", color: "#ef4444", size: 4, blur: 5 },
-          { top: "30%", left: "88%", color: "#3b82f6", size: 6, blur: 8 },
-          { top: "42%", left: "70%", color: "#ef4444", size: 3, blur: 4 },
-          { top: "55%", left: "82%", color: "#3b82f6", size: 5, blur: 7 },
-          { top: "65%", left: "15%", color: "#ef4444", size: 4, blur: 5 },
-          { top: "72%", left: "60%", color: "#3b82f6", size: 7, blur: 10 },
-          { top: "25%", left: "22%", color: "#3b82f6", size: 3, blur: 4 },
-          { top: "50%", left: "30%", color: "#ef4444", size: 5, blur: 6 },
-          { top: "80%", left: "40%", color: "#3b82f6", size: 4, blur: 5 },
-          { top: "10%", left: "55%", color: "#ef4444", size: 3, blur: 4 },
-          { top: "38%", left: "8%", color: "#3b82f6", size: 6, blur: 8 },
-          { top: "60%", left: "92%", color: "#ef4444", size: 4, blur: 6 },
-          { top: "85%", left: "72%", color: "#3b82f6", size: 5, blur: 7 },
-          { top: "15%", left: "40%", color: "#ef4444", size: 3, blur: 4 },
-        ].map((dot, i) => (
+        {STARFIELD_DOTS.map((dot, i) => (
           <span
             key={i}
             className="pointer-events-none absolute rounded-full"
@@ -304,7 +343,7 @@ function OperationsVisual() {
           />
         ))}
         <motion.div
-          className={`absolute bottom-0 left-1/2 z-10 -translate-x-1/2 ${sleeping ? "w-90 sm:w-auto" : ""}`}
+          className={`absolute bottom-0 left-1/2 z-10 -translate-x-1/2 ${sleeping ? "w-full sm:w-auto" : ""}`}
           style={sleeping ? {} : { x: charX, y: charY }}
         >
           {sleeping && (
@@ -339,11 +378,11 @@ function OperationsVisual() {
 
           <motion.img
             key={sleeping ? "sleep" : "active"}
-            src={sleeping ? sleepSrc : operatorCharacter}
+            src={sleeping ? SLEEP_SRC : operatorCharacter}
             alt="Ethixweb mascot"
             className={sleeping
-              ? "w-full max-w-full h-auto sm:w-auto sm:max-w-none sm:h-145 object-contain mascot-breathe"
-              : "h-145 sm:h-160 max-w-none object-contain drop-shadow-[0_34px_90px_rgba(0,0,0,0.72)]"
+              ? "w-full h-auto scale-[1.68] origin-bottom sm:scale-100 sm:w-auto sm:max-w-none sm:h-145 object-contain mascot-breathe"
+              : "h-101.5 sm:h-145 lg:h-160 max-w-none object-contain drop-shadow-[0_34px_90px_rgba(0,0,0,0.72)]"
             }
             initial={{ opacity: 0 }}
             animate={sleeping ? { opacity: 1 } : { opacity: 1, y: [0, -12, 0] }}
@@ -365,7 +404,7 @@ function OperationsVisual() {
           heroBadges.map((badge, i) => (
             <motion.div
               key={badge.label}
-              className="absolute z-20 flex cursor-default items-center gap-2.5 rounded-full px-5 py-3 backdrop-blur-xl"
+              className="absolute z-20 flex cursor-default items-center gap-2 sm:gap-2.5 rounded-full px-3 py-2 sm:px-5 sm:py-3 backdrop-blur-xl"
               style={{
                 ...badge.style,
                 border: "1px solid rgba(220,80,90,0.16)",
@@ -383,8 +422,8 @@ function OperationsVisual() {
                 y: { duration: 5 + i * 0.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
               }}
             >
-              <badge.icon className="h-4 w-4 shrink-0" style={{ color: "rgba(225,110,118,0.85)" }} />
-              <span className="whitespace-nowrap text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
+              <badge.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" style={{ color: "rgba(225,110,118,0.85)" }} />
+              <span className="whitespace-nowrap text-xs sm:text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
                 {badge.label}
               </span>
             </motion.div>
@@ -395,24 +434,26 @@ function OperationsVisual() {
           (() => {
             const cloudSrc = CLOUD_LIGHT; // solid silhouette — fills interior fully (DARK MODE.svg is hollow/outline)
             // Subtle dark glass, same family as the awake floating badges
-            const fill = "linear-gradient(150deg, rgba(40,24,30,0.7), rgba(18,16,24,0.66))";
+            const fill = CLOUD_FILL;
             const dream = heroBadges[dreamIndex];
             const DreamIcon = dream.icon;
             return (
               <motion.div
                 className="pointer-events-none absolute z-20 flex items-center justify-center"
-                style={{ top: "calc(14% - 75px)", right: "calc(-12% + 75px)", width: "282px", height: "203px" }}
+                style={isMobile
+                  ? { top: "calc(42% - 50px)", left: "6%", width: "160px", height: "110px" }
+                  : { top: "calc(28% - 30px)", left: "12%", width: "220px", height: "158px" }}
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1, y: [0, -9, 0] }}
+                animate={{ opacity: isMobile ? 0.65 : 0.88, scale: 1, y: isMobile ? [0, -5, 0] : [0, -6, 0] }}
                 transition={{
                   opacity: { duration: 0.8, ease: "easeOut" },
                   scale: { type: "spring", stiffness: 240, damping: 22 },
                   y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
                 }}
               >
-                {/* Cloud silhouette recolored via mask — subtle glass fill, matches awake badge style */}
+                {/* Cloud silhouette — tail points toward laptop screen below */}
                 <div
-                  className="absolute inset-0 backdrop-blur-xl"
+                  className="absolute inset-0 backdrop-blur-lg"
                   style={{
                     background: fill,
                     WebkitMaskImage: `url(${cloudSrc})`,
@@ -423,28 +464,28 @@ function OperationsVisual() {
                     maskRepeat: "no-repeat",
                     WebkitMaskPosition: "center",
                     maskPosition: "center",
-                    transform: "scaleX(-1)", // flip bubble + tail (text/animation stay upright)
-                    boxShadow: "0 12px 30px rgba(0,0,0,0.28), 0 2px 8px rgba(180,40,50,0.08)",
+                    transform: "scaleX(-1)",
+                    boxShadow: "0 8px 20px rgba(0,0,0,0.22), 0 2px 6px rgba(180,40,50,0.06)",
                   }}
                 />
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={dream.label}
-                    className="relative flex flex-col items-center gap-1.5 px-10 text-center"
-                    style={{ marginBottom: "16px" }} // shifts content up in the centered bubble; bubble unchanged
-                    initial={{ opacity: 0, scale: 0.45, y: 8 }}
+                    className="relative flex flex-col items-center gap-1 px-4 text-center"
+                    style={{ marginBottom: "18px" }}
+                    initial={{ opacity: 0, scale: 0.45, y: 6 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.45, y: -8 }}
+                    exit={{ opacity: 0, scale: 0.45, y: -6 }}
                     transition={{ type: "spring", stiffness: 340, damping: 20 }}
                   >
                     <DreamIcon
                       className="shrink-0"
                       strokeWidth={2}
-                      style={{ width: "26px", height: "26px", color: "rgba(225,110,118,0.85)" }}
+                      style={{ width: isMobile ? "13px" : "18px", height: isMobile ? "13px" : "18px", color: isMobile ? "rgba(225,110,118,0.75)" : "rgba(225,110,118,0.95)" }}
                     />
                     <span
-                      className="whitespace-nowrap text-sm font-medium leading-tight"
-                      style={{ color: "rgba(255,255,255,0.85)" }}
+                      className={isMobile ? "text-[10px] font-medium leading-tight text-center max-w-16" : "text-xs font-medium leading-tight text-center max-w-20"}
+                      style={{ color: isMobile ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.95)" }}
                     >
                       {dream.label}
                     </span>
@@ -461,13 +502,7 @@ function OperationsVisual() {
             className="pointer-events-none absolute z-40"
             style={{ top: "248px", right: "68px", transform: "translateZ(60px)" }}
           >
-            {[
-              { delay: "0s", dur: "6.2s", size: "1.05rem", weight: 600, opacity: 0.42, left: "0px", bottom: "0px", glow: "red" },
-              { delay: "1.3s", dur: "6.8s", size: "0.82rem", weight: 500, opacity: 0.32, left: "17px", bottom: "26px", glow: "blue" },
-              { delay: "2.6s", dur: "7.1s", size: "0.7rem", weight: 500, opacity: 0.26, left: "-11px", bottom: "32px", glow: "red" },
-              { delay: "3.9s", dur: "7.6s", size: "0.58rem", weight: 500, opacity: 0.2, left: "25px", bottom: "56px", glow: "blue" },
-              { delay: "5.2s", dur: "8s", size: "0.5rem", weight: 500, opacity: 0.16, left: "5px", bottom: "62px", glow: "red" },
-            ].map((z, i) => (
+            {ZZZ_PARTICLES.map((z, i) => (
               <span
                 key={i}
                 className="zzz-particle absolute select-none"
@@ -534,19 +569,73 @@ function Services() {
         <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
             <Reveal key={service.title} delay={index * 0.04}>
-              <Link
-                to={service.to}
-                className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/35"
-              >
-                <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
-                <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
-                <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
-                <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
-                  Explore
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+              {index === 0 ? (
+                <div className="group/card relative h-full">
+                  <img
+                    src="/SIT.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute block lg:hidden w-auto object-contain z-20 transition duration-300 group-hover/card:-translate-y-1"
+                    style={{ height: "208px", right: "-10px", bottom: "calc(100% - 86px)" }}
+                    width="150"
+                    height="208"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <Link
+                    to={service.to}
+                    className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 group-hover/card:-translate-y-1 hover:border-primary/35"
+                  >
+                    <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
+                    <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
+                    <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
+                    <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
+                      Explore
+                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+              ) : index === 3 ? (
+                <div className="group/card3 relative h-full">
+                  <img
+                    src="/Ethan%20view%202.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute hidden lg:block w-auto object-contain transition duration-300 group-hover/card3:-translate-y-1"
+                    style={{ height: "1000px", right: "-150px", bottom: "calc(100% - 1000px)", transform: "scale(2.1)", transformOrigin: "bottom right" }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <Link
+                    to={service.to}
+                    className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 group-hover/card3:-translate-y-1 hover:border-primary/35"
+                  >
+                    <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
+                    <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
+                    <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
+                    <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
+                      Explore
+                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                    </div>
+                  </Link>
+                </div>
+              ) : (
+                <Link
+                  to={service.to}
+                  className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/35"
+                >
+                  <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
+                  <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
+                  <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
+                  <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
+                    Explore
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                  </div>
+                </Link>
+              )}
             </Reveal>
           ))}
         </div>
@@ -555,24 +644,26 @@ function Services() {
   );
 }
 
+const OS_ROWS = [
+  {
+    icon: ShieldCheck,
+    title: "Trustworthy systems",
+    desc: "Clean architecture, secure defaults, and reliable handoff across your stack.",
+  },
+  {
+    icon: Layers3,
+    title: "Layered execution",
+    desc: "Strategy, design, development, automation, launch, and support under one roof.",
+  },
+  {
+    icon: Megaphone,
+    title: "Growth connected",
+    desc: "SEO, ads, analytics, forms, calls, and CRM data aligned around revenue.",
+  },
+];
+
 function OperatingSystem() {
-  const rows = [
-    {
-      icon: ShieldCheck,
-      title: "Trustworthy systems",
-      desc: "Clean architecture, secure defaults, and reliable handoff across your stack.",
-    },
-    {
-      icon: Layers3,
-      title: "Layered execution",
-      desc: "Strategy, design, development, automation, launch, and support under one roof.",
-    },
-    {
-      icon: Megaphone,
-      title: "Growth connected",
-      desc: "SEO, ads, analytics, forms, calls, and CRM data aligned around revenue.",
-    },
-  ];
+  const rows = OS_ROWS;
 
   return (
     <section className="px-6 py-24">
@@ -614,10 +705,10 @@ function OperatingSystem() {
 function Proof() {
   return (
     <section className="px-6 py-20">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 lg:grid-cols-4 items-stretch">
         {metrics.map((metric, index) => (
-          <Reveal key={metric.label} delay={index * 0.05}>
-            <div className="premium-card rounded-2xl p-7 text-center">
+          <Reveal key={metric.label} delay={index * 0.05} className="h-full">
+            <div className="premium-card rounded-2xl p-7 text-center h-full flex flex-col items-center justify-center">
               <div className="text-5xl font-extrabold text-gradient-brand">{metric.value}</div>
               <div className="mt-3 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
                 {metric.label}
