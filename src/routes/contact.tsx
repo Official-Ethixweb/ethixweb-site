@@ -53,6 +53,7 @@ function Contact() {
               onSubmit={(e) => {
                 e.preventDefault();
                 setSent(true);
+                e.currentTarget.reset();
               }}
               className="glass-strong rounded-3xl p-8 space-y-5"
             >
