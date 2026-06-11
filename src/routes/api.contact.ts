@@ -4,6 +4,10 @@ import { Resend } from "resend";
 
 const TO_EMAIL = "akash@ethixweb.com"; // TODO: switch back to info@ethixweb.com before going live
 const FROM_EMAIL = "Ethixweb Website <forms@ethixweb.com>";
+const SITE_URL = "https://ethixweb.com";
+const MASCOT_URL = `${SITE_URL}/Ethan%20view%203.png`;
+const BRAND_RED = "#c0272d";
+const DARK = "#0e0c14";
 
 const SERVICE_LABELS: Record<string, string> = {
   website: "Website",
@@ -32,8 +36,10 @@ function escapeHtml(value: string) {
 function row(label: string, value: string) {
   return `
     <tr>
-      <td style="padding:8px 16px;font-weight:600;color:#555;white-space:nowrap;vertical-align:top;">${label}</td>
-      <td style="padding:8px 16px;color:#111;">${value}</td>
+      <td style="padding:14px 0;border-bottom:1px solid #f0f0f0;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">${label}</div>
+        <div style="font-size:15px;font-weight:600;color:#1a1a1a;">${value}</div>
+      </td>
     </tr>`;
 }
 
@@ -71,12 +77,46 @@ export const Route = createFileRoute("/api/contact")({
           .filter(Boolean)
           .join("");
 
+        const firstName = cleanName.split(" ")[0] || cleanName;
+
         const html = `
-          <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;">
-            <h2 style="margin:0 0 4px;color:#111;">New project inquiry</h2>
-            <p style="margin:0 0 16px;color:#777;font-size:13px;">Submitted via the Ethixweb contact form</p>
-            <table style="width:100%;border-collapse:collapse;border:1px solid #eee;border-radius:8px;overflow:hidden;">
-              ${rows}
+          <div style="background:#f4f4f7;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+            <table role="presentation" width="100%" style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #ececec;">
+              <tr>
+                <td style="background:${DARK};padding:32px;">
+                  <table role="presentation" width="100%">
+                    <tr>
+                      <td style="vertical-align:middle;">
+                        <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:1px;">ETHIX<span style="color:${BRAND_RED};">WEB</span></div>
+                        <div style="margin-top:8px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${BRAND_RED};">New project inquiry</div>
+                      </td>
+                      <td style="width:72px;text-align:right;vertical-align:bottom;">
+                        <img src="${MASCOT_URL}" width="72" alt="" style="display:block;border:0;" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:28px 32px 8px;">
+                  <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#1a1a1a;">
+                    <strong>${escapeHtml(cleanName)}</strong> just submitted the contact form on the website. Here's what they shared:
+                  </p>
+                  <table role="presentation" width="100%" style="border-collapse:collapse;">
+                    ${rows}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 32px 32px;">
+                  <a href="mailto:${escapeHtml(cleanEmail)}" style="display:inline-block;background:${BRAND_RED};color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 28px;border-radius:999px;">Reply to ${escapeHtml(firstName)}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:18px 32px;background:#fafafa;border-top:1px solid #f0f0f0;text-align:center;">
+                  <p style="margin:0;font-size:12px;color:#9aa0a6;">Sent automatically from the Ethixweb contact form &middot; ethixweb.com</p>
+                </td>
+              </tr>
             </table>
           </div>`;
 

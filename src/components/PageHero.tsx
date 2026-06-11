@@ -17,7 +17,7 @@ export function PageHero({
       <div className="relative mx-auto max-w-5xl px-6 text-center">
         <Reveal>
           <p className="text-xs uppercase tracking-[0.3em] text-primary">{eyebrow}</p>
-          <h1 className="mt-5 font-display text-5xl lg:text-7xl font-bold text-gradient leading-[1.05]">
+          <h1 className="mt-5 font-display text-5xl lg:text-7xl font-bold text-gradient leading-[1.15] pb-1">
             {title}
           </h1>
           {children && (

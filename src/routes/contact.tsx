@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
@@ -58,6 +58,12 @@ function Contact() {
   const [step, setStep] = useState(1);
   const [dir,  setDir]  = useState(1);
   const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("preview") === "success") {
+      setSent(true);
+    }
+  }, []);
   const [submitting,  setSubmitting]  = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [sel,  setSel]  = useState<{
@@ -471,7 +477,7 @@ function Contact() {
                       src="/Ethan%20view%203.png"
                       alt=""
                       aria-hidden="true"
-                      className="pointer-events-none absolute -bottom-25 left-1/2 -translate-x-1/2 z-0 h-224 w-auto object-contain object-bottom sm:left-auto sm:translate-x-0 sm:right-0 sm:h-256"
+                      className="pointer-events-none absolute -bottom-24.75 left-1/2 -translate-x-1/2 z-0 h-[40.824rem] w-auto object-contain object-bottom sm:left-auto sm:translate-x-0 sm:right-0 sm:h-[46.656rem]"
                       loading="lazy"
                       decoding="async"
                       initial={{ opacity: 0, y: 40 }}
