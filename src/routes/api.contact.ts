@@ -6,6 +6,7 @@ const TO_EMAIL = "akash@ethixweb.com"; // TODO: switch back to info@ethixweb.com
 const FROM_EMAIL = "Ethixweb Website <forms@ethixweb.com>";
 const SITE_URL = "https://ethixweb.com";
 const MASCOT_URL = `${SITE_URL}/Ethan%20view%203.png`;
+const LOGO_URL = `${SITE_URL}/ethixweb.png`;
 const BRAND_RED = "#c0272d";
 const DARK = "#0e0c14";
 
@@ -87,8 +88,8 @@ export const Route = createFileRoute("/api/contact")({
                   <table role="presentation" width="100%">
                     <tr>
                       <td style="vertical-align:middle;">
-                        <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:1px;">ETHIX<span style="color:${BRAND_RED};">WEB</span></div>
-                        <div style="margin-top:8px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${BRAND_RED};">New project inquiry</div>
+                        <img src="${LOGO_URL}" width="140" alt="Ethixweb" style="display:block;border:0;" />
+                        <div style="margin-top:10px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${BRAND_RED};">New project inquiry</div>
                       </td>
                       <td style="width:72px;text-align:right;vertical-align:bottom;">
                         <img src="${MASCOT_URL}" width="72" alt="" style="display:block;border:0;" />
