@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { Resend } from "resend";
 
-const TO_EMAIL = "info@ethixweb.com";
+const TO_EMAIL = "akash@ethixweb.com"; // TODO: switch back to info@ethixweb.com before going live
 const FROM_EMAIL = "Ethixweb Website <forms@ethixweb.com>";
 
 const SERVICE_LABELS: Record<string, string> = {
