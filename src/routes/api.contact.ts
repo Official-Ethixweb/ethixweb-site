@@ -33,6 +33,19 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
+function eIcon() {
+  const bar = `<td style="width:18px;height:4px;background:#ffffff;line-height:4px;font-size:0;">&nbsp;</td>`;
+  const gap = `<td style="height:3px;line-height:3px;font-size:0;">&nbsp;</td>`;
+  return `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="display:inline-table;border-collapse:collapse;vertical-align:middle;">
+      <tr>${bar}</tr>
+      <tr>${gap}</tr>
+      <tr>${bar}</tr>
+      <tr>${gap}</tr>
+      <tr>${bar}</tr>
+    </table>`;
+}
+
 function row(label: string, value: string) {
   return `
     <tr>
@@ -87,7 +100,14 @@ export const Route = createFileRoute("/api/contact")({
                   <table role="presentation" width="100%">
                     <tr>
                       <td style="vertical-align:middle;">
-                        <div style="font-size:24px;font-weight:800;letter-spacing:1px;color:#ffffff;">ETHIX<span style="color:${BRAND_RED};">WEB</span></div>
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+                          <tr>
+                            <td style="vertical-align:middle;padding-right:2px;">${eIcon()}</td>
+                            <td style="vertical-align:middle;font-size:24px;font-weight:800;letter-spacing:1px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;">THIXW</td>
+                            <td style="vertical-align:middle;padding:0 2px;">${eIcon()}</td>
+                            <td style="vertical-align:middle;font-size:24px;font-weight:800;letter-spacing:1px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;">B</td>
+                          </tr>
+                        </table>
                         <div style="margin-top:10px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${BRAND_RED};">New project inquiry</div>
                       </td>
                       <td style="width:72px;text-align:right;vertical-align:bottom;">
