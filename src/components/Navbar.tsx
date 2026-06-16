@@ -6,6 +6,8 @@ import { Logo } from "./Logo";
 import { TimezoneWidget } from "./TimezoneWidget";
 import { useTheme } from "./ThemeProvider";
 
+const LIVE_PATHS = new Set(["/", "/contact"]);
+
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
@@ -61,19 +63,29 @@ export function Navbar() {
         <div className="flex items-center justify-between px-5 py-3">
           <Logo />
           <nav className="hidden lg:flex items-center gap-1">
-            {links.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-white/5"
-                activeProps={{
-                  className: "px-4 py-2 text-sm text-foreground rounded-lg bg-white/5",
-                }}
-                activeOptions={{ exact: l.to === "/" }}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) =>
+              LIVE_PATHS.has(l.to) ? (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-white/5"
+                  activeProps={{
+                    className: "px-4 py-2 text-sm text-foreground rounded-lg bg-white/5",
+                  }}
+                  activeOptions={{ exact: l.to === "/" }}
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <div
+                  key={l.to}
+                  title="Coming soon"
+                  className="relative flex items-center cursor-not-allowed px-4 py-2 rounded-lg select-none"
+                >
+                  <span className="text-sm text-muted-foreground/35">{l.label}</span>
+                </div>
+              )
+            )}
           </nav>
           <div className="hidden lg:flex items-center gap-3">
             <TimezoneWidget />
@@ -106,16 +118,25 @@ export function Navbar() {
               className="lg:hidden overflow-hidden border-t border-white/8 backdrop-blur-2xl"
             >
               <div className="flex flex-col gap-1 p-4">
-                {links.map((l) => (
-                  <Link
-                    key={l.to}
-                    to={l.to}
-                    onClick={() => setOpen(false)}
-                    className="px-4 py-3 rounded-lg hover:bg-white/5 text-foreground"
-                  >
-                    {l.label}
-                  </Link>
-                ))}
+                {links.map((l) =>
+                  LIVE_PATHS.has(l.to) ? (
+                    <Link
+                      key={l.to}
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      className="px-4 py-3 rounded-lg hover:bg-white/5 text-foreground"
+                    >
+                      {l.label}
+                    </Link>
+                  ) : (
+                    <div
+                      key={l.to}
+                      className="flex items-center px-4 py-3 rounded-lg cursor-not-allowed select-none"
+                    >
+                      <span className="text-sm text-muted-foreground/35">{l.label}</span>
+                    </div>
+                  )
+                )}
                 <Link
                   to="/contact"
                   onClick={() => setOpen(false)}

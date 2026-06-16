@@ -29,9 +29,30 @@ export const Route = createFileRoute("/locations/kent-wa")({
         content:
           "Modern, mobile-friendly websites that help Kent WA businesses attract more customers.",
       },
-      { property: "og:url", content: "/locations/kent-wa" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/locations/kent-wa" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Web Design Services in Kent, WA - Ethixweb" },
+      { name: "twitter:description", content: "Professional web design, SEO and digital marketing for Kent WA businesses." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
     ],
-    links: [{ rel: "canonical", href: "/locations/kent-wa" }],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/locations/kent-wa" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
+            { "@type": "ListItem", position: 2, name: "Locations", item: "https://ethixweb.com/locations" },
+            { "@type": "ListItem", position: 3, name: "Kent, WA", item: "https://ethixweb.com/locations/kent-wa" },
+          ],
+        }),
+      },
+    ],
   }),
   component: Page,
 });
@@ -84,9 +105,42 @@ const industries = [
   "Professional Services (lawyers, consultants, healthcare)",
 ];
 
+const LOCAL_BUSINESS_SCHEMA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Ethixweb",
+  url: "https://ethixweb.com",
+  logo: "https://ethixweb.com/ethixweb.png",
+  image: "https://ethixweb.com/ethixweb.png",
+  description:
+    "Professional web design, SEO and digital marketing for Kent WA home service businesses, restaurants, contractors and local shops.",
+  email: "akash@ethixweb.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Kent",
+    addressRegion: "WA",
+    addressCountry: "US",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 47.3809,
+    longitude: -122.2348,
+  },
+  areaServed: {
+    "@type": "City",
+    name: "Kent",
+    sameAs: "https://en.wikipedia.org/wiki/Kent,_Washington",
+  },
+  priceRange: "$$",
+});
+
 function Page() {
   return (
     <SiteLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: LOCAL_BUSINESS_SCHEMA }}
+      />
       <PageHero
         eyebrow={
           <span className="inline-flex items-center gap-1.5">

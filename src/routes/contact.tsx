@@ -47,6 +47,39 @@ export const Route = createFileRoute("/contact")({
       { name: "description", content: "Tell us about your project and get a personalised roadmap within one business day." },
       { property: "og:title",       content: "Contact Ethixweb" },
       { property: "og:description", content: "Start a project with our team." },
+      { property: "og:type",        content: "website" },
+      { property: "og:image",       content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url",         content: "https://ethixweb.com/contact" },
+      { name: "twitter:card",        content: "summary_large_image" },
+      { name: "twitter:title",       content: "Contact Ethixweb" },
+      { name: "twitter:description", content: "Tell us about your project and get a personalised roadmap within one business day." },
+      { name: "twitter:image",       content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots",              content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/contact" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contact Ethixweb",
+          url: "https://ethixweb.com/contact",
+          description: "Tell us about your project and get a personalised roadmap within one business day.",
+          mainEntity: {
+            "@type": "Organization",
+            name: "Ethixweb",
+            email: "akash@ethixweb.com",
+            url: "https://ethixweb.com",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Kent",
+              addressRegion: "WA",
+              addressCountry: "US",
+            },
+          },
+        }),
+      },
     ],
   }),
   component: Contact,
@@ -149,7 +182,7 @@ function Contact() {
                 <AnimatePresence>
                   {!sent && (
                     <motion.img
-                      src="/Ethan%20view%202.png"
+                      src="/Ethan%20view%202.webp"
                       alt=""
                       aria-hidden="true"
                       className="pointer-events-none absolute -bottom-25 -right-25 z-10 w-auto object-contain object-bottom"
@@ -325,18 +358,21 @@ function Contact() {
                               </p>
                               <div className="grid gap-2 sm:grid-cols-3">
                                 {[
-                                  { key: "dcName",  placeholder: "Your name",      type: "text"  },
-                                  { key: "dcPhone", placeholder: "Phone number",   type: "tel"   },
-                                  { key: "dcEmail", placeholder: "Email address",  type: "email" },
-                                ].map(({ key, placeholder, type }) => (
-                                  <input
-                                    key={key}
-                                    type={type}
-                                    value={sel[key as "dcName" | "dcPhone" | "dcEmail"]}
-                                    onChange={e => setSel(s => ({ ...s, [key]: e.target.value, service: null }))}
-                                    placeholder={placeholder}
-                                    className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-primary/50 focus:outline-none transition"
-                                  />
+                                  { key: "dcName",  placeholder: "Your name",      type: "text",  label: "Name"  },
+                                  { key: "dcPhone", placeholder: "Phone number",   type: "tel",   label: "Phone" },
+                                  { key: "dcEmail", placeholder: "Email address",  type: "email", label: "Email" },
+                                ].map(({ key, placeholder, type, label }) => (
+                                  <label key={key} className="sr-only-label block">
+                                    <span className="sr-only">{label}</span>
+                                    <input
+                                      type={type}
+                                      value={sel[key as "dcName" | "dcPhone" | "dcEmail"]}
+                                      onChange={e => setSel(s => ({ ...s, [key]: e.target.value, service: null }))}
+                                      placeholder={placeholder}
+                                      aria-label={label}
+                                      className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-primary/50 focus:outline-none transition"
+                                    />
+                                  </label>
                                 ))}
                               </div>
                               {isDirect && submitError && (
@@ -470,11 +506,11 @@ function Contact() {
                     initial={{ opacity: 0, scale: 0.94 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.45, ease: "easeOut" }}
-                    className="relative flex-1 min-h-110"
+                    className="relative flex-1 min-h-96 sm:min-h-110 overflow-hidden"
                   >
                     {/* Mascot - behind text */}
                     <motion.img
-                      src="/Ethan%20view%203.png"
+                      src="/Ethan%20view%203.webp"
                       alt=""
                       aria-hidden="true"
                       className="pointer-events-none absolute -bottom-24.75 left-1/2 -translate-x-1/2 z-0 h-[40.824rem] w-auto object-contain object-bottom sm:left-auto sm:translate-x-0 sm:right-0 sm:h-[46.656rem]"

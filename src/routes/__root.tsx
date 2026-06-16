@@ -72,7 +72,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#0c0d10" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Ethixweb" },
+      { name: "format-detection", content: "telephone=no" },
       { title: "Ethixweb - Premium Technology Partner" },
       {
         name: "description",
@@ -87,7 +93,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Ethixweb" },
+      { property: "og:locale", content: "en_US" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Ethixweb - Premium Technology Partner" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@ethixweb" },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -112,11 +125,44 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const SCHEMA_ORG_ORGANIZATION = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Ethixweb",
+  url: "https://ethixweb.com",
+  logo: "https://ethixweb.com/ethixweb.png",
+  description:
+    "Digital operations, AI automation, websites, software, CRM integrations, SEO, ads, and fast support for US-focused teams.",
+  email: "akash@ethixweb.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Kent",
+    addressRegion: "WA",
+    addressCountry: "US",
+  },
+});
+
+const SCHEMA_ORG_WEBSITE = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Ethixweb",
+  url: "https://ethixweb.com",
+  description: "Premium technology partner for US home service businesses.",
+});
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: SCHEMA_ORG_ORGANIZATION }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: SCHEMA_ORG_WEBSITE }}
+        />
       </head>
       <body>
         {children}

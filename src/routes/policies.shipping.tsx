@@ -9,6 +9,26 @@ export const Route = createFileRoute("/policies/shipping")({
     meta: [
       { title: "Shipping Policy - Ethixweb" },
       { name: "description", content: "Ethixweb delivery policy for digital services and assets." },
+      { property: "og:title", content: "Shipping Policy - Ethixweb" },
+      { property: "og:description", content: "Ethixweb delivery policy for digital services and assets." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://ethixweb.com/policies/shipping" },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/policies/shipping" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
+            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
+            { "@type": "ListItem", position: 3, name: "Shipping Policy", item: "https://ethixweb.com/policies/shipping" },
+          ],
+        }),
+      },
     ],
   }),
   component: ShippingPolicy,

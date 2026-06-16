@@ -9,6 +9,26 @@ export const Route = createFileRoute("/policies/privacy")({
     meta: [
       { title: "Privacy Policy - Ethixweb" },
       { name: "description", content: "Ethixweb privacy policy - how we collect, use, and protect your data." },
+      { property: "og:title", content: "Privacy Policy - Ethixweb" },
+      { property: "og:description", content: "How Ethixweb collects, uses, and protects your data." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://ethixweb.com/policies/privacy" },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/policies/privacy" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
+            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
+            { "@type": "ListItem", position: 3, name: "Privacy Policy", item: "https://ethixweb.com/policies/privacy" },
+          ],
+        }),
+      },
     ],
   }),
   component: PrivacyPolicy,

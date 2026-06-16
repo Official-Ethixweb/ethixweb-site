@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/ethixweb-logo-text.png";
+import logo from "@/assets/ethixweb-logo-text.webp";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (

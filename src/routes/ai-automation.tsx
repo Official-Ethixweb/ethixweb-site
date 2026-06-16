@@ -23,7 +23,16 @@ export const Route = createFileRoute("/ai-automation")({
       },
       { property: "og:title", content: "AI & Automation Solutions" },
       { property: "og:description", content: "Production-ready AI systems for modern businesses." },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/ai-automation" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "AI & Automation - Ethixweb" },
+      { name: "twitter:description", content: "Custom AI agents, internal copilots and end-to-end workflow automation." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
     ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/ai-automation" }],
   }),
   component: Page,
 });
@@ -43,9 +52,21 @@ const f = [
   },
 ];
 
+const SERVICE_SCHEMA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "AI & Workflow Automation",
+  provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
+  description: "Custom AI agents, internal copilots and end-to-end workflow automation for modern businesses.",
+  url: "https://ethixweb.com/ai-automation",
+  areaServed: { "@type": "Country", name: "United States" },
+  serviceType: "AI Automation and Integration",
+});
+
 function Page() {
   return (
     <SiteLayout>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: SERVICE_SCHEMA }} />
       <PageHero eyebrow="AI & Automation" title="Software that thinks. Workflows that scale.">
         We build production-grade AI that quietly transforms how your business runs.
       </PageHero>

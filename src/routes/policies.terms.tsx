@@ -9,6 +9,26 @@ export const Route = createFileRoute("/policies/terms")({
     meta: [
       { title: "Terms & Conditions - Ethixweb" },
       { name: "description", content: "Ethixweb terms and conditions governing use of our services." },
+      { property: "og:title", content: "Terms & Conditions - Ethixweb" },
+      { property: "og:description", content: "Terms and conditions governing use of Ethixweb services." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://ethixweb.com/policies/terms" },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/policies/terms" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
+            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
+            { "@type": "ListItem", position: 3, name: "Terms & Conditions", item: "https://ethixweb.com/policies/terms" },
+          ],
+        }),
+      },
     ],
   }),
   component: TermsPolicy,

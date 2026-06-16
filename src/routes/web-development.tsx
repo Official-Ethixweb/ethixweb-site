@@ -28,7 +28,16 @@ export const Route = createFileRoute("/web-development")({
         property: "og:description",
         content: "Modern and visually stunning websites engineered to convert.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/web-development" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Website Design - Ethixweb" },
+      { name: "twitter:description", content: "Transform your online presence with expert website design. Custom, conversion-focused websites for home service businesses." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
     ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/web-development" }],
   }),
   component: Page,
 });
@@ -98,9 +107,21 @@ const promises = [
   "Fast loading",
 ];
 
+const SERVICE_SCHEMA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Website Design & Development",
+  provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
+  description: "Custom, conversion-focused websites for home service businesses - modern, fast, and SEO-ready.",
+  url: "https://ethixweb.com/web-development",
+  areaServed: { "@type": "Country", name: "United States" },
+  serviceType: "Web Design and Development",
+});
+
 function Page() {
   return (
     <SiteLayout>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: SERVICE_SCHEMA }} />
       <PageHero
         eyebrow="Website Design"
         title="Transform Your Online Presence with Expert Website Design"

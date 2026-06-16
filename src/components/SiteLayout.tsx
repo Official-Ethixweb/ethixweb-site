@@ -7,7 +7,7 @@ import { useClickSound } from "@/hooks/useClickSound";
 function Inner({ children }: { children: ReactNode }) {
   useClickSound();
   return (
-    <div className="site-vignette noise relative min-h-screen bg-background text-foreground">
+    <div className="site-vignette relative min-h-screen bg-background text-foreground">
       <div className="dust-field" />
       <div className="relative z-10">
         <Navbar />

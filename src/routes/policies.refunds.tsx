@@ -9,6 +9,26 @@ export const Route = createFileRoute("/policies/refunds")({
     meta: [
       { title: "Cancellation & Refunds - Ethixweb" },
       { name: "description", content: "Ethixweb cancellation and refund policy for digital services." },
+      { property: "og:title", content: "Cancellation & Refunds - Ethixweb" },
+      { property: "og:description", content: "Ethixweb cancellation and refund policy for digital services." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://ethixweb.com/policies/refunds" },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/policies/refunds" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
+            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
+            { "@type": "ListItem", position: 3, name: "Cancellation & Refunds", item: "https://ethixweb.com/policies/refunds" },
+          ],
+        }),
+      },
     ],
   }),
   component: RefundsPolicy,

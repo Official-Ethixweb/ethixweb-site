@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
+  Ban,
   Bot,
   BrainCircuit,
   Cable,
@@ -19,15 +20,17 @@ import {
   TrendingUp,
   Workflow,
 } from "lucide-react";
+
+const LIVE_PATHS = new Set(["/", "/contact"]);
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
 import { Testimonials } from "@/components/Testimonials";
 import { useTheme } from "@/components/ThemeProvider";
-import operatorCharacter from "@/assets/operator-character.png";
+import operatorCharacter from "@/assets/operator-character.webp";
 
 const GlobalNetwork = lazy(() => import("@/components/GlobalNetwork").then((m) => ({ default: m.GlobalNetwork })));
 
-const SLEEP_SRC = "/Untitled%20design%20(38).png";
+const SLEEP_SRC = "/Untitled%20design%20(38).webp";
 const CLOUD_LIGHT = "/LIGHT%20MODE.svg";
 
 function useIsSleeping() {
@@ -90,6 +93,26 @@ export const Route = createFileRoute("/")({
       { name: "robots", content: "index, follow" },
     ],
     links: [{ rel: "canonical", href: "https://ethixweb.com/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          name: "Ethixweb",
+          url: "https://ethixweb.com",
+          logo: "https://ethixweb.com/ethixweb.png",
+          description: "AI automation, websites, CRM integrations, SEO, and digital operations.",
+          email: "info@ethixweb.com",
+          openingHours: "Mo-Fr 09:00-17:00",
+          areaServed: "US",
+          sameAs: [
+            "https://www.linkedin.com/company/ethixweb/",
+            "https://www.instagram.com/ethix.web/",
+          ],
+        }),
+      },
+    ],
   }),
   component: Home,
 });
@@ -175,8 +198,8 @@ function Hero() {
   return (
     <section className="relative -mt-24 overflow-hidden bg-gradient-hero px-6 pb-4 pt-36 sm:pb-28 lg:pt-40">
       <div className="absolute inset-0 grid-bg opacity-50" />
-      <div className="absolute left-1/2 top-0 h-136 w-136 -translate-x-1/2 rounded-full bg-primary/25 blur-[150px] animate-pulse-glow" />
-      <div className="absolute bottom-0 right-0 h-120 w-120 rounded-full bg-primary/20 blur-[160px]" />
+      <div className="absolute left-1/2 top-0 h-136 w-136 -translate-x-1/2 rounded-full bg-primary/20 blur-[100px]" />
+      <div className="absolute bottom-0 right-0 h-120 w-120 rounded-full bg-primary/15 blur-[100px]" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 pt-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
@@ -216,12 +239,13 @@ function Hero() {
                 Start a project
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
               </Link>
-              <Link
-                to="/portfolio"
-                className="magnetic inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground backdrop-blur-xl hover:border-primary/40 hover:bg-primary/10"
+              <div
+                title="Coming soon"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-muted-foreground/40 backdrop-blur-xl cursor-not-allowed select-none"
               >
                 See our work
-              </Link>
+                <Ban className="h-4 w-4 text-primary/60" />
+              </div>
             </div>
           </Reveal>
         </div>
@@ -265,10 +289,10 @@ const ZZZ_PARTICLES = [
 const CLOUD_FILL = "linear-gradient(150deg, rgba(40,24,30,0.7), rgba(18,16,24,0.66))";
 
 const heroBadges = [
-  { label: "More booked jobs", style: { top: "5%", left: "1%" }, icon: PhoneCall, radius: "42% 58% 53% 47% / 48% 42% 58% 52%" },
-  { label: "More conversions", style: { top: "10%", right: "-1%" }, icon: TrendingUp, radius: "55% 45% 48% 52% / 44% 56% 44% 56%" },
-  { label: "UI/UX Systems", style: { top: "44%", left: "-3%" }, icon: Layers3, radius: "48% 52% 56% 44% / 52% 48% 52% 48%" },
-  { label: "Revenue tracked", style: { bottom: "45%", right: "-2%" }, icon: DollarSign, radius: "52% 48% 44% 56% / 48% 56% 44% 52%" },
+  { label: "More booked jobs", style: { top: "5%", left: "2%" }, icon: PhoneCall, radius: "42% 58% 53% 47% / 48% 42% 58% 52%" },
+  { label: "More conversions", style: { top: "10%", right: "0%" }, icon: TrendingUp, radius: "55% 45% 48% 52% / 44% 56% 44% 56%" },
+  { label: "UI/UX Systems", style: { top: "44%", left: "0%" }, icon: Layers3, radius: "48% 52% 56% 44% / 52% 48% 52% 48%" },
+  { label: "Revenue tracked", style: { bottom: "45%", right: "0%" }, icon: DollarSign, radius: "52% 48% 44% 56% / 48% 56% 44% 52%" },
   { label: "Design that converts", style: { bottom: "12%", left: "10%" }, icon: Palette, radius: "46% 54% 58% 42% / 56% 44% 56% 44%" },
 ];
 
@@ -294,34 +318,42 @@ function OperationsVisual() {
   const charY = useSpring(useTransform(my, [-1, 1], [-12, 12]), { stiffness: 70, damping: 20 });
 
   useEffect(() => {
-    if (sleeping) return; // no cursor tracking when sleeping
+    if (sleeping) return;
+    let raf = 0;
     let idleTimer: ReturnType<typeof setTimeout>;
+    let pendingX = 0;
+    let pendingY = 0;
 
+    const flush = () => {
+      mx.set(pendingX);
+      my.set(pendingY);
+      raf = 0;
+    };
     const onMove = (e: MouseEvent) => {
-      mx.set((e.clientX / window.innerWidth - 0.5) * 2);
-      my.set((e.clientY / window.innerHeight - 0.5) * 2);
+      pendingX = (e.clientX / window.innerWidth - 0.5) * 2;
+      pendingY = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!raf) raf = requestAnimationFrame(flush);
       clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        mx.set(0);
-        my.set(0);
-      }, 3500);
+      idleTimer = setTimeout(() => { mx.set(0); my.set(0); }, 3500);
     };
     const onOrient = (e: DeviceOrientationEvent) => {
-      if (e.gamma !== null) mx.set(Math.max(-1, Math.min(1, e.gamma / 25)));
-      if (e.beta !== null) my.set(Math.max(-1, Math.min(1, (e.beta - 45) / 25)));
+      if (e.gamma !== null) pendingX = Math.max(-1, Math.min(1, e.gamma / 25));
+      if (e.beta !== null) pendingY = Math.max(-1, Math.min(1, (e.beta - 45) / 25));
+      if (!raf) raf = requestAnimationFrame(flush);
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("deviceorientation", onOrient, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("deviceorientation", onOrient);
+      if (raf) cancelAnimationFrame(raf);
       clearTimeout(idleTimer);
     };
   }, [sleeping, mx, my]);
 
   return (
     <motion.div className="relative mx-auto w-full max-w-130" style={{ perspective: "900px" }}>
-      <div className="absolute inset-6 rounded-full bg-primary/20 blur-[110px]" />
+      <div className="absolute inset-6 rounded-full bg-primary/15 blur-[70px]" />
       <motion.div
         className="relative h-72 sm:h-155 lg:h-170"
         style={{ rotateX, rotateY, transformStyle: "preserve-3d", willChange: "transform" }}
@@ -500,7 +532,7 @@ function OperationsVisual() {
         {sleeping && (
           <div
             className="pointer-events-none absolute z-40"
-            style={{ top: "248px", right: "68px", transform: "translateZ(60px)" }}
+            style={{ top: isMobile ? "140px" : "248px", right: isMobile ? "28px" : "68px", transform: "translateZ(60px)" }}
           >
             {ZZZ_PARTICLES.map((z, i) => (
               <span
@@ -569,73 +601,42 @@ function Services() {
         <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
             <Reveal key={service.title} delay={index * 0.04}>
-              {index === 0 ? (
-                <div className="group/card relative h-full">
+              <div className="relative h-full">
+                {index === 0 && (
                   <img
-                    src="/SIT.png"
+                    src="/SIT.webp"
                     alt=""
                     aria-hidden="true"
-                    className="pointer-events-none absolute block lg:hidden w-auto object-contain z-20 transition duration-300 group-hover/card:-translate-y-1"
-                    style={{ height: "208px", right: "-10px", bottom: "calc(100% - 86px)" }}
+                    className="pointer-events-none absolute block lg:hidden w-auto object-contain z-20"
+                    style={{ height: "208px", right: "0px", bottom: "calc(100% - 86px)" }}
                     width="150"
                     height="208"
                     loading="lazy"
                     decoding="async"
                   />
-                  <Link
-                    to={service.to}
-                    className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 group-hover/card:-translate-y-1 hover:border-primary/35"
-                  >
-                    <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
-                    <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
-                    <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
-                    <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
-                      Explore
-                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                    </div>
-                  </Link>
-                </div>
-              ) : index === 3 ? (
-                <div className="group/card3 relative h-full">
+                )}
+                {index === 3 && (
                   <img
-                    src="/Ethan%20view%202.png"
+                    src="/Ethan%20view%202.webp"
                     alt=""
                     aria-hidden="true"
-                    className="pointer-events-none absolute hidden lg:block w-auto object-contain transition duration-300 group-hover/card3:-translate-y-1"
-                    style={{ height: "1000px", right: "-150px", bottom: "calc(100% - 1000px)", transform: "scale(2.1)", transformOrigin: "bottom right" }}
+                    className="pointer-events-none absolute hidden lg:block w-auto object-contain"
+                    style={{ height: "1000px", right: "-130px", bottom: "calc(100% - 980px)", transformOrigin: "bottom right", transform: "scale(2.1)" }}
                     loading="lazy"
                     decoding="async"
                   />
-                  <Link
-                    to={service.to}
-                    className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 group-hover/card3:-translate-y-1 hover:border-primary/35"
-                  >
-                    <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
-                    <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
-                    <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
-                    <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
-                      Explore
-                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                    </div>
-                  </Link>
-                </div>
-              ) : (
-                <Link
-                  to={service.to}
-                  className="premium-card group relative block h-full overflow-hidden rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/35"
-                >
-                  <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl transition group-hover:bg-primary/25" />
-                  <service.icon className="h-7 w-7 text-primary" strokeWidth={1.7} />
-                  <h3 className="mt-7 text-xl font-bold">{service.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{service.desc}</p>
-                  <div className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-primary">
-                    Explore
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                )}
+                <div className="premium-card relative h-full overflow-hidden rounded-2xl p-6 cursor-default">
+                  <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl" />
+                  <service.icon className="h-7 w-7 text-primary/60" strokeWidth={1.7} />
+                  <h3 className="mt-7 text-xl font-bold text-foreground/70">{service.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground/50">{service.desc}</p>
+                  <div className="mt-7 inline-flex items-center gap-1.5 text-sm font-bold text-muted-foreground/35">
+                    Coming soon
+                    <Ban className="h-3.5 w-3.5 text-primary/50" />
                   </div>
-                </Link>
-              )}
+                </div>
+              </div>
             </Reveal>
           ))}
         </div>

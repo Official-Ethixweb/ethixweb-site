@@ -28,7 +28,16 @@ export const Route = createFileRoute("/graphic-design")({
       },
       { property: "og:title", content: "Graphic Design & Branding - Ethixweb" },
       { property: "og:description", content: "Create a powerful brand identity that stands out." },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/graphic-design" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Graphic Design & Branding - Ethixweb" },
+      { name: "twitter:description", content: "Logo design, brand identity, marketing collateral, social graphics and UI/UX - bespoke branding that builds trust and drives engagement." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
     ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/graphic-design" }],
   }),
   component: Page,
 });
@@ -99,9 +108,21 @@ const whyUs = [
   { i: Eye, t: "Attention to Detail", d: "Every design element crafted for maximum impact." },
 ];
 
+const SERVICE_SCHEMA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Graphic Design & Branding",
+  provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
+  description: "Logo design, brand identity, marketing collateral, social graphics and UI/UX for modern businesses.",
+  url: "https://ethixweb.com/graphic-design",
+  areaServed: { "@type": "Country", name: "United States" },
+  serviceType: "Graphic Design and Branding",
+});
+
 function Page() {
   return (
     <SiteLayout>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: SERVICE_SCHEMA }} />
       <PageHero
         eyebrow="Graphic Design & Branding"
         title="Create a Powerful Brand Identity That Stands Out"

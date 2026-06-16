@@ -15,7 +15,7 @@ import {
   Eye,
   CheckCircle2,
 } from "lucide-react";
-import operatorCharacter from "@/assets/operator-character.png";
+import operatorCharacter from "@/assets/operator-character.webp";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -30,6 +30,45 @@ export const Route = createFileRoute("/about")({
       {
         property: "og:description",
         content: "Our story, how we work and why home service contractors trust us.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
+      { property: "og:url", content: "https://ethixweb.com/about" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "About Ethixweb" },
+      { name: "twitter:description", content: "Our story, how we work and why home service contractors trust us." },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://ethixweb.com/about" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "About Ethixweb",
+          url: "https://ethixweb.com/about",
+          description: "Ethixweb is a small, senior team helping US home service contractors grow with marketing that moves revenue.",
+          mainEntity: {
+            "@type": "Organization",
+            name: "Ethixweb",
+            url: "https://ethixweb.com",
+            logo: "https://ethixweb.com/ethixweb.png",
+            email: "akash@ethixweb.com",
+            foundingDate: "2020",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Kent",
+              addressRegion: "WA",
+              addressCountry: "US",
+            },
+            sameAs: [
+              "https://www.linkedin.com/company/ethixweb/",
+              "https://www.instagram.com/ethix.web/",
+            ],
+          },
+        }),
       },
     ],
   }),
@@ -232,7 +271,7 @@ function About() {
                 <div className="relative mx-auto mt-10 hidden h-64 w-full max-w-xs lg:block">
                   <div className="absolute inset-8 rounded-full bg-primary/15 blur-[80px]" />
                   <img
-                    src="/Ethan%20view%207.png"
+                    src="/Ethan%20view%207.webp"
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
@@ -345,7 +384,7 @@ function About() {
                 <div className="relative mx-auto hidden h-64 w-full max-w-xs lg:block">
                   <div className="absolute inset-8 rounded-full bg-primary/15 blur-[80px]" />
                   <img
-                    src="/Ethan%20view%2011.png"
+                    src="/Ethan%20view%2011.webp"
                     alt=""
                     aria-hidden="true"
                     loading="lazy"

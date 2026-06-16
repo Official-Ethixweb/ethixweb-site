@@ -162,7 +162,7 @@ export function Testimonials() {
 
             <div className="premium-card relative w-full max-w-sm shrink-0 overflow-visible rounded-3xl px-8 pb-4.5 pt-18.5 text-center sm:px-10 sm:pt-22.5 lg:max-w-sm lg:min-w-90 lg:pt-22.5">
               <img
-                src="/ethan%20sitting.png"
+                src="/ethan%20sitting.webp"
                 alt=""
                 aria-hidden="true"
                 className="pointer-events-none absolute bottom-full right-36 -mb-32.25 h-60.25 w-auto object-contain drop-shadow-[0_14px_28px_rgba(0,0,0,0.28)] sm:right-38 sm:h-75.25 sm:-mb-35 lg:right-40 lg:h-90.75 lg:-mb-37.5"

@@ -2,7 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { ArrowUpRight, Mail, Clock } from "lucide-react";
 
-const FOOTER_MASCOT = "/Ethan%20view%20%201.png";
+const LIVE_PATHS = new Set(["/", "/contact"]);
+
+const FOOTER_MASCOT = "/Ethan%20view%20%201.webp";
 
 const COMPANY_LINKS: [string, string][] = [
   ["About", "/about"],
@@ -44,7 +46,7 @@ function Instagram({ className }: { className?: string }) {
 }
 
 const SOCIAL_LINKS = [
-  { Icon: Facebook, href: "#", label: "Facebook" },
+  { Icon: Facebook, href: "https://www.facebook.com/ethixweb", label: "Facebook" },
   { Icon: Linkedin, href: "https://www.linkedin.com/company/ethixweb/", label: "LinkedIn" },
   { Icon: Instagram, href: "https://www.instagram.com/ethix.web/", label: "Instagram" },
 ] as const;
@@ -114,7 +116,7 @@ export function Footer() {
             © {new Date().getFullYear()} Ethixweb. All rights reserved.
           </p>
           <img
-            src="/Ethan%20view%208.png"
+            src="/Ethan%20view%208.webp"
             alt=""
             aria-hidden="true"
             className="pointer-events-none absolute block sm:hidden w-auto object-contain"
@@ -142,12 +144,18 @@ function FooterCol({ title, links }: { title: string; links: [string, string][] 
       <ul className="space-y-2.5">
         {links.map(([label, to]) => (
           <li key={to}>
-            <Link
-              to={to}
-              className="text-sm text-foreground/80 hover:text-primary transition-colors"
-            >
-              {label}
-            </Link>
+            {LIVE_PATHS.has(to) ? (
+              <Link
+                to={to}
+                className="text-sm text-foreground/80 hover:text-primary transition-colors"
+              >
+                {label}
+              </Link>
+            ) : (
+              <span className="inline-flex cursor-not-allowed select-none">
+                <span className="text-sm text-muted-foreground/35">{label}</span>
+              </span>
+            )}
           </li>
         ))}
       </ul>

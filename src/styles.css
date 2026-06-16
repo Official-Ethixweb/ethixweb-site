@@ -44,23 +44,23 @@
 :root.light {
   --radius: 0.625rem;
   --background: #0c0d10;
-  --foreground: oklch(0.97 0.005 30);
+  --foreground: #f5efee;
   --charcoal: #100f18;
   --card: #180f0f;
-  --card-foreground: oklch(0.97 0.005 30);
+  --card-foreground: #f5efee;
   --popover: #100f18;
-  --popover-foreground: oklch(0.97 0.005 30);
+  --popover-foreground: #f5efee;
   --primary: #c0272d;
-  --primary-foreground: oklch(0.98 0.005 30);
+  --primary-foreground: #f8f3f2;
   --primary-glow: #c0272d;
   --secondary: #27121d;
-  --secondary-foreground: oklch(0.97 0.005 30);
+  --secondary-foreground: #f5efee;
   --muted: #180f0f;
-  --muted-foreground: oklch(0.7 0.015 20);
+  --muted-foreground: #b0a39f;
   --accent: #391516;
-  --accent-foreground: oklch(0.98 0.005 30);
+  --accent-foreground: #f8f3f2;
   --destructive: #c0272d;
-  --destructive-foreground: oklch(0.98 0 0);
+  --destructive-foreground: #fafafa;
   --border: rgba(255, 255, 255, 0.07);
   --input: #100f18;
   --ring: #c0272d;
@@ -144,6 +144,7 @@ html.dark {
       radial-gradient(ellipse 45% 55% at 100% 25%, rgba(24, 15, 15, 0.55), transparent 65%),
       linear-gradient(95deg, #100f18 0%, #0c0d10 45%, #0c0d10 60%, #180f0f 100%);
     background-attachment: fixed;
+    /* iOS Safari doesn't support background-attachment:fixed on body well — override below */
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
@@ -192,31 +193,34 @@ html.dark {
   }
 
   .glass {
-    background: linear-gradient(135deg, rgba(39, 18, 29, 0.58), rgba(16, 15, 24, 0.42));
-    backdrop-filter: blur(20px) saturate(140%);
+    background: linear-gradient(135deg, rgba(39, 18, 29, 0.62), rgba(16, 15, 24, 0.48));
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    backdrop-filter: blur(12px) saturate(130%);
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .glass:hover {
     box-shadow: var(--shadow-md);
   }
 
   .glass-strong {
-    background: linear-gradient(135deg, rgba(39, 18, 29, 0.82), rgba(12, 13, 16, 0.74));
-    backdrop-filter: blur(24px) saturate(155%);
+    background: linear-gradient(135deg, rgba(39, 18, 29, 0.88), rgba(12, 13, 16, 0.82));
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--shadow-lg);
   }
 
   .premium-card {
     background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
-      linear-gradient(180deg, rgba(39, 18, 29, 0.76), rgba(12, 13, 16, 0.72));
+      linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+      linear-gradient(180deg, rgba(39, 18, 29, 0.82), rgba(12, 13, 16, 0.78));
     border: 1px solid rgba(255, 255, 255, 0.075);
-    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(22px) saturate(145%);
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    backdrop-filter: blur(12px) saturate(130%);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .premium-card:hover {
     box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -238,9 +242,10 @@ html.dark {
 
   .grid-bg {
     background-image:
-      linear-gradient(oklch(1 0 0 / 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(1 0 0 / 0.035) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
     background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(circle at center, black, transparent 72%);
     mask-image: radial-gradient(circle at center, black, transparent 72%);
   }
 
@@ -454,7 +459,6 @@ html.dark {
   }
   .animate-pulse-glow {
     animation: pulse-glow 4s ease-in-out infinite;
-    will-change: opacity, transform;
   }
   .animate-marquee {
     animation: marquee 30s linear infinite;
@@ -548,8 +552,9 @@ html.dark {
 }
 
 .light .glass {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(248, 245, 242, 0.68));
-  backdrop-filter: blur(20px) saturate(140%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(248, 245, 242, 0.76));
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  backdrop-filter: blur(12px) saturate(130%);
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: var(--shadow-sm);
 }
@@ -557,8 +562,9 @@ html.dark {
   box-shadow: var(--shadow-md);
 }
 .light .glass-strong {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(250, 247, 244, 0.45));
-  backdrop-filter: blur(28px) saturate(180%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(250, 247, 244, 0.62));
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: var(--shadow-lg);
 }
@@ -570,7 +576,8 @@ html.dark {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(250, 247, 244, 0.95));
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 1);
-  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
 }
 .light .premium-card:hover {
   box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 1);
@@ -592,6 +599,7 @@ html.dark {
     linear-gradient(rgba(0, 0, 0, 0.055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.055) 1px, transparent 1px);
   background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(circle at center, black, transparent 72%);
   mask-image: radial-gradient(circle at center, black, transparent 72%);
 }
 .light .noise::after {
@@ -633,6 +641,35 @@ html.dark {
 .light input:focus,
 .light textarea:focus {
   border-color: var(--color-primary);
+}
+
+/* ── iOS Safari: background-attachment:fixed causes scroll jank on mobile ── */
+@supports (-webkit-touch-callout: none) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
+/* ── Touch target minimum size for accessibility (WCAG 2.5.5) ─────────────── */
+@media (pointer: coarse) {
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Safe area insets for notched devices (iPhone X+, Android cutouts) ─────── */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ── Prevent text size adjustment on orientation change (iOS) ──────────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
