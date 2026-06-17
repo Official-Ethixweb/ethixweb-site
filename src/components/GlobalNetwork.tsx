@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, Radio, TrendingUp, Wrench, Zap } from "lucide-react";
 import { Reveal } from "./Reveal";
-import { Shuffle } from "./Shuffle";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type City = {
@@ -1143,14 +1142,9 @@ export function GlobalNetwork() {
               <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
                 Global Operations Network
               </p>
-              <Shuffle
-                text="Built for fast-moving teams across time zones."
-                tag="h2"
-                className="pb-1 text-4xl font-extrabold leading-[1.05] text-gradient lg:text-6xl"
-                shuffleTimes={3}
-                stagger={0.016}
-                duration={0.03}
-              />
+              <h2 className="pb-1 text-4xl font-extrabold leading-[1.05] text-gradient lg:text-6xl">
+                Built for fast-moving teams across time zones.
+              </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 Seattle, Utah, New York, Canada, the United Kingdom, and India stay connected
                 through one responsive digital operations layer.
