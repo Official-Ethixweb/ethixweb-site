@@ -23,7 +23,6 @@ import { Route as AiAutomationRouteImport } from './routes/ai-automation'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PoliciesTermsRouteImport } from './routes/policies.terms'
-import { Route as PoliciesShippingRouteImport } from './routes/policies.shipping'
 import { Route as PoliciesRefundsRouteImport } from './routes/policies.refunds'
 import { Route as PoliciesPrivacyRouteImport } from './routes/policies.privacy'
 import { Route as LocationsKentWaRouteImport } from './routes/locations.kent-wa'
@@ -99,11 +98,6 @@ const PoliciesTermsRoute = PoliciesTermsRouteImport.update({
   path: '/policies/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PoliciesShippingRoute = PoliciesShippingRouteImport.update({
-  id: '/policies/shipping',
-  path: '/policies/shipping',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PoliciesRefundsRoute = PoliciesRefundsRouteImport.update({
   id: '/policies/refunds',
   path: '/policies/refunds',
@@ -143,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
-  '/policies/shipping': typeof PoliciesShippingRoute
   '/policies/terms': typeof PoliciesTermsRoute
 }
 export interface FileRoutesByTo {
@@ -164,7 +157,6 @@ export interface FileRoutesByTo {
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
-  '/policies/shipping': typeof PoliciesShippingRoute
   '/policies/terms': typeof PoliciesTermsRoute
 }
 export interface FileRoutesById {
@@ -186,7 +178,6 @@ export interface FileRoutesById {
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
-  '/policies/shipping': typeof PoliciesShippingRoute
   '/policies/terms': typeof PoliciesTermsRoute
 }
 export interface FileRouteTypes {
@@ -209,7 +200,6 @@ export interface FileRouteTypes {
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
-    | '/policies/shipping'
     | '/policies/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -230,7 +220,6 @@ export interface FileRouteTypes {
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
-    | '/policies/shipping'
     | '/policies/terms'
   id:
     | '__root__'
@@ -251,7 +240,6 @@ export interface FileRouteTypes {
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
-    | '/policies/shipping'
     | '/policies/terms'
   fileRoutesById: FileRoutesById
 }
@@ -273,7 +261,6 @@ export interface RootRouteChildren {
   LocationsKentWaRoute: typeof LocationsKentWaRoute
   PoliciesPrivacyRoute: typeof PoliciesPrivacyRoute
   PoliciesRefundsRoute: typeof PoliciesRefundsRoute
-  PoliciesShippingRoute: typeof PoliciesShippingRoute
   PoliciesTermsRoute: typeof PoliciesTermsRoute
 }
 
@@ -377,13 +364,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PoliciesTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/policies/shipping': {
-      id: '/policies/shipping'
-      path: '/policies/shipping'
-      fullPath: '/policies/shipping'
-      preLoaderRoute: typeof PoliciesShippingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/policies/refunds': {
       id: '/policies/refunds'
       path: '/policies/refunds'
@@ -433,7 +413,6 @@ const rootRouteChildren: RootRouteChildren = {
   LocationsKentWaRoute: LocationsKentWaRoute,
   PoliciesPrivacyRoute: PoliciesPrivacyRoute,
   PoliciesRefundsRoute: PoliciesRefundsRoute,
-  PoliciesShippingRoute: PoliciesShippingRoute,
   PoliciesTermsRoute: PoliciesTermsRoute,
 }
 export const routeTree = rootRouteImport

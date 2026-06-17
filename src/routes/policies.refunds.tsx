@@ -124,7 +124,7 @@ function RefundsPolicy() {
               </p>
               <Link
                 to="/contact"
-                className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-gradient-brand px-6 py-2.5 text-sm font-medium shadow-glow"
+                className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-glow"
               >
                 Get in touch <ArrowUpRight className="h-4 w-4" />
               </Link>

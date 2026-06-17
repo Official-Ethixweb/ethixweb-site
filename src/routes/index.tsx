@@ -212,7 +212,8 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mt-7 max-w-5xl pb-2 text-[clamp(2.61rem,6.34vw,6.16rem)] font-extrabold leading-[0.9] text-gradient">
-              We run the tech.
+              We run the{" "}
+              <span className="tech-3d relative inline-block">tech.</span>
               <br />
               You run the{" "}
               <span
@@ -592,7 +593,7 @@ function Services() {
         <Reveal>
           <div className="max-w-3xl">
             <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
-              Solutions
+              Robust Solutions
             </p>
             <h2 className="pb-1 text-4xl font-extrabold leading-tight text-gradient lg:text-6xl">
               Senior operators for the systems that grow the{" "}
@@ -641,10 +642,6 @@ function Services() {
                   <service.icon className="h-7 w-7 text-primary/60" strokeWidth={1.7} />
                   <h3 className="mt-7 text-xl font-bold text-foreground">{service.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-foreground/75">{service.desc}</p>
-                  <div className="mt-7 inline-flex items-center gap-1.5 text-sm font-bold text-muted-foreground/35">
-                    Coming soon
-                    <Ban className="h-3.5 w-3.5 text-primary/50" />
-                  </div>
                 </div>
               </div>
             </Reveal>
@@ -735,15 +732,29 @@ function Proof() {
 function CTA() {
   return (
     <section className="px-6 py-24">
-      <div className="mx-auto max-w-7xl glass-strong rounded-4xl p-12 text-center">
-        <Reveal>
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-4xl glass-strong p-12 text-center">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 right-8 hidden h-114.5 w-83.25 overflow-hidden sm:block sm:right-12 sm:h-145.5 sm:w-104 lg:right-16 lg:h-187.25 lg:w-135.25"
+        >
+          <img
+            src="/Ethan%20view%209.webp"
+            alt=""
+            aria-hidden="true"
+            className="absolute left-1/2 top-0 w-auto -translate-x-1/2 object-contain"
+            style={{ height: "196%" }}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <Reveal className="relative z-10">
           <h2 className="font-display text-4xl font-bold text-gradient">Want to work with us?</h2>
           <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
             If you're a contractor tired of being one of 200 accounts at a big agency, let's talk.
           </p>
           <Link
             to="/contact"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-7 py-3.5 font-medium shadow-glow"
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
           >
             Get in touch <ArrowUpRight className="h-4 w-4" />
           </Link>

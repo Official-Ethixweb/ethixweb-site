@@ -96,10 +96,4 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  <url>
-    <loc>https://ethixweb.com/policies/shipping</loc>
-    <lastmod>2026-06-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
 </urlset>

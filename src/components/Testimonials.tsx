@@ -111,12 +111,19 @@ function ReviewCard({ review, brand }: { review: (typeof REVIEWS)[number]; brand
 function InfiniteCarousel({ brand }: { brand: string }) {
   const x = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
 
   useAnimationFrame((_, delta) => {
     const trackW = trackRef.current?.scrollWidth ?? 0;
     const half = trackW / 2;
-    const next = (x.get() - 0.4 * delta * 0.06) % half;
-    x.set(next <= -half ? 0 : next);
+    if (half <= 0) return;
+    if (!initialized.current) {
+      x.set(-half);
+      initialized.current = true;
+      return;
+    }
+    const next = x.get() + 0.4 * delta * 0.06;
+    x.set(next >= 0 ? -half : next);
   });
 
   const duplicated = [...REVIEWS, ...REVIEWS, ...REVIEWS, ...REVIEWS];
@@ -161,14 +168,23 @@ export function Testimonials() {
             </div>
 
             <div className="premium-card relative w-full max-w-sm shrink-0 overflow-visible rounded-3xl px-8 pb-4.5 pt-18.5 text-center sm:px-10 sm:pt-22.5 lg:max-w-sm lg:min-w-90 lg:pt-22.5">
-              <img
-                src="/ethan%20sitting.webp"
-                alt=""
+              <div
                 aria-hidden="true"
-                className="pointer-events-none absolute bottom-full right-[214px] -mb-[71px] h-[174px] w-auto object-contain drop-shadow-[0_14px_28px_rgba(0,0,0,0.28)] sm:right-38 sm:h-75.25 sm:-mb-35 lg:right-40 lg:h-90.75 lg:-mb-37.5"
-                loading="lazy"
-                decoding="async"
-              />
+                className="pointer-events-none absolute bottom-full right-[214px] -mb-[71px] h-[174px] sm:right-38 sm:h-75.25 sm:-mb-35 lg:right-40 lg:h-90.75 lg:-mb-37.5"
+              >
+                <div
+                  aria-hidden="true"
+                  className="platform-ledge absolute left-1/2 top-[58%] z-0 h-3 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-3.5 sm:w-28 lg:h-4 lg:w-32"
+                />
+                <img
+                  src="/ethan%20sitting.webp"
+                  alt=""
+                  aria-hidden="true"
+                  className="relative z-10 block h-full w-auto object-contain drop-shadow-[0_14px_28px_rgba(0,0,0,0.28)]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="relative -top-10 -mt-2.5 flex justify-end">
                 <TrustpilotLogo brand={brand} filled={4} size="lg" />
               </div>

@@ -16,7 +16,6 @@ const COMPANY_LINKS: [string, string][] = [
 
 const USEFUL_LINKS: [string, string][] = [
   ["Cancellation & Refunds", "/policies/refunds"],
-  ["Shipping Policy", "/policies/shipping"],
   ["Terms & Conditions", "/policies/terms"],
   ["Privacy Policy", "/policies/privacy"],
 ];
@@ -124,13 +123,15 @@ export function Footer() {
             loading="lazy"
             decoding="async"
           />
-          <Link
-            to="/contact"
+          <a
+            href="https://calendly.com/ethixweb-agency/30min?month=2026-06"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group relative z-10 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
           >
             Book an appointment{" "}
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-          </Link>
+          </a>
         </div>
       </div>
     </footer>

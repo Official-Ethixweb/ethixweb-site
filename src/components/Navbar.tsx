@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight, Sun, Moon } from "lucide-react";
+import { Menu, X, ArrowUpRight, Sun, Moon, Ban } from "lucide-react";
 import { Logo } from "./Logo";
 import { TimezoneWidget } from "./TimezoneWidget";
 import { useTheme } from "./ThemeProvider";
@@ -45,6 +45,8 @@ function ThemeToggle() {
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [comingSoon, setComingSoon] = useState<string | null>(null);
+  const comingSoonTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -52,6 +54,19 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(
+    () => () => {
+      if (comingSoonTimer.current) clearTimeout(comingSoonTimer.current);
+    },
+    [],
+  );
+
+  const announceComingSoon = (label: string) => {
+    if (comingSoonTimer.current) clearTimeout(comingSoonTimer.current);
+    setComingSoon(label);
+    comingSoonTimer.current = setTimeout(() => setComingSoon(null), 2200);
+  };
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
@@ -77,14 +92,15 @@ export function Navbar() {
                   {l.label}
                 </Link>
               ) : (
-                <div
+                <button
                   key={l.to}
-                  title="Coming soon"
-                  className="relative flex items-center cursor-not-allowed px-4 py-2 rounded-lg select-none"
+                  type="button"
+                  onClick={() => announceComingSoon(l.label)}
+                  className="relative flex items-center px-4 py-2 rounded-lg select-none transition-colors hover:bg-white/5"
                 >
                   <span className="text-sm text-muted-foreground/35">{l.label}</span>
-                </div>
-              )
+                </button>
+              ),
             )}
           </nav>
           <div className="hidden lg:flex items-center gap-3">
@@ -129,13 +145,15 @@ export function Navbar() {
                       {l.label}
                     </Link>
                   ) : (
-                    <div
+                    <button
                       key={l.to}
-                      className="flex items-center px-4 py-3 rounded-lg cursor-not-allowed select-none"
+                      type="button"
+                      onClick={() => announceComingSoon(l.label)}
+                      className="flex items-center px-4 py-3 rounded-lg select-none text-left transition-colors hover:bg-white/5"
                     >
                       <span className="text-sm text-muted-foreground/35">{l.label}</span>
-                    </div>
-                  )
+                    </button>
+                  ),
                 )}
                 <Link
                   to="/contact"
@@ -145,6 +163,23 @@ export function Navbar() {
                   Start a project <ArrowUpRight className="h-4 w-4" />
                 </Link>
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-0 top-20 z-60 flex justify-center px-4">
+        <AnimatePresence>
+          {comingSoon && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className="glass-strong flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-foreground shadow-elegant"
+            >
+              <Ban className="h-4 w-4 shrink-0 text-primary/70" />
+              {comingSoon} is coming soon
             </motion.div>
           )}
         </AnimatePresence>

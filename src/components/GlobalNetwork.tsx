@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { motion } from "framer-motion";
 import { Activity, Radio, TrendingUp, Wrench, Zap } from "lucide-react";
 import { Reveal } from "./Reveal";
@@ -450,12 +458,38 @@ function useClock(tz: string) {
   return time;
 }
 
+export type GlobeStageHandle = { focusOn: (cityName: string) => void };
+
+type FocusState = {
+  active: boolean;
+  phase: "spinY" | "spinX" | "hold";
+  city: string;
+  phaseT0: number;
+  fromY: number;
+  fromX: number;
+  toY: number;
+  toX: number;
+  holdUntil: number;
+};
+
+// Horizontal (longitude) spin runs first, then vertical (latitude) tilt - two
+// distinct stages so the motion reads as "spin around, then tip up/down" -
+// totals 1.8s, inside the 1.5-2s premium-transition window.
+const FOCUS_SPIN_Y_MS = 1000;
+const FOCUS_SPIN_X_MS = 800;
+const FOCUS_HOLD_MS = 3000;
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 // ─── Globe stage ──────────────────────────────────────────────────────────────
-function GlobeStage() {
+const GlobeStage = forwardRef<GlobeStageHandle>(function GlobeStage(_props, ref) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState(608);
   const [overlayTick, setOverlayTick] = useState(0);
+  const [focusedCity, setFocusedCity] = useState<string | null>(null);
 
   const rotYRef = useRef(20);
   const rotXRef = useRef(-13);
@@ -467,6 +501,40 @@ function GlobeStage() {
   const packetsRef = useRef<Packet[]>([]);
   const ghostPacketsRef = useRef<Packet[]>([]);
   const landMapRef = useRef<Uint8Array | null>(null);
+  const focusRef = useRef<FocusState | null>(null);
+
+  const focusOn = useCallback((cityName: string) => {
+    if (focusRef.current?.active || draggingRef.current) return; // ignore mid-animation/drag clicks
+    const city = CITIES.find((c) => c.name === cityName);
+    if (!city) return;
+
+    velYRef.current = 0;
+    velXRef.current = 0;
+
+    const fromY = rotYRef.current;
+    const fromX = rotXRef.current;
+    const rawToY = 90 - city.lon;
+    // shortest angular path, no long way around
+    const delta = ((((rawToY - fromY) % 360) + 540) % 360) - 180;
+    // with rotY landing the city's meridian dead-center (x=0, z=1 facing the
+    // camera), rotX = lat puts it at the vertical center too - exact middle
+    const toX = Math.max(-55, Math.min(55, city.lat));
+
+    focusRef.current = {
+      active: true,
+      phase: "spinY",
+      city: cityName,
+      phaseT0: performance.now(),
+      fromY,
+      fromX,
+      toY: fromY + delta,
+      toX,
+      holdUntil: 0,
+    };
+    setFocusedCity(cityName);
+  }, []);
+
+  useImperativeHandle(ref, () => ({ focusOn }), [focusOn]);
 
   // Pre-generate Fibonacci sphere points with land tag
   const spherePointsRef = useRef<{ lat: number; lon: number; land: boolean }[]>([]);
@@ -565,13 +633,46 @@ function GlobeStage() {
       const dt = Math.min(64, now - last);
       last = now;
 
-      const idle = now - lastInteractRef.current > 1200 && !draggingRef.current;
-      if (idle) velYRef.current += (0.022 - velYRef.current) * 0.016;
-      if (!draggingRef.current) {
-        rotYRef.current += velYRef.current * dt;
-        rotXRef.current += velXRef.current * dt;
-        velYRef.current *= 0.966;
-        velXRef.current *= 0.92;
+      const focus = focusRef.current;
+      if (focus?.active) {
+        if (focus.phase === "spinY") {
+          // stage 1: horizontal spin only - tilt stays put
+          const t = Math.min(1, (now - focus.phaseT0) / FOCUS_SPIN_Y_MS);
+          const e = easeInOutCubic(t);
+          rotYRef.current = focus.fromY + (focus.toY - focus.fromY) * e;
+          rotXRef.current = focus.fromX;
+          if (t >= 1) {
+            focus.phase = "spinX";
+            focus.phaseT0 = now;
+          }
+        } else if (focus.phase === "spinX") {
+          // stage 2: vertical tilt only - horizontal stays locked on target
+          const t = Math.min(1, (now - focus.phaseT0) / FOCUS_SPIN_X_MS);
+          const e = easeInOutCubic(t);
+          rotYRef.current = focus.toY;
+          rotXRef.current = focus.fromX + (focus.toX - focus.fromX) * e;
+          if (t >= 1) {
+            focus.phase = "hold";
+            focus.holdUntil = now + FOCUS_HOLD_MS;
+          }
+        } else {
+          rotYRef.current = focus.toY;
+          rotXRef.current = focus.toX;
+          if (now >= focus.holdUntil) {
+            focusRef.current = null;
+            setFocusedCity(null);
+            lastInteractRef.current = 0; // idle becomes true immediately - smooth auto-spin ramp-back
+          }
+        }
+      } else {
+        const idle = now - lastInteractRef.current > 1200 && !draggingRef.current;
+        if (idle) velYRef.current += (0.022 - velYRef.current) * 0.016;
+        if (!draggingRef.current) {
+          rotYRef.current += velYRef.current * dt;
+          rotXRef.current += velXRef.current * dt;
+          velYRef.current *= 0.966;
+          velXRef.current *= 0.92;
+        }
       }
       rotXRef.current = Math.max(-55, Math.min(55, rotXRef.current));
 
@@ -696,6 +797,7 @@ function GlobeStage() {
     const el = wrapRef.current;
     if (!el) return;
     const onDown = (e: PointerEvent) => {
+      if (focusRef.current?.active) return; // don't let drag interrupt the focus sequence
       draggingRef.current = true;
       lastInteractRef.current = performance.now();
       lastPosRef.current = { x: e.clientX, y: e.clientY };
@@ -867,15 +969,17 @@ function GlobeStage() {
           const c = arcCP(a, b, 0.46);
           const op = Math.max(0.2, Math.min(0.95, ((a.z + b.z) / 2 + 0.42) * 1.1));
           const hub = fr === "India" || to === "India";
+          const isFocusedRoute = !!focusedCity && (fr === focusedCity || to === focusedCity);
           return (
             <path
               key={`r${i}`}
               d={`M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}`}
               fill="none"
               stroke="url(#arc-grad)"
-              strokeWidth={hub ? 1.6 : 0.8}
-              opacity={op}
+              strokeWidth={isFocusedRoute ? (hub ? 2.6 : 1.8) : hub ? 1.6 : 0.8}
+              opacity={isFocusedRoute ? 1 : op}
               filter="url(#route-glow)"
+              style={{ transition: "stroke-width 0.3s ease, opacity 0.3s ease" }}
             />
           );
         })}
@@ -925,15 +1029,49 @@ function GlobeStage() {
           if (!pt.visible) return null;
           const hub = pt.city.tier === "hub";
           const primary = pt.city.tier === "primary";
+          const isFocused = pt.city.name === focusedCity;
           const base = hub ? 20 : primary ? 11 : 6.5;
-          const coreR = hub ? 5.8 : primary ? 4.0 : 2.6;
-          const lop = Math.max(0, Math.min(1, (pt.z + 0.1) * 2));
+          const coreR = (hub ? 5.8 : primary ? 4.0 : 2.6) * (isFocused ? 1.4 : 1);
+          const lop = isFocused ? 1 : Math.max(0, Math.min(1, (pt.z + 0.1) * 2));
           const lo = hub ? 18 : 14;
 
           return (
             <g key={pt.city.name}>
+              {/* Focus selection ring */}
+              {isFocused && (
+                <circle
+                  cx={pt.x}
+                  cy={pt.y}
+                  r={base * 1.5}
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="1.4"
+                  opacity="0.75"
+                  filter="url(#hub-glow)"
+                >
+                  <animate
+                    attributeName="r"
+                    values={`${base * 1.1};${base * 1.9};${base * 1.1}`}
+                    dur="1.4s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0.85;0.35;0.85"
+                    dur="1.4s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              )}
+
               {/* Outer pulse ring */}
-              <circle cx={pt.x} cy={pt.y} r={base} fill="var(--primary)" fillOpacity="0.10">
+              <circle
+                cx={pt.x}
+                cy={pt.y}
+                r={base}
+                fill="var(--primary)"
+                fillOpacity={isFocused ? 0.2 : 0.1}
+              >
                 <animate
                   attributeName="r"
                   values={`${base * 0.5};${base * 2.3};${base * 0.5}`}
@@ -998,24 +1136,25 @@ function GlobeStage() {
                 cx={pt.x}
                 cy={pt.y}
                 r={coreR}
-                fill={hub ? "#fff" : "var(--primary)"}
+                fill={hub || isFocused ? "#fff" : "var(--primary)"}
                 stroke="var(--primary)"
-                strokeWidth={hub ? 2.2 : 0}
-                strokeOpacity={hub ? 0.6 : 0}
-                filter={hub ? "url(#hub-glow)" : "url(#node-glow)"}
+                strokeWidth={hub ? 2.2 : isFocused ? 1.6 : 0}
+                strokeOpacity={hub ? 0.6 : isFocused ? 0.9 : 0}
+                filter={hub || isFocused ? "url(#hub-glow)" : "url(#node-glow)"}
+                style={{ transition: "r 0.3s ease" }}
               />
 
               {/* Label */}
               {lop > 0.05 && (
-                <g opacity={lop}>
+                <g opacity={lop} style={{ transition: "opacity 0.3s ease" }}>
                   <line
                     x1={pt.x}
                     y1={pt.y}
                     x2={pt.x + lo}
                     y2={pt.y - lo}
                     stroke="var(--primary)"
-                    strokeOpacity="0.36"
-                    strokeWidth="0.6"
+                    strokeOpacity={isFocused ? 0.8 : 0.36}
+                    strokeWidth={isFocused ? 1 : 0.6}
                   />
                   <rect
                     x={pt.x + lo}
@@ -1023,10 +1162,10 @@ function GlobeStage() {
                     width={(pt.city.name.length + (hub ? 4 : 0)) * 10.6 + 14}
                     height="24"
                     rx="6"
-                    fill="rgba(8,8,16,0.86)"
+                    fill={isFocused ? "rgba(120,20,28,0.92)" : "rgba(8,8,16,0.86)"}
                     stroke="var(--primary)"
-                    strokeOpacity="0.26"
-                    strokeWidth="0.65"
+                    strokeOpacity={isFocused ? 0.8 : 0.26}
+                    strokeWidth={isFocused ? 1.2 : 0.65}
                   />
                   <text
                     x={pt.x + lo + 7}
@@ -1047,10 +1186,18 @@ function GlobeStage() {
       </svg>
     </div>
   );
-}
+});
 
 // ─── Side panels ──────────────────────────────────────────────────────────────
-function StatusCard({ data, idx }: { data: (typeof STATUS_CARDS)[number]; idx: number }) {
+function StatusCard({
+  data,
+  idx,
+  onFocus,
+}: {
+  data: (typeof STATUS_CARDS)[number];
+  idx: number;
+  onFocus?: (city: string) => void;
+}) {
   const time = useClock(data.tz);
   const dot = data.tone === "emerald" ? "bg-emerald-400" : "bg-amber-400";
   return (
@@ -1060,7 +1207,14 @@ function StatusCard({ data, idx }: { data: (typeof STATUS_CARDS)[number]; idx: n
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay: idx * 0.1 }}
       whileHover={{ y: -4 }}
-      className="premium-card rounded-2xl p-5"
+      whileTap={{ scale: 0.98 }}
+      onClick={() => onFocus?.(data.city)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onFocus?.(data.city);
+      }}
+      className="premium-card cursor-pointer rounded-2xl p-5 transition-colors hover:border-primary/35"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -1094,7 +1248,7 @@ function ClockChip({ c }: { c: { label: string; tz: string } }) {
   );
 }
 
-function ActivityTicker() {
+function ActivityTicker({ onFocus }: { onFocus?: (city: string) => void }) {
   const items = [
     { t: "Deployment shipped", l: "New York" },
     { t: "AI agent reply", l: "Utah" },
@@ -1109,7 +1263,15 @@ function ActivityTicker() {
     return () => window.clearInterval(id);
   }, [items.length]);
   return (
-    <div className="premium-card overflow-hidden rounded-2xl p-4">
+    <div
+      className="premium-card cursor-pointer overflow-hidden rounded-2xl p-4 transition-colors hover:border-primary/35"
+      onClick={() => onFocus?.(items[index].l)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onFocus?.(items[index].l);
+      }}
+    >
       <div className="mb-2 flex items-center gap-2">
         <Radio className="h-3.5 w-3.5 animate-pulse text-primary" />
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -1132,6 +1294,9 @@ function ActivityTicker() {
 
 // ─── Export ───────────────────────────────────────────────────────────────────
 export function GlobalNetwork() {
+  const globeRef = useRef<GlobeStageHandle>(null);
+  const focusOnCity = useCallback((city: string) => globeRef.current?.focusOn(city), []);
+
   return (
     <section className="relative overflow-hidden px-6 py-28 lg:py-32">
         <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
@@ -1166,7 +1331,7 @@ export function GlobalNetwork() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="relative"
             >
-              <GlobeStage />
+              <GlobeStage ref={globeRef} />
               <p className="mt-2 text-center text-[10px] uppercase tracking-widest text-muted-foreground/70">
                 Drag to rotate · auto-spins when idle
               </p>
@@ -1174,9 +1339,9 @@ export function GlobalNetwork() {
 
             <div className="flex flex-col gap-4">
               {STATUS_CARDS.map((s, i) => (
-                <StatusCard key={s.city} data={s} idx={i} />
+                <StatusCard key={s.city} data={s} idx={i} onFocus={focusOnCity} />
               ))}
-              <ActivityTicker />
+              <ActivityTicker onFocus={focusOnCity} />
             </div>
           </div>
 
