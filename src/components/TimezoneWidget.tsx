@@ -1,21 +1,34 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe2, ChevronDown, Zap } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
-type Zone = { code: string; label: string; tz: string; flag: string };
+type Zone = { code: string; country: string; label: string; tz: string };
 
 const ZONES: Zone[] = [
-  { code: "IN", label: "India", tz: "Asia/Kolkata", flag: "🇮🇳" },
-  { code: "US-ET", label: "US East", tz: "America/New_York", flag: "🇺🇸" },
-  { code: "US-PT", label: "US West", tz: "America/Los_Angeles", flag: "🇺🇸" },
-  { code: "UK", label: "United Kingdom", tz: "Europe/London", flag: "🇬🇧" },
-  { code: "AE", label: "UAE", tz: "Asia/Dubai", flag: "🇦🇪" },
-  { code: "AU", label: "Australia (Syd)", tz: "Australia/Sydney", flag: "🇦🇺" },
-  { code: "SG", label: "Singapore", tz: "Asia/Singapore", flag: "🇸🇬" },
-  { code: "DE", label: "Germany", tz: "Europe/Berlin", flag: "🇩🇪" },
-  { code: "CA", label: "Canada (Tor)", tz: "America/Toronto", flag: "🇨🇦" },
+  { code: "IN", country: "IN", label: "India", tz: "Asia/Kolkata" },
+  { code: "US-ET", country: "US", label: "US East", tz: "America/New_York" },
+  { code: "US-PT", country: "US", label: "US West", tz: "America/Los_Angeles" },
+  { code: "UK", country: "UK", label: "United Kingdom", tz: "Europe/London" },
+  { code: "AE", country: "AE", label: "UAE", tz: "Asia/Dubai" },
+  { code: "AU", country: "AU", label: "Australia (Syd)", tz: "Australia/Sydney" },
+  { code: "SG", country: "SG", label: "Singapore", tz: "Asia/Singapore" },
+  { code: "DE", country: "DE", label: "Germany", tz: "Europe/Berlin" },
+  { code: "CA", country: "CA", label: "Canada (Tor)", tz: "America/Toronto" },
 ];
+
+// Country-code badge instead of a flag emoji - flag glyphs render inconsistently
+// (or fall back to raw letter tiles) across OSes, especially Windows.
+function CodeBadge({ code, className = "" }: { code: string; className?: string }) {
+  return (
+    <span
+      className={`inline-flex h-4 min-w-[1.1rem] items-center justify-center rounded-sm bg-primary/15 px-1 text-[9px] font-bold leading-none text-primary ${className}`}
+    >
+      {code}
+    </span>
+  );
+}
 
 const INDIA_TZ = "Asia/Kolkata";
 
@@ -56,9 +69,20 @@ export function TimezoneWidget() {
   const [now, setNow] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [localTz, setLocalTz] = useState<string>("UTC");
+  const [mounted, setMounted] = useState(false);
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const recalcPos = () => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    setPos({ top: rect.bottom + 12, right: window.innerWidth - rect.right });
+  };
 
   useEffect(() => {
+    setMounted(true);
     setLocalTz(Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
@@ -66,11 +90,37 @@ export function TimezoneWidget() {
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (
+        ref.current &&
+        !ref.current.contains(target) &&
+        panelRef.current &&
+        !panelRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  // The dropdown is portaled to <body> (its trigger sits inside a navbar container
+  // with overflow-hidden, which would otherwise silently clip it) so position has
+  // to be computed from the trigger's real screen coordinates instead of CSS `absolute`.
+  useEffect(() => {
+    if (!open) return;
+    recalcPos();
+    window.addEventListener("resize", recalcPos);
+    return () => window.removeEventListener("resize", recalcPos);
+  }, [open]);
+
+  const toggleOpen = () => {
+    setOpen((v) => {
+      const next = !v;
+      if (next) recalcPos();
+      return next;
+    });
+  };
 
   const { theme } = useTheme();
   const india = formatTime(now, INDIA_TZ);
@@ -96,7 +146,8 @@ export function TimezoneWidget() {
   return (
     <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen((v) => !v)}
+        ref={buttonRef}
+        onClick={toggleOpen}
         className="hidden md:inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 text-xs hover:bg-foreground/5 transition"
         aria-label="Global timezone"
       >
@@ -111,93 +162,104 @@ export function TimezoneWidget() {
           />
         </span>
         <Globe2 className="h-3.5 w-3.5 text-primary" />
-        <span className="font-medium tabular-nums">🇮🇳 {india}</span>
+        <span className="font-medium tabular-nums flex items-center gap-1.5">
+          <CodeBadge code="IN" />
+          {india}
+        </span>
         {!sameAsIndia && (
           <span className="text-muted-foreground tabular-nums hidden lg:inline">· You {local}</span>
         )}
         <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-40"
-            onClick={() => setOpen(false)}
-          />
-        )}
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.18 }}
-            className="absolute right-0 mt-3 w-[320px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-elegant p-4 z-50"
-            style={panelStyle}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-primary" />
-                <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                  Global Desk
-                </span>
-              </div>
-              <span
-                className={`text-[10px] px-2 py-0.5 rounded-full ${
-                  working ? "bg-emerald-500/15 text-emerald-400" : "bg-amber-500/15 text-amber-400"
-                }`}
+      {mounted &&
+        pos &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                key="backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                className="fixed inset-0 z-40"
+                onClick={() => setOpen(false)}
+              />
+            )}
+            {open && (
+              <motion.div
+                ref={panelRef}
+                initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                transition={{ duration: 0.18 }}
+                className="fixed w-[320px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-elegant p-4 z-50"
+                style={{ ...panelStyle, top: pos.top, right: pos.right }}
               >
-                {working ? "Online · Fast reply" : "After hours"}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="rounded-xl bg-foreground/5 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                  Ethixweb · India
-                </p>
-                <p className="mt-1 text-lg font-display font-semibold tabular-nums">{india}</p>
-                <p className="text-[10px] text-muted-foreground">{formatLong(now, INDIA_TZ)}</p>
-              </div>
-              <div className="rounded-xl bg-primary/10 border border-primary/20 p-3">
-                <p className="text-[10px] uppercase tracking-widest text-primary/80">
-                  Your Local Time
-                </p>
-                <p className="mt-1 text-lg font-display font-semibold tabular-nums">{local}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{localTz}</p>
-              </div>
-            </div>
-
-            <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                Team check · worldwide
-              </p>
-              {ZONES.map((z) => (
-                <div
-                  key={z.code}
-                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 hover:bg-foreground/5 transition"
-                >
-                  <span className="text-xs flex items-center gap-2">
-                    <span className="text-base leading-none">{z.flag}</span>
-                    <span className="text-foreground/85">{z.label}</span>
-                  </span>
-                  <span className="text-xs tabular-nums text-muted-foreground">
-                    {formatTime(now, z.tz)}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-primary" />
+                    <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                      Global Desk
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full ${
+                      working
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-amber-500/15 text-amber-400"
+                    }`}
+                  >
+                    {working ? "Online · Fast reply" : "After hours"}
                   </span>
                 </div>
-              ))}
-            </div>
 
-            <p className="mt-3 text-[10px] text-muted-foreground text-center">
-              Quick fixes · global availability · always-on partner
-            </p>
-          </motion.div>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="rounded-xl bg-foreground/5 p-3">
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Ethixweb · India
+                    </p>
+                    <p className="mt-1 text-lg font-display font-semibold tabular-nums">{india}</p>
+                    <p className="text-[10px] text-muted-foreground">{formatLong(now, INDIA_TZ)}</p>
+                  </div>
+                  <div className="rounded-xl bg-primary/10 border border-primary/20 p-3">
+                    <p className="text-[10px] uppercase tracking-widest text-primary/80">
+                      Your Local Time
+                    </p>
+                    <p className="mt-1 text-lg font-display font-semibold tabular-nums">{local}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{localTz}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                    Team check · worldwide
+                  </p>
+                  {ZONES.map((z) => (
+                    <div
+                      key={z.code}
+                      className="flex items-center justify-between rounded-lg px-2.5 py-1.5 hover:bg-foreground/5 transition"
+                    >
+                      <span className="text-xs flex items-center gap-2">
+                        <CodeBadge code={z.country} />
+                        <span className="text-foreground/85">{z.label}</span>
+                      </span>
+                      <span className="text-xs tabular-nums text-muted-foreground">
+                        {formatTime(now, z.tz)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="mt-3 text-[10px] text-muted-foreground text-center">
+                  Quick fixes · global availability · always-on partner
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }
