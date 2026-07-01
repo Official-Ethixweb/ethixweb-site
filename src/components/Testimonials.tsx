@@ -174,7 +174,7 @@ export function Testimonials() {
 
       <div className="relative mx-auto max-w-7xl">
         <Reveal>
-          <div className="flex flex-col items-center gap-12 text-center lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:text-left">
+          <div className="flex flex-col items-center gap-24 text-center sm:gap-40 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:text-left">
             <div className="max-w-xl">
               <p className="mb-3 text-sm font-bold uppercase tracking-[0.24em] text-primary">
                 Client Reviews
