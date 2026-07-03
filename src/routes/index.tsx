@@ -443,7 +443,7 @@ function OperationsVisual() {
             sizes={sleeping ? undefined : "(max-width: 639px) 271px, (max-width: 1023px) 387px, 427px"}
             alt="Ethixweb mascot"
             width={sleeping ? 1920 : 1024}
-            height={sleeping ? 1080 : 1536}
+            height={sleeping ? 1080 : 1279}
             className={sleeping
               ? "w-full h-auto scale-[1.68] origin-bottom sm:scale-100 sm:w-auto sm:max-w-none sm:h-145 object-contain mascot-breathe"
               : "h-101.5 sm:h-145 lg:h-160 max-w-none object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
