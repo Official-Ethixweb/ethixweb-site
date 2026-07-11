@@ -4,7 +4,6 @@
 
 export const SITE_URL = "https://ethixweb.com";
 export const APP_URL = "https://ethixweb-reimagined.vercel.app";
-export const MASCOT_URL = `${SITE_URL}/Ethan%20view%203.png`;
 export const LOGO_URL = `${APP_URL}/ethixweb.png`;
 export const BRAND_RED = "#c0272d";
 export const DARK = "#0e0c14";
@@ -75,9 +74,6 @@ export function emailShell({
                 <td style="vertical-align:middle;">
                   <img src="${LOGO_URL}" width="160" height="24" alt="Ethixweb" style="display:block;border:0;width:160px;height:24px;" />
                   <div style="margin-top:10px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${BRAND_RED};">${eyebrow}</div>
-                </td>
-                <td style="width:72px;text-align:right;vertical-align:bottom;">
-                  <img src="${MASCOT_URL}" width="72" alt="" style="display:block;border:0;" />
                 </td>
               </tr>
             </table>

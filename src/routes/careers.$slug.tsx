@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Container } from "@/components/Container";
+import { GlowBlob } from "@/components/GlowBlob";
 import { JOBS, HIRING_PROCESS, getJob, type Job } from "@/lib/careers-data";
 import {
   ArrowUpRight,
@@ -24,7 +26,9 @@ export const Route = createFileRoute("/careers/$slug")({
   head: ({ loaderData }) => {
     const job = loaderData as Job | undefined;
     if (!job) {
-      return { meta: [{ title: "Role not found - Ethixweb" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Role not found - Ethixweb" }, { name: "robots", content: "noindex" }],
+      };
     }
     return {
       meta: [
@@ -76,14 +80,19 @@ function JobDetail() {
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative -mt-24 overflow-hidden bg-gradient-hero px-6 pb-14 pt-36 sm:pt-44">
+      <section className="relative -mt-24 overflow-hidden bg-gradient-hero pb-14 pt-36 sm:pt-44">
         <div className="absolute inset-0 grid-bg opacity-50" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-72 w-[40rem] bg-primary/30 blur-[120px] rounded-full" />
-        <div className="relative mx-auto max-w-5xl">
+        <GlowBlob
+          size="lg"
+          color="primary"
+          blur={120}
+          className="top-0 left-1/2 -translate-x-1/2"
+        />
+        <Container size="medium" className="relative">
           <Breadcrumbs items={[{ label: "Careers", to: "/careers" }, { label: job.title }]} />
           <Reveal>
             <p className="text-xs uppercase tracking-[0.3em] text-primary">{job.department}</p>
-            <h1 className="mt-5 font-display text-4xl lg:text-6xl font-bold text-gradient leading-[1.1] pb-1">
+            <h1 className="mt-5 font-display text-6xl font-bold text-gradient leading-[1.1] pb-1">
               {job.title}
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{job.summary}</p>
@@ -114,11 +123,11 @@ function JobDetail() {
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Container>
       </section>
 
       {/* ── Body ─────────────────────────────────────────────────────────── */}
-      <section className="px-6 py-16">
+      <section className="px-4 py-16 xs:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl grid gap-12 lg:grid-cols-[1.6fr_1fr] lg:items-start">
           {/* Main content */}
           <div className="space-y-14">
@@ -176,7 +185,10 @@ function JobDetail() {
                 {job.otherRequirements.length > 0 && (
                   <ul className="mt-6 grid gap-2.5">
                     {job.otherRequirements.map((r) => (
-                      <li key={r} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                      <li
+                        key={r}
+                        className="flex items-start gap-2.5 text-sm text-muted-foreground"
+                      >
                         <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-primary/70" />
                         {r}
                       </li>
@@ -214,7 +226,9 @@ function JobDetail() {
                       </span>
                       <div>
                         <p className="font-semibold text-sm">{step.title}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">{step.description}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+                          {step.description}
+                        </p>
                       </div>
                     </li>
                   ))}
@@ -238,7 +252,9 @@ function JobDetail() {
           <div className="lg:sticky lg:top-28">
             <Reveal delay={0.1}>
               <div className="glass-strong rounded-3xl p-7">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground">Quick facts</p>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                  Quick facts
+                </p>
                 <dl className="mt-4 space-y-3 text-sm">
                   <div className="flex items-center justify-between gap-3">
                     <dt className="text-muted-foreground">Location</dt>
@@ -277,7 +293,9 @@ function JobDetail() {
             {otherJobs.length > 0 && (
               <Reveal delay={0.15}>
                 <div className="mt-6 rounded-3xl border border-white/5 bg-white/[0.02] p-7">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Other open roles</p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Other open roles
+                  </p>
                   <div className="mt-4 space-y-3">
                     {otherJobs.map((j) => (
                       <Link
@@ -287,7 +305,9 @@ function JobDetail() {
                         className="group block rounded-xl border border-white/5 px-4 py-3 hover:border-primary/30 hover:bg-white/[0.04] transition"
                       >
                         <p className="text-sm font-semibold">{j.title}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{j.location} &middot; {j.type}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {j.location} &middot; {j.type}
+                        </p>
                       </Link>
                     ))}
                   </div>

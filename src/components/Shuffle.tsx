@@ -1,4 +1,5 @@
 import {
+  createElement,
   useCallback,
   useEffect,
   useMemo,
@@ -77,28 +78,43 @@ export function Shuffle({
       const startDelay = i * stagger * 1000;
 
       for (let step = 0; step < shuffleTimes; step++) {
-        const t = setTimeout(() => {
-          setDisplay((prev) => {
-            const next = [...prev];
-            next[i] = scrambleCharset.charAt(Math.floor(Math.random() * scrambleCharset.length));
-            return next;
-          });
-        }, startDelay + step * duration * 1000);
+        const t = setTimeout(
+          () => {
+            setDisplay((prev) => {
+              const next = [...prev];
+              next[i] = scrambleCharset.charAt(Math.floor(Math.random() * scrambleCharset.length));
+              return next;
+            });
+          },
+          startDelay + step * duration * 1000,
+        );
         timeoutsRef.current.push(t);
       }
 
-      const settleT = setTimeout(() => {
-        setDisplay((prev) => {
-          const next = [...prev];
-          next[i] = char;
-          return next;
-        });
-        completed += 1;
-        if (completed === settleCount) onShuffleComplete?.();
-      }, startDelay + shuffleTimes * duration * 1000);
+      const settleT = setTimeout(
+        () => {
+          setDisplay((prev) => {
+            const next = [...prev];
+            next[i] = char;
+            return next;
+          });
+          completed += 1;
+          if (completed === settleCount) onShuffleComplete?.();
+        },
+        startDelay + shuffleTimes * duration * 1000,
+      );
       timeoutsRef.current.push(settleT);
     });
-  }, [text, shuffleTimes, stagger, duration, scrambleCharset, respectReducedMotion, onShuffleComplete, clearTimers]);
+  }, [
+    text,
+    shuffleTimes,
+    stagger,
+    duration,
+    scrambleCharset,
+    respectReducedMotion,
+    onShuffleComplete,
+    clearTimers,
+  ]);
 
   useEffect(() => {
     if (inView && !playedRef.current) {
@@ -139,13 +155,9 @@ export function Shuffle({
             {display[i]}
           </span>
         ))}
-      </span>
+      </span>,
     );
   });
 
-  return (
-    <Tag ref={ref} className={className} style={style} onMouseEnter={handleMouseEnter}>
-      {children}
-    </Tag>
-  );
+  return createElement(Tag, { ref, className, style, onMouseEnter: handleMouseEnter }, children);
 }

@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
+import { Container } from "@/components/Container";
+import { CardGrid } from "@/components/CardGrid";
 import { Reveal } from "@/components/Reveal";
 import {
   Code2,
@@ -11,7 +13,6 @@ import {
   PhoneCall,
   ShoppingCart,
   Share2,
-  ArrowUpRight,
 } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -33,7 +34,11 @@ export const Route = createFileRoute("/services")({
       { property: "og:url", content: "https://ethixweb.com/services" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Ethixweb Services" },
-      { name: "twitter:description", content: "Websites, Google Ads, Local Services Ads, SEO, conversion tracking and lead gen for US home service businesses." },
+      {
+        name: "twitter:description",
+        content:
+          "Websites, Google Ads, Local Services Ads, SEO, conversion tracking and lead gen for US home service businesses.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -46,12 +51,33 @@ export const Route = createFileRoute("/services")({
           "@type": "ItemList",
           name: "Ethixweb Services",
           url: "https://ethixweb.com/services",
-          description: "Websites, Google Ads, Local Services Ads, SEO, conversion tracking and lead gen for US home service businesses.",
+          description:
+            "Websites, Google Ads, Local Services Ads, SEO, conversion tracking and lead gen for US home service businesses.",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Website Design & Development", url: "https://ethixweb.com/web-development" },
-            { "@type": "ListItem", position: 2, name: "AI & Workflow Automation", url: "https://ethixweb.com/ai-automation" },
-            { "@type": "ListItem", position: 3, name: "Social Media Marketing", url: "https://ethixweb.com/marketing" },
-            { "@type": "ListItem", position: 4, name: "Graphic Design & Branding", url: "https://ethixweb.com/graphic-design" },
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Website Design & Development",
+              url: "https://ethixweb.com/web-development",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "AI & Workflow Automation",
+              url: "https://ethixweb.com/ai-automation",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: "Social Media Marketing",
+              url: "https://ethixweb.com/marketing",
+            },
+            {
+              "@type": "ListItem",
+              position: 4,
+              name: "Graphic Design & Branding",
+              url: "https://ethixweb.com/graphic-design",
+            },
           ],
         }),
       },
@@ -63,50 +89,53 @@ export const Route = createFileRoute("/services")({
 const items = [
   {
     icon: Code2,
-    t: "Website Design & Dev",
-    d: "WordPress, Astro and headless builds - fast, mobile first, built to convert.",
+    title: "Website Design & Dev",
+    description: "WordPress, Astro and headless builds: fast, mobile first, built to convert.",
     to: "/web-development",
   },
   {
     icon: Megaphone,
-    t: "Google Ads",
-    d: "Search campaigns managed by senior media buyers, optimized weekly for booked jobs.",
+    title: "Google Ads",
+    description:
+      "Search campaigns managed by senior media buyers, optimized weekly for booked jobs.",
     to: "/marketing",
   },
   {
     icon: PhoneCall,
-    t: "Local Services Ads",
-    d: "Google LSA setup, verification and optimization for top of page placement.",
+    title: "Local Services Ads",
+    description: "Google LSA setup, verification and optimization for top of page placement.",
     to: "/marketing",
   },
   {
     icon: Search,
-    t: "SEO & Local SEO",
-    d: "Technical SEO, content engines, GBP optimization and local authority building.",
+    title: "SEO & Local SEO",
+    description: "Technical SEO, content engines, GBP optimization and local authority building.",
     to: "/services",
   },
   {
     icon: BarChart3,
-    t: "Conversion Tracking",
-    d: "GA4, GTM and CallRail setup so every lead is attributed to its real source.",
+    title: "Conversion Tracking",
+    description: "GA4, GTM and CallRail setup so every lead is attributed to its real source.",
     to: "/services",
   },
   {
     icon: Share2,
-    t: "Social & Content",
-    d: "Social media management and content that builds trust in your local market.",
+    title: "Social & Content",
+    description: "Social media management and content that builds trust in your local market.",
     to: "/marketing",
   },
   {
     icon: Palette,
-    t: "Brand & Creative",
-    d: "Identity, ad creative and photography direction that looks trustworthy and premium.",
+    title: "Brand & Creative",
+    description:
+      "Identity, ad creative and photography direction that looks trustworthy and premium.",
     to: "/services",
   },
   {
     icon: ShoppingCart,
-    t: "CRM & Lead Systems",
-    d: "CRM integrations, lifecycle flows and lead routing that turn calls into customers.",
+    title: "CRM & Lead Systems",
+    description:
+      "CRM integrations, lifecycle flows and lead routing that turn calls into customers.",
     to: "/ai-automation",
   },
 ];
@@ -115,24 +144,20 @@ function Services() {
   return (
     <SiteLayout>
       <PageHero eyebrow="Services" title="Everything a home service business needs to grow.">
-        Websites, ads, SEO and tracking - handled by a senior team that actually answers the phone.
+        Websites, ads, SEO and tracking, handled by a senior team that actually answers the phone.
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {items.map((s, i) => (
-            <Reveal key={s.t} delay={i * 0.05}>
-              <Link
-                to={s.to}
-                className="group block h-full glass rounded-3xl p-7 hover:bg-white/[0.06] transition"
-              >
-                <s.icon className="h-9 w-9 text-primary mb-5" strokeWidth={1.5} />
-                <h3 className="font-display text-lg font-semibold">{s.t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
-                <ArrowUpRight className="mt-5 h-4 w-4 text-primary group-hover:rotate-45 transition" />
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+      <section className="py-20">
+        <Container>
+          <Reveal>
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary">What we offer</p>
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
+                Everything under one roof.
+              </h2>
+            </div>
+          </Reveal>
+          <CardGrid items={items} cols={4} />
+        </Container>
       </section>
     </SiteLayout>
   );

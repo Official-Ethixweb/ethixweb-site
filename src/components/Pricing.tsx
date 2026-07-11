@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Check, ArrowUpRight, Sparkles } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { Container } from "./Container";
 
 type Row = { label: string; values: [string, string, string] };
 
@@ -56,12 +57,12 @@ const rows: Row[] = [
 
 export function Pricing() {
   return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-7xl">
+    <section className="py-24">
+      <Container>
         <Reveal>
           <div className="max-w-2xl">
             <p className="text-sm uppercase tracking-widest text-primary mb-4">Pricing</p>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient">
+            <h2 className="font-display text-5xl font-bold text-gradient">
               Service packages built for home service operators.
             </h2>
             <p className="mt-5 text-muted-foreground">
@@ -70,7 +71,7 @@ export function Pricing() {
           </div>
         </Reveal>
 
-        <div className="mt-14 grid md:grid-cols-3 gap-5">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
           {tiers.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.08}>
               <div
@@ -135,7 +136,7 @@ export function Pricing() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

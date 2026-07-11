@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { ThemeProvider } from "./ThemeProvider";
+import { ScrollProgress } from "./ScrollProgress";
 import { useClickSound } from "@/hooks/useClickSound";
 
 function Inner({ children }: { children: ReactNode }) {
@@ -14,10 +15,13 @@ function Inner({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
+      <ScrollProgress />
       <div className="dust-field" />
       <div className="relative z-10">
         <Navbar />
-        <main id="main-content" className="pt-24">{children}</main>
+        <main id="main-content" className="pt-24">
+          {children}
+        </main>
         <Footer />
       </div>
     </div>

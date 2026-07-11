@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/blog")({
@@ -16,7 +17,10 @@ export const Route = createFileRoute("/blog")({
       { property: "og:url", content: "https://ethixweb.com/blog" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Ethixweb Blog" },
-      { name: "twitter:description", content: "Essays on design, AI and growth from the Ethixweb team." },
+      {
+        name: "twitter:description",
+        content: "Essays on design, AI and growth from the Ethixweb team.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -77,8 +81,9 @@ function Blog() {
       <PageHero eyebrow="Journal" title="Field notes from the build.">
         Tactics, essays and case studies on shipping great digital work.
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl grid gap-5">
+      <section className="py-20">
+        <h2 className="sr-only">Latest posts</h2>
+        <Container size="medium" className="grid gap-5">
           {posts.map((p, i) => (
             <Reveal key={p.t} delay={i * 0.06}>
               <a
@@ -92,7 +97,7 @@ function Blog() {
                       <span>·</span>
                       <span>{p.r}</span>
                     </div>
-                    <h3 className="mt-3 font-display text-2xl lg:text-3xl font-semibold">{p.t}</h3>
+                    <h3 className="mt-3 font-display text-3xl font-semibold">{p.t}</h3>
                     <p className="mt-2 text-muted-foreground">{p.d}</p>
                   </div>
                   <ArrowUpRight className="h-6 w-6 shrink-0 text-primary group-hover:rotate-45 transition" />
@@ -100,7 +105,7 @@ function Blog() {
               </a>
             </Reveal>
           ))}
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );

@@ -2,15 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { PolicySection as Section } from "@/components/PolicySection";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/policies/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy - Ethixweb" },
-      { name: "description", content: "Ethixweb privacy policy - how we collect, use, and protect your data." },
+      {
+        name: "description",
+        content: "Ethixweb privacy policy: how we collect, use, and protect your data.",
+      },
       { property: "og:title", content: "Privacy Policy - Ethixweb" },
-      { property: "og:description", content: "How Ethixweb collects, uses, and protects your data." },
+      {
+        property: "og:description",
+        content: "How Ethixweb collects, uses, and protects your data.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://ethixweb.com/policies/privacy" },
       { name: "robots", content: "index, follow" },
@@ -24,8 +32,18 @@ export const Route = createFileRoute("/policies/privacy")({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
-            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
-            { "@type": "ListItem", position: 3, name: "Privacy Policy", item: "https://ethixweb.com/policies/privacy" },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Policies",
+              item: "https://ethixweb.com/policies",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: "Privacy Policy",
+              item: "https://ethixweb.com/policies/privacy",
+            },
           ],
         }),
       },
@@ -34,23 +52,14 @@ export const Route = createFileRoute("/policies/privacy")({
   component: PrivacyPolicy,
 });
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="glass rounded-2xl p-8">
-      <h2 className="font-display text-xl font-semibold text-foreground">{title}</h2>
-      <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">{children}</div>
-    </div>
-  );
-}
-
 function PrivacyPolicy() {
   return (
     <SiteLayout>
       <PageHero eyebrow="Policies" title="Privacy Policy">
         Last updated: January 2025
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-3xl space-y-5">
+      <section className="py-20">
+        <Container size="narrow" className="space-y-5">
           <Reveal>
             <Section title="1. Information We Collect">
               <p>We collect information you provide directly, including:</p>
@@ -84,10 +93,10 @@ function PrivacyPolicy() {
           <Reveal delay={0.08}>
             <Section title="3. Data Storage & Security">
               <p>
-                Your data is stored on secure servers. We use industry standard encryption
-                (TLS/SSL) for data in transit and access controls for data at rest. No method of
-                transmission over the internet is 100% secure; we take all reasonable precautions
-                to protect your information.
+                Your data is stored on secure servers. We use industry standard encryption (TLS/SSL)
+                for data in transit and access controls for data at rest. No method of transmission
+                over the internet is 100% secure; we take all reasonable precautions to protect your
+                information.
               </p>
             </Section>
           </Reveal>
@@ -159,7 +168,7 @@ function PrivacyPolicy() {
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );

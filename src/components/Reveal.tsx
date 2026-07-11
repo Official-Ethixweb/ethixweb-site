@@ -1,21 +1,24 @@
 import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { DURATION_BASE, EASE_PREMIUM } from "@/lib/motion";
 
 const v: Variants = {
   hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: DURATION_BASE, ease: EASE_PREMIUM } },
 };
 
 export function Reveal({
   children,
   delay = 0,
   className = "",
+  as = "div",
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
+  as?: "div" | "li";
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [fallback, setFallback] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -27,9 +30,11 @@ export function Reveal({
     return () => clearTimeout(t);
   }, []);
 
+  const MotionTag = (as === "li" ? motion.li : motion.div) as typeof motion.div;
+
   return (
-    <motion.div
-      ref={ref}
+    <MotionTag
+      ref={ref as React.RefObject<HTMLDivElement | null>}
       className={className}
       initial={reduceMotion ? "show" : "hidden"}
       animate={inView || fallback || reduceMotion ? "show" : "hidden"}
@@ -37,6 +42,6 @@ export function Reveal({
       transition={reduceMotion ? { duration: 0 } : { delay }}
     >
       {children}
-    </motion.div>
+    </MotionTag>
   );
 }

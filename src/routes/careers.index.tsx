@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { GlowBlob } from "@/components/GlowBlob";
+import { HeroWebVisual } from "@/components/HeroWebVisual";
 import { JobCard } from "@/components/careers/JobCard";
 import { JOBS, HIRING_PROCESS } from "@/lib/careers-data";
 import {
@@ -24,7 +27,7 @@ export const Route = createFileRoute("/careers/")({
       {
         name: "description",
         content:
-          "Join Ethixweb - a small, remote first team building websites, AI automation, SEO and software for US businesses. Open roles in engineering and SEO.",
+          "Join Ethixweb, a small, remote first team building websites, AI automation, SEO and software for US businesses. Open roles in engineering and SEO.",
       },
       { property: "og:title", content: "Careers at Ethixweb" },
       { property: "og:description", content: "Open roles at a remote first, senior led team." },
@@ -35,7 +38,8 @@ export const Route = createFileRoute("/careers/")({
       { name: "twitter:title", content: "Careers at Ethixweb" },
       {
         name: "twitter:description",
-        content: "Join Ethixweb - a small, remote first team building websites, AI automation, SEO and software for US businesses.",
+        content:
+          "Join Ethixweb, a small, remote first team building websites, AI automation, SEO and software for US businesses.",
       },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
@@ -164,82 +168,68 @@ function CardPhoto({ src, alt, aspect }: { src: string; alt: string; aspect: str
 }
 
 function Careers() {
-  const reduceMotion = useReducedMotion();
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative -mt-24 overflow-hidden bg-gradient-hero px-6 pb-16 pt-36 sm:pb-24 sm:pt-44">
+      <section className="relative -mt-24 overflow-hidden bg-gradient-hero pb-16 pt-36 sm:pb-24 sm:pt-44">
         <div className="absolute inset-0 grid-bg opacity-50" />
-        <div className="absolute left-1/2 top-0 h-136 w-136 -translate-x-1/2 rounded-full bg-primary/20 blur-[100px]" />
+        <GlowBlob
+          size="lg"
+          color="primary"
+          blur={100}
+          className="left-1/2 top-0 -translate-x-1/2"
+        />
+        <div className="pointer-events-none absolute inset-x-0 top-32 mx-auto w-full max-w-5xl scale-110 opacity-15">
+          <HeroWebVisual showBadges={false} />
+        </div>
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <Reveal>
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_18px_rgba(138,24,28,0.9)]" />
-                We&apos;re hiring
-              </div>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <h1 className="mt-7 max-w-2xl pb-1 text-[clamp(2.4rem,5.4vw,4.5rem)] font-extrabold leading-[1.05] text-gradient">
-                Join the team that&apos;s building the future of digital operations.
-              </h1>
-            </Reveal>
-            <Reveal delay={0.16}>
-              <p className="mt-7 max-w-xl text-lg leading-8 text-muted-foreground">
-                We&apos;re a small, remote first team helping US businesses grow through modern
-                websites, AI automation, SEO, and software engineering.
-              </p>
-            </Reveal>
-            <Reveal delay={0.24}>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <a
-                  href="#open-positions"
-                  className="magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
-                >
-                  View Open Positions
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                </a>
-                <a
-                  href="#life-at-ethixweb"
-                  className="magnetic inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground hover:border-primary/40 hover:bg-primary/10"
-                >
-                  Life at Ethixweb
-                </a>
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal delay={0.18}>
-            <div className="relative mx-auto w-full max-w-xl">
-              <div className="absolute inset-4 -z-10 rounded-[2.5rem] bg-primary/15 blur-[90px]" />
-              <motion.div
-                whileHover={reduceMotion ? undefined : { y: -4 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="premium-card relative overflow-hidden rounded-[1.75rem] p-2 shadow-[0_18px_40px_rgba(0,0,0,0.4)] sm:rounded-[2.25rem] sm:p-3"
-              >
-                <img
-                  src="/team-hero.webp"
-                  alt="The Ethixweb team collaborating across engineering, design, AI automation and SEO from their workstations"
-                  width={1200}
-                  height={947}
-                  loading="eager"
-                  decoding="async"
-                  className="relative w-full rounded-[1.25rem] object-contain sm:rounded-[1.75rem]"
-                />
-              </motion.div>
+        <Container className="relative flex flex-col items-center text-center">
+          <Reveal>
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_18px_rgba(138,24,28,0.9)]" />
+              We&apos;re hiring
             </div>
           </Reveal>
-        </div>
+          <Reveal delay={0.08}>
+            <h1 className="mt-7 max-w-3xl pb-1 text-[clamp(2.4rem,5.4vw,4.5rem)] font-extrabold leading-[1.05] text-gradient">
+              Join the team that&apos;s building the future of digital operations.
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="mx-auto mt-7 max-w-xl text-lg leading-8 text-muted-foreground">
+              We&apos;re a small, remote first team helping US businesses grow through modern
+              websites, AI automation, SEO, and software engineering.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <a
+                href="#open-positions"
+                className="magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
+              >
+                View Open Positions
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+              </a>
+              <a
+                href="#life-at-ethixweb"
+                className="magnetic inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground hover:border-primary/40 hover:bg-primary/10"
+              >
+                Life at Ethixweb
+              </a>
+            </div>
+          </Reveal>
+        </Container>
       </section>
 
       {/* ── Life at Ethixweb ─────────────────────────────────────────────── */}
-      <section id="life-at-ethixweb" className="px-6 py-20">
-        <div className="mx-auto max-w-7xl">
+      <section id="life-at-ethixweb" className="py-20">
+        <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">Life at Ethixweb</p>
-              <h2 className="font-display text-4xl font-bold text-gradient lg:text-5xl pb-1">
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary">
+                Life at Ethixweb
+              </p>
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Built for people who like to build.
               </h2>
             </div>
@@ -297,16 +287,16 @@ function Careers() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ── Hiring process timeline ──────────────────────────────────────── */}
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-20">
+        <Container>
           <Reveal>
             <div className="mx-auto mb-16 max-w-2xl text-center">
               <p className="mb-4 text-sm uppercase tracking-widest text-primary">Hiring process</p>
-              <h2 className="font-display text-4xl font-bold text-gradient lg:text-5xl pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 A clear path from application to offer.
               </h2>
             </div>
@@ -317,30 +307,35 @@ function Careers() {
               className="absolute top-5 left-0 right-0 hidden h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent lg:block"
               aria-hidden="true"
             />
-            <ol className="grid gap-8 lg:grid-cols-6">
+            <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {HIRING_PROCESS.map((step, i) => (
-                <Reveal key={step.title} delay={i * 0.08}>
-                  <li className="relative flex flex-col items-start lg:items-center lg:text-center">
-                    <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-sm font-bold text-white shadow-glow">
-                      {i + 1}
-                    </span>
-                    <h3 className="mt-4 font-display text-base font-semibold">{step.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-                  </li>
+                <Reveal
+                  key={step.title}
+                  as="li"
+                  delay={i * 0.08}
+                  className="relative flex flex-col items-start lg:items-center lg:text-center"
+                >
+                  <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-sm font-bold text-white shadow-glow">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-4 font-display text-base font-semibold">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                    {step.description}
+                  </p>
                 </Reveal>
               ))}
             </ol>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ── Open positions ───────────────────────────────────────────────── */}
-      <section id="open-positions" className="px-6 py-20">
-        <div className="mx-auto max-w-7xl">
+      <section id="open-positions" className="py-20">
+        <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <p className="mb-4 text-sm uppercase tracking-widest text-primary">Open positions</p>
-              <h2 className="font-display text-4xl font-bold text-gradient lg:text-5xl pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Roles we&apos;re hiring for right now.
               </h2>
             </div>
@@ -352,39 +347,38 @@ function Careers() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ── Closing CTA ──────────────────────────────────────────────────── */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="premium-card relative overflow-hidden rounded-4xl px-6 py-16 text-center sm:px-12 lg:py-20">
-            <div className="absolute inset-0 ambient-red opacity-80" />
-            <div className="absolute inset-0 grid-bg opacity-30" />
-            <Reveal>
-              <div className="relative mx-auto max-w-2xl">
-                <Sparkles className="mx-auto h-9 w-9 text-primary" strokeWidth={1.5} />
-                <h2 className="mt-5 pb-1 text-3xl font-extrabold leading-tight text-gradient sm:text-5xl">
-                  Don&apos;t see the right role?
-                </h2>
-                <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-                  We&apos;re always open to meeting senior, curious people. Send us a general
-                  application and we&apos;ll reach out if there&apos;s a fit.
-                </p>
-                <div className="mt-9">
-                  <Link
-                    to="/careers/apply"
-                    search={{ role: "general" }}
-                    className="magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
-                  >
-                    Send a general application
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                  </Link>
-                </div>
+      <section className="py-24">
+        <Container className="premium-card web-card web-card-feature relative overflow-hidden rounded-4xl px-6 py-16 text-center sm:px-12 lg:py-20">
+          <div className="absolute inset-0 ambient-red opacity-80" />
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <span className="web-corner" aria-hidden="true" />
+          <Reveal>
+            <div className="relative mx-auto max-w-2xl">
+              <Sparkles className="mx-auto h-9 w-9 text-primary" strokeWidth={1.5} />
+              <h2 className="mt-5 pb-1 text-5xl font-extrabold leading-tight text-gradient">
+                Don&apos;t see the right role?
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+                We&apos;re always open to meeting senior, curious people. Send us a general
+                application and we&apos;ll reach out if there&apos;s a fit.
+              </p>
+              <div className="mt-9">
+                <Link
+                  to="/careers/apply"
+                  search={{ role: "general" }}
+                  className="magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
+                >
+                  Send a general application
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                </Link>
               </div>
-            </Reveal>
-          </div>
-        </div>
+            </div>
+          </Reveal>
+        </Container>
       </section>
     </SiteLayout>
   );

@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 import { Reveal } from "./Reveal";
+import { Container } from "./Container";
+import { GlowBlob } from "./GlowBlob";
 
 export function PageHero({
   eyebrow,
@@ -11,20 +13,20 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative -mt-24 pt-40 pb-20 bg-gradient-hero overflow-hidden">
+    <section className="relative -mt-24 overflow-hidden bg-gradient-hero pb-16 pt-36 sm:pb-20 sm:pt-40">
       <div className="absolute inset-0 grid-bg opacity-50" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-72 w-[40rem] bg-primary/30 blur-[120px] rounded-full" />
-      <div className="relative mx-auto max-w-5xl px-6 text-center">
+      <GlowBlob size="lg" color="primary" className="top-0 left-1/2 -translate-x-1/2" />
+      <Container size="medium" className="relative text-center">
         <Reveal>
           <p className="text-xs uppercase tracking-[0.3em] text-primary">{eyebrow}</p>
-          <h1 className="mt-5 font-display text-5xl lg:text-7xl font-bold text-gradient leading-[1.15] pb-1">
+          <h1 className="mt-5 font-display text-7xl font-bold leading-[1.15] text-gradient pb-1">
             {title}
           </h1>
           {children && (
-            <div className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">{children}</div>
+            <div className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">{children}</div>
           )}
         </Reveal>
-      </div>
+      </Container>
     </section>
   );
 }

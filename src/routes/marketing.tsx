@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { CTASection } from "@/components/CTASection";
 import {
   Megaphone,
   BarChart3,
@@ -10,7 +12,6 @@ import {
   ArrowUpRight,
   CheckCircle2,
   Users,
-  Globe2,
   Sparkles,
 } from "lucide-react";
 
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/marketing")({
       {
         name: "description",
         content:
-          "Elevate your brand with expert social media marketing - content, engagement tracking, paid campaigns and flexible plans built for home service businesses.",
+          "Elevate your brand with expert social media marketing: content, engagement tracking, paid campaigns and flexible plans built for home service businesses.",
       },
       { property: "og:title", content: "Social Media Marketing - Ethixweb" },
       {
@@ -33,7 +34,11 @@ export const Route = createFileRoute("/marketing")({
       { property: "og:url", content: "https://ethixweb.com/marketing" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Social Media Marketing - Ethixweb" },
-      { name: "twitter:description", content: "Elevate your brand with expert social media marketing - content, engagement tracking, paid campaigns and flexible plans built for home service businesses." },
+      {
+        name: "twitter:description",
+        content:
+          "Elevate your brand with expert social media marketing: content, engagement tracking, paid campaigns and flexible plans built for home service businesses.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -92,7 +97,8 @@ const SERVICE_SCHEMA = JSON.stringify({
   "@type": "Service",
   name: "Social Media Marketing",
   provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
-  description: "Content creation, engagement tracking, paid campaigns and social media strategy for home service businesses.",
+  description:
+    "Content creation, engagement tracking, paid campaigns and social media strategy for home service businesses.",
   url: "https://ethixweb.com/marketing",
   areaServed: { "@type": "Country", name: "United States" },
   serviceType: "Social Media Marketing",
@@ -106,15 +112,15 @@ function Page() {
         eyebrow="Social Media Marketing"
         title="Drive Engagement and Growth with Social Media"
       >
-        Engage, grow and convert effectively - content, campaigns and analytics under one roof.
+        Engage, grow and convert effectively: content, campaigns and analytics under one roof.
       </PageHero>
 
       {/* What We Do */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-5xl text-center">
+      <section className="py-24">
+        <Container size="medium" className="text-center">
           <Reveal>
             <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+            <h2 className="font-display text-5xl font-bold text-gradient pb-1">
               Elevate Your Brand with Social Media Marketing
             </h2>
             <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
@@ -131,12 +137,12 @@ function Page() {
               Contact Us <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Reveal>
-        </div>
+        </Container>
       </section>
 
       {/* Interesting Fact */}
-      <section className="px-6 py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.04] to-transparent">
-        <div className="mx-auto max-w-7xl grid lg:grid-cols-[1fr_1.4fr] gap-12 items-center">
+      <section className="py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.04] to-transparent">
+        <Container className="grid items-center gap-12 sm:grid-cols-2 lg:grid-cols-[1fr_1.4fr]">
           <Reveal>
             <div className="relative">
               <div className="absolute -inset-8 bg-gradient-glow blur-3xl opacity-50" />
@@ -153,7 +159,7 @@ function Page() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-gradient leading-tight pb-1">
+            <h2 className="font-display text-4xl font-bold text-gradient leading-tight pb-1">
               Over 3.4 billion people connect via social media.
             </h2>
             <p className="mt-6 text-muted-foreground leading-relaxed">
@@ -161,25 +167,25 @@ function Page() {
               today's digital landscape. From sharing daily moments to driving global conversations,
               social platforms shape how we communicate, learn and engage with the world. Whether
               for entertainment, business or activism, social media continues to influence cultures,
-              industries and societies - bridging gaps and creating new opportunities like never
+              industries and societies, bridging gaps and creating new opportunities like never
               before.
             </p>
           </Reveal>
-        </div>
+        </Container>
       </section>
 
       {/* We'll Help You */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">We'll Help You</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Strategy. Content. Conversion.
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed max-w-xl">
                 We help you navigate the ever evolving world of social media with tailored
-                strategies that fit your unique goals - no long term contracts, just real results.
+                strategies that fit your unique goals. No long term contracts, just real results.
               </p>
             </div>
           </Reveal>
@@ -202,21 +208,21 @@ function Page() {
               View all services <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Plans */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">Pricing</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Become the social media leader in your local market.
               </h2>
             </div>
           </Reveal>
-          <div className="mt-14 grid md:grid-cols-3 gap-5">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
             {plans.map((p, i) => (
               <Reveal key={p.name} delay={i * 0.08}>
                 <div
@@ -268,28 +274,16 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl glass-strong rounded-[2rem] p-12 lg:p-16 text-center relative overflow-hidden">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-[40rem] bg-primary/20 blur-[120px] rounded-full" />
-          <Megaphone className="h-10 w-10 text-primary mx-auto mb-4 relative" />
-          <h2 className="relative font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
-            Ready to grow on social?
-          </h2>
-          <p className="relative mt-4 text-muted-foreground max-w-xl mx-auto">
-            We'll audit your current social presence and come back with a clear, no jargon plan.
-          </p>
-          <Link
-            to="/contact"
-            className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-7 py-3.5 font-medium shadow-glow hover:scale-[1.03] transition-transform"
-          >
-            Get a free audit <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      <CTASection
+        icon={Megaphone}
+        title="Ready to grow on social?"
+        description="We'll audit your current social presence and come back with a clear, no jargon plan."
+        ctaLabel="Get a free audit"
+        ctaTo="/contact"
+      />
     </SiteLayout>
   );
 }

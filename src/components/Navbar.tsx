@@ -6,9 +6,9 @@ import { Logo } from "./Logo";
 import { TimezoneWidget } from "./TimezoneWidget";
 import { useTheme } from "./ThemeProvider";
 
-const LIVE_PATHS = new Set(["/", "/contact"]);
+const LIVE_PATHS = new Set(["/", "/contact", "/careers"]);
 
-const links = [
+export const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/industries", label: "Industries" },
@@ -134,7 +134,7 @@ export function Navbar() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden overflow-hidden border-t border-white/8 backdrop-blur-2xl"
+              className="lg:hidden overflow-hidden border-t border-border backdrop-blur-2xl"
             >
               <div className="flex flex-col gap-1 p-4">
                 {links.map((l) =>
@@ -143,7 +143,7 @@ export function Navbar() {
                       key={l.to}
                       to={l.to}
                       onClick={() => setOpen(false)}
-                      className="px-4 py-3 rounded-lg hover:bg-white/5 text-foreground"
+                      className="px-4 py-3 rounded-lg hover:bg-foreground/5 text-foreground"
                     >
                       {l.label}
                     </Link>
@@ -152,7 +152,7 @@ export function Navbar() {
                       key={l.to}
                       type="button"
                       onClick={() => announceComingSoon(l.label)}
-                      className="flex items-center px-4 py-3 rounded-lg select-none text-left transition-colors hover:bg-white/5"
+                      className="flex items-center px-4 py-3 rounded-lg select-none text-left transition-colors hover:bg-foreground/5"
                     >
                       <span className="text-sm text-muted-foreground/35">{l.label}</span>
                     </button>

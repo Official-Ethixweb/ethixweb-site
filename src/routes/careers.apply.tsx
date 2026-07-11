@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { upload } from "@vercel/blob/client";
@@ -8,7 +8,9 @@ import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useTheme } from "@/components/ThemeProvider";
+import { SystemConstellation } from "@/components/SystemConstellation";
 import { JOBS, getJob } from "@/lib/careers-data";
+import { getScreeningConfig } from "@/lib/screening-rubrics";
 import {
   Mail,
   MapPin,
@@ -18,6 +20,9 @@ import {
   FileText,
   X,
   Loader2,
+  Code2,
+  Search,
+  Users,
 } from "lucide-react";
 
 const ALLOWED_RESUME_TYPES = [
@@ -26,6 +31,21 @@ const ALLOWED_RESUME_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 const MAX_RESUME_BYTES = 10 * 1024 * 1024;
+
+const ROLE_ICONS: Record<string, typeof Code2> = {
+  "full-stack-developer": Code2,
+  "seo-specialist": Search,
+};
+
+const ROLE_OPTIONS = [
+  ...JOBS.map((j) => ({
+    value: j.id,
+    label: j.title,
+    desc: j.department,
+    icon: ROLE_ICONS[j.id] ?? Users,
+  })),
+  { value: "general", label: "General Application", desc: "Not sure yet", icon: Users },
+];
 
 const NOTICE_PERIODS = [
   { id: "immediate", label: "Immediate" },
@@ -183,7 +203,9 @@ function ApplyPage() {
       setSent(true);
     } catch (err) {
       setSubmitError(
-        err instanceof Error ? err.message : "Something went wrong. Please email info@ethixweb.com directly.",
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please email info@ethixweb.com directly.",
       );
     } finally {
       setSubmitting(false);
@@ -201,39 +223,36 @@ function ApplyPage() {
       <Breadcrumbs
         items={[
           { label: "Careers", to: "/careers" },
-          ...(preselected ? [{ label: preselected.title, to: `/careers/${preselected.slug}` }] : []),
+          ...(preselected
+            ? [{ label: preselected.title, to: `/careers/${preselected.slug}` }]
+            : []),
           { label: "Apply" },
         ]}
       />
 
-      <section className="px-6 py-12">
+      <section className="px-4 py-12 xs:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <div className="relative grid lg:grid-cols-[1fr_1.55fr] gap-0 overflow-hidden rounded-3xl shadow-elegant text-white">
               {/* Left panel */}
               <div className="relative flex flex-col justify-between overflow-hidden bg-gradient-hero px-8 py-10 text-foreground">
-                <AnimatePresence>
-                  {!sent && (
-                    <motion.img
-                      src="/Ethan%20view%202.webp"
-                      alt=""
-                      aria-hidden="true"
-                      className="pointer-events-none absolute bottom-0 -right-25 z-10 h-150 max-h-[55vh] w-auto object-contain object-bottom lg:-bottom-12 lg:h-198 lg:max-h-[85vh]"
-                      loading="lazy"
-                      decoding="async"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, x: 25, y: step >= 2 ? 30 : 20 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                    />
-                  )}
-                </AnimatePresence>
                 <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary/30 blur-[90px]" />
                 <div className="pointer-events-none absolute bottom-0 right-0 h-48 w-48 rounded-full bg-primary/10 blur-[70px]" />
 
+                {/* System graphic - lights up node-by-node as the applicant moves through the
+                    form, instead of a static character. */}
+                {!sent && (
+                  <SystemConstellation
+                    nodes={stepLabels.map((label) => ({ label }))}
+                    activeIndex={step - 1}
+                    className="pointer-events-none absolute -right-10 bottom-0 z-10 hidden h-64 w-64 opacity-70 sm:block lg:h-72 lg:w-72"
+                  />
+                )}
+
                 <div className="relative z-20">
-                  <h2 className="text-3xl font-extrabold leading-tight lg:text-4xl">
-                    Let&apos;s get to<br />
+                  <h2 className="text-4xl font-extrabold leading-tight">
+                    Let&apos;s get to
+                    <br />
                     <span className="text-primary">know you.</span>
                   </h2>
                   <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -250,8 +269,10 @@ function ApplyPage() {
                           <div className="flex flex-col items-center">
                             <motion.div
                               animate={{
-                                backgroundColor: done || active ? "var(--color-primary)" : "transparent",
-                                borderColor: done || active ? "var(--color-primary)" : stepDotBorder,
+                                backgroundColor:
+                                  done || active ? "var(--color-primary)" : "transparent",
+                                borderColor:
+                                  done || active ? "var(--color-primary)" : stepDotBorder,
                               }}
                               transition={{ duration: 0.3 }}
                               className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold"
@@ -259,14 +280,20 @@ function ApplyPage() {
                               {done ? (
                                 <Check className="h-3.5 w-3.5 text-primary-foreground" />
                               ) : (
-                                <span className={active ? "text-primary-foreground" : "text-muted-foreground/70"}>
+                                <span
+                                  className={
+                                    active ? "text-primary-foreground" : "text-muted-foreground/70"
+                                  }
+                                >
                                   {i + 1}
                                 </span>
                               )}
                             </motion.div>
                             {i < stepLabels.length - 1 && (
                               <motion.div
-                                animate={{ backgroundColor: done ? "rgba(192,39,45,0.45)" : stepLineBg }}
+                                animate={{
+                                  backgroundColor: done ? "rgba(192,39,45,0.45)" : stepLineBg,
+                                }}
                                 transition={{ duration: 0.4 }}
                                 className="my-1 w-px"
                                 style={{ height: 28 }}
@@ -314,7 +341,10 @@ function ApplyPage() {
                       { i: Mail, v: "info@ethixweb.com" },
                       { i: MapPin, v: "Remote (India)" },
                     ].map(({ i: I, v }) => (
-                      <div key={v} className="flex items-center gap-2.5 text-xs text-muted-foreground">
+                      <div
+                        key={v}
+                        className="flex items-center gap-2.5 text-xs text-muted-foreground"
+                      >
                         <I className="h-3.5 w-3.5 shrink-0 text-primary/60" />
                         {v}
                       </div>
@@ -362,22 +392,68 @@ function ApplyPage() {
                             transition={{ duration: 0.24, ease: "easeOut" }}
                             className="space-y-4"
                           >
-                            <SelectField
-                              label="Applying for"
-                              value={roleId}
-                              onChange={setRoleId}
-                              options={[
-                                { value: "", label: "Select a role…" },
-                                ...JOBS.map((j) => ({ value: j.id, label: j.title })),
-                                { value: "general", label: "General Application" },
-                              ]}
-                            />
-                            <div className="grid sm:grid-cols-2 gap-4">
-                              <TextField label="Full name" value={fullName} onChange={setFullName} />
-                              <TextField label="Email" type="email" value={email} onChange={setEmail} />
+                            <div>
+                              <label className="text-xs uppercase tracking-widest text-muted-foreground">
+                                Applying for <span className="text-primary">*</span>
+                              </label>
+                              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                                {ROLE_OPTIONS.map(({ value, label, desc, icon: Icon }, index) => {
+                                  const active = roleId === value;
+                                  return (
+                                    <motion.button
+                                      key={value}
+                                      type="button"
+                                      initial={{ opacity: 0, y: 10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      transition={{
+                                        duration: 0.24,
+                                        delay: index * 0.035,
+                                        ease: "easeOut",
+                                      }}
+                                      whileHover={{ scale: 1.03, y: -2 }}
+                                      whileTap={{ scale: 0.97 }}
+                                      onClick={() => setRoleId(value)}
+                                      className={`web-card group relative rounded-2xl p-4 text-left transition-all duration-200 ${
+                                        active
+                                          ? "premium-card ring-2 ring-primary/60"
+                                          : "premium-card"
+                                      }`}
+                                    >
+                                      <Icon
+                                        className={`relative mb-2.5 h-5 w-5 transition-colors ${active ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`}
+                                        strokeWidth={1.6}
+                                      />
+                                      <p className="relative text-sm font-semibold leading-snug text-foreground">
+                                        {label}
+                                      </p>
+                                      <p className="relative mt-1 text-xs leading-snug text-muted-foreground">
+                                        {desc}
+                                      </p>
+                                    </motion.button>
+                                  );
+                                })}
+                              </div>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-4">
-                              <TextField label="Phone" type="tel" value={phone} onChange={setPhone} />
+                              <TextField
+                                label="Full name"
+                                value={fullName}
+                                onChange={setFullName}
+                              />
+                              <TextField
+                                label="Email"
+                                type="email"
+                                value={email}
+                                onChange={setEmail}
+                              />
+                            </div>
+                            <div className="grid sm:grid-cols-2 gap-4">
+                              <TextField
+                                label="Phone"
+                                type="tel"
+                                value={phone}
+                                onChange={setPhone}
+                              />
                               <TextField
                                 label="LinkedIn (optional)"
                                 value={linkedin}
@@ -473,7 +549,9 @@ function ApplyPage() {
                                     <span className="text-sm text-white/80">
                                       Click to upload your resume
                                     </span>
-                                    <span className="text-xs text-white/40">PDF, DOC or DOCX · Max 10MB</span>
+                                    <span className="text-xs text-white/40">
+                                      PDF, DOC or DOCX · Max 10MB
+                                    </span>
                                     <input
                                       id="resume-upload"
                                       type="file"
@@ -491,7 +569,9 @@ function ApplyPage() {
                                       <FileText className="h-5 w-5 shrink-0 text-primary" />
                                     )}
                                     <div className="min-w-0 flex-1">
-                                      <p className="truncate text-sm font-medium text-white">{resumeFile.name}</p>
+                                      <p className="truncate text-sm font-medium text-white">
+                                        {resumeFile.name}
+                                      </p>
                                       <p className="text-xs text-white/40">
                                         {formatBytes(resumeFile.size)} ·{" "}
                                         {resumeStatus === "uploading" ? "Uploading…" : "Uploaded"}
@@ -507,7 +587,9 @@ function ApplyPage() {
                                     </button>
                                   </div>
                                 )}
-                                {resumeError && <p className="mt-2 text-sm text-red-400">{resumeError}</p>}
+                                {resumeError && (
+                                  <p className="mt-2 text-sm text-red-400">{resumeError}</p>
+                                )}
                               </div>
                             </div>
 
@@ -530,10 +612,14 @@ function ApplyPage() {
                             />
 
                             <div>
-                              <label className="text-xs uppercase tracking-widest text-muted-foreground">
+                              <label
+                                htmlFor="cover-letter"
+                                className="text-xs uppercase tracking-widest text-muted-foreground"
+                              >
                                 Cover letter (optional)
                               </label>
                               <textarea
+                                id="cover-letter"
                                 rows={4}
                                 value={coverLetter}
                                 onChange={(e) => setCoverLetter(e.target.value)}
@@ -598,7 +684,7 @@ function ApplyPage() {
                     initial={{ opacity: 0, scale: 0.94 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.45, ease: "easeOut" }}
-                    className="relative flex min-h-100 flex-1 flex-col items-center justify-center gap-4 px-6 py-10 text-center sm:px-10"
+                    className="relative flex flex-1 flex-col items-center justify-center gap-4 px-6 py-10 text-center sm:min-h-100 sm:px-10"
                   >
                     <div className="pointer-events-none absolute bottom-0 left-1/2 -z-10 h-56 w-56 -translate-x-1/2 rounded-full bg-primary/15 blur-[90px] sm:h-64 sm:w-64 lg:h-72 lg:w-72" />
                     <motion.div
@@ -620,26 +706,31 @@ function ApplyPage() {
                       transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
                       className="max-w-sm text-lg leading-relaxed text-foreground/90"
                     >
-                      We've received your application and resume. Our team will reach out within a few
-                      business days if there's a fit.
+                      We've received your application and resume. Our team will reach out within a
+                      few business days if there's a fit.
                     </motion.p>
+                    <SystemConstellation
+                      nodes={stepLabels.map((label) => ({ label }))}
+                      className="h-40 w-40 opacity-80"
+                    />
+                    {getScreeningConfig(roleId) && (
+                      <motion.a
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+                        href={`/careers/screening?role=${encodeURIComponent(roleId)}&name=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&resume=${encodeURIComponent(resumeUrl)}`}
+                        className="magnetic group relative z-10 mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
+                      >
+                        Take the screening test now
+                        <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                      </motion.a>
+                    )}
                     <Link
                       to="/careers"
                       className="relative z-10 mt-2 text-sm font-semibold text-primary hover:underline"
                     >
                       ← Back to all roles
                     </Link>
-                    <motion.img
-                      src="/Ethan%20view%203.webp"
-                      alt=""
-                      aria-hidden="true"
-                      className="pointer-events-none relative z-10 mt-1 h-72 w-auto object-contain sm:h-80 lg:-mt-3 lg:h-88"
-                      loading="lazy"
-                      decoding="async"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.65, delay: 0.5, ease: "easeOut" }}
-                    />
                   </motion.div>
                 )}
               </div>
@@ -666,12 +757,14 @@ function TextField({
   required?: boolean;
   placeholder?: string;
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="text-xs uppercase tracking-widest text-muted-foreground">
+      <label htmlFor={id} className="text-xs uppercase tracking-widest text-muted-foreground">
         {label} {required && <span className="text-primary">*</span>}
       </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -693,12 +786,14 @@ function SelectField({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="text-xs uppercase tracking-widest text-muted-foreground">
+      <label htmlFor={id} className="text-xs uppercase tracking-widest text-muted-foreground">
         {label} <span className="text-primary">*</span>
       </label>
       <select
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="mt-2 w-full rounded-xl bg-black/85 border border-white/10 px-4 py-3 text-base sm:text-sm text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition"

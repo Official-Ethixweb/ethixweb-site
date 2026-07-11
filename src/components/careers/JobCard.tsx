@@ -8,7 +8,7 @@ export function JobCard({ job }: { job: Job }) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="group glass relative flex h-full flex-col rounded-3xl p-7 hover:bg-white/[0.06] transition-colors"
+      className="group glass web-card relative flex h-full flex-col rounded-3xl p-7 hover:bg-white/[0.06] transition-colors"
     >
       <p className="text-xs font-bold uppercase tracking-widest text-primary">{job.department}</p>
       <h3 className="mt-2 font-display text-2xl font-semibold leading-snug">{job.title}</h3>

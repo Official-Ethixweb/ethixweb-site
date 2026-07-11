@@ -1,18 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
-
+import { Container } from "@/components/Container";
+import { CTASection } from "@/components/CTASection";
 import { Reveal } from "@/components/Reveal";
-import {
-  Wrench,
-  Anchor,
-  Bot,
-  ShieldCheck,
-  MapPin,
-  ShoppingBag,
-  Mail,
-  ArrowUpRight,
-} from "lucide-react";
+import { Wrench, Anchor, Bot, ShieldCheck, MapPin, ShoppingBag, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/industries")({
   head: () => ({
@@ -33,7 +25,11 @@ export const Route = createFileRoute("/industries")({
       { property: "og:url", content: "https://ethixweb.com/industries" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Industries - HVAC, Plumbing & Fishing" },
-      { name: "twitter:description", content: "Specialized tech and marketing systems for HVAC, plumbing and fishing charter operators." },
+      {
+        name: "twitter:description",
+        content:
+          "Specialized tech and marketing systems for HVAC, plumbing and fishing charter operators.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -93,7 +89,8 @@ const INDUSTRIES_SCHEMA = JSON.stringify({
   "@type": "Service",
   name: "Industry-Specific Technology Systems",
   provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
-  description: "Specialized tech and marketing systems for HVAC, plumbing and fishing charter operators.",
+  description:
+    "Specialized tech and marketing systems for HVAC, plumbing and fishing charter operators.",
   url: "https://ethixweb.com/industries",
   areaServed: { "@type": "Country", name: "United States" },
   serviceType: "Industry-Specific Digital Operations",
@@ -105,7 +102,7 @@ function Industries() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: INDUSTRIES_SCHEMA }} />
       <PageHero eyebrow="Industries" title="Built for the businesses that build America.">
         We specialize in two worlds: home services and fishing charters. Different operations, same
-        problem - calls and bookings can't wait.
+        problem: calls and bookings can't wait.
       </PageHero>
 
       <IndustryBlock
@@ -125,23 +122,12 @@ function Industries() {
         flipped
       />
 
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-7xl glass-strong rounded-[2rem] p-12 text-center">
-          <h2 className="font-display text-4xl font-bold text-gradient pb-1">
-            Which industry are you in?
-          </h2>
-          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-            Tell us about your operation. We'll come back with a clear plan tailored to your
-            industry.
-          </p>
-          <Link
-            to="/contact"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-7 py-3.5 font-medium shadow-glow"
-          >
-            Book a consultation <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      <CTASection
+        title="Which industry are you in?"
+        description="Tell us about your operation. We'll come back with a clear plan tailored to your industry."
+        ctaLabel="Book a consultation"
+        ctaTo="/contact"
+      />
     </SiteLayout>
   );
 }
@@ -166,23 +152,23 @@ function IndustryBlock({
   flipped?: boolean;
 }) {
   return (
-    <section className="px-6 py-20">
-      <div className="mx-auto max-w-7xl glass-strong rounded-[2rem] overflow-hidden relative">
+    <section className="py-20">
+      <Container className="glass-strong relative overflow-hidden rounded-[2rem]">
         <div className="absolute inset-0 bg-gradient-hero opacity-60" />
         <div
-          className={`relative grid lg:grid-cols-2 gap-10 p-10 lg:p-16 items-start ${flipped ? "lg:[&>*:first-child]:order-2" : ""}`}
+          className={`relative grid items-start gap-10 p-8 sm:grid-cols-2 sm:p-10 lg:p-16 ${flipped ? "sm:[&>*:first-child]:order-2" : ""}`}
         >
           <Reveal>
             <div>
               <div className="inline-flex items-center gap-2 text-primary text-sm uppercase tracking-widest">
                 <Icon className="h-5 w-5" strokeWidth={1.5} /> {eyebrow}
               </div>
-              <h2 className="mt-4 font-display text-3xl lg:text-4xl font-bold text-gradient leading-tight pb-1">
+              <h2 className="mt-4 font-display text-4xl font-bold text-gradient leading-tight pb-1">
                 {title}
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed">{pain}</p>
               <p className="mt-6 text-sm text-foreground/80">
-                We build websites that don't just look good - they're built to convert visitors into
+                We build websites that don't just look good. They're built to convert visitors into
                 paying customers.
               </p>
             </div>
@@ -199,7 +185,7 @@ function IndustryBlock({
             </div>
           </Reveal>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

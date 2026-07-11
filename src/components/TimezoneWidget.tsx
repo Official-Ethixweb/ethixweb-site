@@ -153,8 +153,8 @@ export function TimezoneWidget() {
         ref={buttonRef}
         onClick={toggleOpen}
         className="hidden md:inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
-        aria-label="Global timezone"
       >
+        <span className="sr-only">Global timezone: </span>
         <span className="relative flex h-1.5 w-1.5 shrink-0">
           <span
             className={`absolute inline-flex h-full w-full rounded-full opacity-70 ${
@@ -167,7 +167,9 @@ export function TimezoneWidget() {
         </span>
         <CodeBadge code="IN" />
         <span className="font-medium tabular-nums text-foreground/90">{india}</span>
-        <ChevronDown className={`h-3 w-3 text-muted-foreground/50 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-3 w-3 text-muted-foreground/50 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {mounted &&
@@ -219,7 +221,9 @@ export function TimezoneWidget() {
                       Ethixweb · India
                     </p>
                     <p className="mt-1 text-lg font-display font-semibold tabular-nums">{india}</p>
-                    <p className="text-[10px] text-muted-foreground">{now && formatLong(now, INDIA_TZ)}</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {now && formatLong(now, INDIA_TZ)}
+                    </p>
                   </div>
                   <div className="rounded-xl bg-primary/10 border border-primary/20 p-3">
                     <p className="text-[10px] uppercase tracking-widest text-primary/80">

@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { GlowBlob } from "@/components/GlowBlob";
 import {
   Code2,
   Smartphone,
@@ -21,7 +23,7 @@ export const Route = createFileRoute("/web-development")({
       {
         name: "description",
         content:
-          "Transform your online presence with expert website design. Custom, conversion focused websites for home service businesses - modern, fast, SEO ready.",
+          "Transform your online presence with expert website design. Custom, conversion focused websites for home service businesses: modern, fast, SEO ready.",
       },
       { property: "og:title", content: "Website Design - Ethixweb" },
       {
@@ -33,7 +35,11 @@ export const Route = createFileRoute("/web-development")({
       { property: "og:url", content: "https://ethixweb.com/web-development" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Website Design - Ethixweb" },
-      { name: "twitter:description", content: "Transform your online presence with expert website design. Custom, conversion focused websites for home service businesses." },
+      {
+        name: "twitter:description",
+        content:
+          "Transform your online presence with expert website design. Custom, conversion focused websites for home service businesses.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -61,7 +67,7 @@ const processSteps = [
   {
     n: "04",
     t: "Personalised Web Design",
-    d: "Custom design tailored to your brand - never a template.",
+    d: "Custom design tailored to your brand, never a template.",
   },
 ];
 
@@ -112,7 +118,8 @@ const SERVICE_SCHEMA = JSON.stringify({
   "@type": "Service",
   name: "Website Design & Development",
   provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
-  description: "Custom, conversion focused websites for home service businesses - modern, fast, and SEO ready.",
+  description:
+    "Custom, conversion focused websites for home service businesses: modern, fast, and SEO ready.",
   url: "https://ethixweb.com/web-development",
   areaServed: { "@type": "Country", name: "United States" },
   serviceType: "Web Design and Development",
@@ -126,16 +133,16 @@ function Page() {
         eyebrow="Website Design"
         title="Transform Your Online Presence with Expert Website Design"
       >
-        Modern and visually stunning websites - built for home service businesses that want to
+        Modern and visually stunning websites, built for home service businesses that want to
         dominate their local market.
       </PageHero>
 
       {/* What We Do */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-5xl text-center">
+      <section className="py-24">
+        <Container size="medium" className="text-center">
           <Reveal>
             <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+            <h2 className="font-display text-5xl font-bold text-gradient pb-1">
               Expert Website Design for Home Service Businesses
             </h2>
             <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
@@ -151,16 +158,16 @@ function Page() {
               Contact Us <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Reveal>
-        </div>
+        </Container>
       </section>
 
       {/* Website Process */}
-      <section className="px-6 py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">Website Process</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Designing digital experiences that inspire.
               </h2>
               <p className="mt-5 text-muted-foreground leading-relaxed max-w-xl">
@@ -179,16 +186,16 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Services */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">Services</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Everything you need under one roof.
               </h2>
             </div>
@@ -205,13 +212,13 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* All of Our Websites Are */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl glass-strong rounded-[2.5rem] p-10 lg:p-16 relative overflow-hidden">
-          <div className="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-primary/20 blur-[120px]" />
+      <section className="py-24">
+        <Container className="glass-strong relative overflow-hidden rounded-[2.5rem] p-8 sm:p-10 lg:p-16">
+          <GlowBlob size="md" color="primary" blur={120} className="-top-32 -right-32" />
           <Reveal>
             <div className="flex items-center gap-3 mb-6">
               <Sparkles className="h-5 w-5 text-primary" />
@@ -219,7 +226,7 @@ function Page() {
                 All of Our Websites Are
               </p>
             </div>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient max-w-2xl pb-1">
+            <h2 className="font-display text-5xl font-bold text-gradient max-w-2xl pb-1">
               Built to look great, load fast, and convert.
             </h2>
           </Reveal>
@@ -247,7 +254,7 @@ function Page() {
               Request a consultation <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );

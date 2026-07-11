@@ -2,15 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { PolicySection as Section } from "@/components/PolicySection";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/policies/refunds")({
   head: () => ({
     meta: [
       { title: "Cancellation & Refunds - Ethixweb" },
-      { name: "description", content: "Ethixweb cancellation and refund policy for digital services." },
+      {
+        name: "description",
+        content: "Ethixweb cancellation and refund policy for digital services.",
+      },
       { property: "og:title", content: "Cancellation & Refunds - Ethixweb" },
-      { property: "og:description", content: "Ethixweb cancellation and refund policy for digital services." },
+      {
+        property: "og:description",
+        content: "Ethixweb cancellation and refund policy for digital services.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://ethixweb.com/policies/refunds" },
       { name: "robots", content: "index, follow" },
@@ -24,8 +32,18 @@ export const Route = createFileRoute("/policies/refunds")({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
-            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
-            { "@type": "ListItem", position: 3, name: "Cancellation & Refunds", item: "https://ethixweb.com/policies/refunds" },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Policies",
+              item: "https://ethixweb.com/policies",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: "Cancellation & Refunds",
+              item: "https://ethixweb.com/policies/refunds",
+            },
           ],
         }),
       },
@@ -34,23 +52,14 @@ export const Route = createFileRoute("/policies/refunds")({
   component: RefundsPolicy,
 });
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="glass rounded-2xl p-8">
-      <h2 className="font-display text-xl font-semibold text-foreground">{title}</h2>
-      <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">{children}</div>
-    </div>
-  );
-}
-
 function RefundsPolicy() {
   return (
     <SiteLayout>
       <PageHero eyebrow="Policies" title="Cancellation & Refunds">
         Last updated: January 2025
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-3xl space-y-5">
+      <section className="py-20">
+        <Container size="narrow" className="space-y-5">
           <Reveal>
             <Section title="Project Cancellations">
               <p>
@@ -69,31 +78,33 @@ function RefundsPolicy() {
           </Reveal>
           <Reveal delay={0.06}>
             <Section title="Refund Eligibility">
-              <p>
-                Refunds are available under the following conditions:
-              </p>
+              <p>Refunds are available under the following conditions:</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>The project has not been started (full refund, minus payment processing fees).</li>
+                <li>
+                  The project has not been started (full refund, minus payment processing fees).
+                </li>
                 <li>
                   Ethixweb fails to deliver agreed deliverables within the contracted timeline
                   without client caused delays (partial or full refund at our discretion).
                 </li>
-                <li>A material defect in delivered work that cannot be rectified within 2
-                  revision cycles.</li>
+                <li>
+                  A material defect in delivered work that cannot be rectified within 2 revision
+                  cycles.
+                </li>
               </ul>
               <p>
-                Refunds are not available for completed and approved deliverables, rush fees,
-                third party costs (domain registration, hosting, ad spend), or delays caused by
-                incomplete client supplied assets or approvals.
+                Refunds are not available for completed and approved deliverables, rush fees, third
+                party costs (domain registration, hosting, ad spend), or delays caused by incomplete
+                client supplied assets or approvals.
               </p>
             </Section>
           </Reveal>
           <Reveal delay={0.12}>
             <Section title="Monthly Retainers">
               <p>
-                Monthly retainer agreements may be cancelled with 30 days' written notice.
-                Fees for the current billing cycle are non-refundable. The final month of service
-                will be provided in full before the retainer concludes.
+                Monthly retainer agreements may be cancelled with 30 days' written notice. Fees for
+                the current billing cycle are non-refundable. The final month of service will be
+                provided in full before the retainer concludes.
               </p>
             </Section>
           </Reveal>
@@ -130,7 +141,7 @@ function RefundsPolicy() {
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );

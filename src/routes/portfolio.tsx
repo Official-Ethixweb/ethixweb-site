@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { GlowBlob } from "@/components/GlowBlob";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/portfolio")({
@@ -11,7 +13,7 @@ export const Route = createFileRoute("/portfolio")({
       {
         name: "description",
         content:
-          "Real case studies from Ethixweb - websites, SEO and paid media that generated thousands of qualified leads.",
+          "Real case studies from Ethixweb: websites, SEO and paid media that generated thousands of qualified leads.",
       },
       { property: "og:title", content: "Our Work - Ethixweb Case Studies" },
       { property: "og:description", content: "Selected client work and measurable results." },
@@ -20,7 +22,11 @@ export const Route = createFileRoute("/portfolio")({
       { property: "og:url", content: "https://ethixweb.com/portfolio" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Our Work - Ethixweb Case Studies" },
-      { name: "twitter:description", content: "Real case studies from Ethixweb - websites, SEO and paid media that generated thousands of qualified leads." },
+      {
+        name: "twitter:description",
+        content:
+          "Real case studies from Ethixweb: websites, SEO and paid media that generated thousands of qualified leads.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -33,10 +39,21 @@ export const Route = createFileRoute("/portfolio")({
           "@type": "ItemList",
           name: "Ethixweb Portfolio",
           url: "https://ethixweb.com/portfolio",
-          description: "Real case studies from Ethixweb - websites, SEO and paid media that generated thousands of qualified leads.",
+          description:
+            "Real case studies from Ethixweb: websites, SEO and paid media that generated thousands of qualified leads.",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Bals Mobile Dental Hygiene", description: "45% traffic lift and 1,500+ patient inquiries in year one." },
-            { "@type": "ListItem", position: 2, name: "MTO Cabinets", description: "2,500+ qualified leads in 12 months at $6 CPL during peak." },
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Bals Mobile Dental Hygiene",
+              description: "45% traffic lift and 1,500+ patient inquiries in year one.",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "MTO Cabinets",
+              description: "2,500+ qualified leads in 12 months at $6 CPL during peak.",
+            },
           ],
         }),
       },
@@ -91,13 +108,19 @@ function Portfolio() {
         A selection of projects where design, SEO and paid media combined to move the business
         forward.
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-5">
+      <section className="py-20">
+        <h2 className="sr-only">Case studies</h2>
+        <Container className="grid gap-5 md:grid-cols-2">
           {projects.map((p, i) => (
             <Reveal key={p.t} delay={i * 0.06}>
               <div className="group relative overflow-hidden rounded-3xl glass p-8 flex flex-col gap-5 hover:bg-white/[0.06] transition">
                 <div className="absolute inset-0 bg-gradient-brand opacity-[0.06] group-hover:opacity-20 transition" />
-                <div className="absolute -bottom-32 -right-20 h-64 w-64 rounded-full bg-primary/40 blur-3xl opacity-30 group-hover:opacity-70 transition" />
+                <GlowBlob
+                  size="sm"
+                  color="primary"
+                  blur={64}
+                  className="-bottom-32 -right-20 opacity-30 transition group-hover:opacity-70"
+                />
                 <div className="relative">
                   <span className="text-xs uppercase tracking-widest text-primary">{p.tag}</span>
                 </div>
@@ -115,11 +138,11 @@ function Portfolio() {
               </div>
             </Reveal>
           ))}
-        </div>
+        </Container>
 
         <Reveal>
-          <div className="mt-16 glass-strong rounded-[2rem] p-12 text-center">
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-gradient pb-1">
+          <Container className="mt-16 glass-strong rounded-[2rem] p-12 text-center">
+            <h2 className="font-display text-4xl font-bold text-gradient pb-1">
               Your business could be next.
             </h2>
             <Link
@@ -128,7 +151,7 @@ function Portfolio() {
             >
               Start a project <ArrowUpRight className="h-4 w-4" />
             </Link>
-          </div>
+          </Container>
         </Reveal>
       </section>
     </SiteLayout>

@@ -26,9 +26,13 @@ import { Route as PoliciesTermsRouteImport } from './routes/policies.terms'
 import { Route as PoliciesRefundsRouteImport } from './routes/policies.refunds'
 import { Route as PoliciesPrivacyRouteImport } from './routes/policies.privacy'
 import { Route as LocationsKentWaRouteImport } from './routes/locations.kent-wa'
+import { Route as CareersScreeningRouteImport } from './routes/careers.screening'
 import { Route as CareersApplyRouteImport } from './routes/careers.apply'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
+import { Route as ApiScreeningSubmitRouteImport } from './routes/api.screening.submit'
+import { Route as ApiScreeningStartRouteImport } from './routes/api.screening.start'
+import { Route as ApiScreeningDecisionRouteImport } from './routes/api.screening.decision'
 import { Route as ApiCareersUploadRouteImport } from './routes/api.careers.upload'
 import { Route as ApiCareersApplyRouteImport } from './routes/api.careers.apply'
 
@@ -117,6 +121,11 @@ const LocationsKentWaRoute = LocationsKentWaRouteImport.update({
   path: '/locations/kent-wa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CareersScreeningRoute = CareersScreeningRouteImport.update({
+  id: '/screening',
+  path: '/screening',
+  getParentRoute: () => CareersRoute,
+} as any)
 const CareersApplyRoute = CareersApplyRouteImport.update({
   id: '/apply',
   path: '/apply',
@@ -130,6 +139,21 @@ const CareersSlugRoute = CareersSlugRouteImport.update({
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScreeningSubmitRoute = ApiScreeningSubmitRouteImport.update({
+  id: '/api/screening/submit',
+  path: '/api/screening/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScreeningStartRoute = ApiScreeningStartRouteImport.update({
+  id: '/api/screening/start',
+  path: '/api/screening/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScreeningDecisionRoute = ApiScreeningDecisionRouteImport.update({
+  id: '/api/screening/decision',
+  path: '/api/screening/decision',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCareersUploadRoute = ApiCareersUploadRouteImport.update({
@@ -159,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
@@ -166,6 +191,9 @@ export interface FileRoutesByFullPath {
   '/careers/': typeof CareersIndexRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/screening/decision': typeof ApiScreeningDecisionRoute
+  '/api/screening/start': typeof ApiScreeningStartRoute
+  '/api/screening/submit': typeof ApiScreeningSubmitRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +210,7 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
@@ -189,6 +218,9 @@ export interface FileRoutesByTo {
   '/careers': typeof CareersIndexRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/screening/decision': typeof ApiScreeningDecisionRoute
+  '/api/screening/start': typeof ApiScreeningStartRoute
+  '/api/screening/submit': typeof ApiScreeningSubmitRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -207,6 +239,7 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
@@ -214,6 +247,9 @@ export interface FileRoutesById {
   '/careers/': typeof CareersIndexRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/screening/decision': typeof ApiScreeningDecisionRoute
+  '/api/screening/start': typeof ApiScreeningStartRoute
+  '/api/screening/submit': typeof ApiScreeningSubmitRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -233,6 +269,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
@@ -240,6 +277,9 @@ export interface FileRouteTypes {
     | '/careers/'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/screening/decision'
+    | '/api/screening/start'
+    | '/api/screening/submit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -256,6 +296,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
@@ -263,6 +304,9 @@ export interface FileRouteTypes {
     | '/careers'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/screening/decision'
+    | '/api/screening/start'
+    | '/api/screening/submit'
   id:
     | '__root__'
     | '/'
@@ -280,6 +324,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
@@ -287,6 +332,9 @@ export interface FileRouteTypes {
     | '/careers/'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/screening/decision'
+    | '/api/screening/start'
+    | '/api/screening/submit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -309,6 +357,9 @@ export interface RootRouteChildren {
   PoliciesTermsRoute: typeof PoliciesTermsRoute
   ApiCareersApplyRoute: typeof ApiCareersApplyRoute
   ApiCareersUploadRoute: typeof ApiCareersUploadRoute
+  ApiScreeningDecisionRoute: typeof ApiScreeningDecisionRoute
+  ApiScreeningStartRoute: typeof ApiScreeningStartRoute
+  ApiScreeningSubmitRoute: typeof ApiScreeningSubmitRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -432,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocationsKentWaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/careers/screening': {
+      id: '/careers/screening'
+      path: '/screening'
+      fullPath: '/careers/screening'
+      preLoaderRoute: typeof CareersScreeningRouteImport
+      parentRoute: typeof CareersRoute
+    }
     '/careers/apply': {
       id: '/careers/apply'
       path: '/apply'
@@ -451,6 +509,27 @@ declare module '@tanstack/react-router' {
       path: '/api/contact'
       fullPath: '/api/contact'
       preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/screening/submit': {
+      id: '/api/screening/submit'
+      path: '/api/screening/submit'
+      fullPath: '/api/screening/submit'
+      preLoaderRoute: typeof ApiScreeningSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/screening/start': {
+      id: '/api/screening/start'
+      path: '/api/screening/start'
+      fullPath: '/api/screening/start'
+      preLoaderRoute: typeof ApiScreeningStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/screening/decision': {
+      id: '/api/screening/decision'
+      path: '/api/screening/decision'
+      fullPath: '/api/screening/decision'
+      preLoaderRoute: typeof ApiScreeningDecisionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/careers/upload': {
@@ -473,12 +552,14 @@ declare module '@tanstack/react-router' {
 interface CareersRouteChildren {
   CareersSlugRoute: typeof CareersSlugRoute
   CareersApplyRoute: typeof CareersApplyRoute
+  CareersScreeningRoute: typeof CareersScreeningRoute
   CareersIndexRoute: typeof CareersIndexRoute
 }
 
 const CareersRouteChildren: CareersRouteChildren = {
   CareersSlugRoute: CareersSlugRoute,
   CareersApplyRoute: CareersApplyRoute,
+  CareersScreeningRoute: CareersScreeningRoute,
   CareersIndexRoute: CareersIndexRoute,
 }
 
@@ -505,6 +586,9 @@ const rootRouteChildren: RootRouteChildren = {
   PoliciesTermsRoute: PoliciesTermsRoute,
   ApiCareersApplyRoute: ApiCareersApplyRoute,
   ApiCareersUploadRoute: ApiCareersUploadRoute,
+  ApiScreeningDecisionRoute: ApiScreeningDecisionRoute,
+  ApiScreeningStartRoute: ApiScreeningStartRoute,
+  ApiScreeningSubmitRoute: ApiScreeningSubmitRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

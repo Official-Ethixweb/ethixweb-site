@@ -35,9 +35,9 @@ export const JOBS: Job[] = [
     location: "Remote (India)",
     salary: "Not disclosed",
     summary:
-      "Build and ship scalable web applications end to end for our US clients - React on the frontend, Node.js on the backend.",
+      "Build and ship scalable web applications end to end for our US clients: React on the frontend, Node.js on the backend.",
     about:
-      "We're looking for a Full Stack Developer to join our small, senior engineering team and own features end to end - from database schema to deployed UI. You'll work directly with US clients, ship production code every week, and have real input into architecture decisions.",
+      "We're looking for a Full Stack Developer to join our small, senior engineering team and own features end to end, from database schema to deployed UI. You'll work directly with US clients, ship production code every week, and have real input into architecture decisions.",
     responsibilities: [
       "Build scalable web applications used by real US clients",
       "Develop frontend interfaces in React",
@@ -68,7 +68,7 @@ export const JOBS: Job[] = [
       "Familiarity with Slack, ClickUp, Loom and Google Workspace",
     ],
     benefits: [
-      "Remote first - work from anywhere in India",
+      "Remote first: work from anywhere in India",
       "5 day work week",
       "Direct ownership over real client projects",
       "Modern engineering stack, no legacy spaghetti",
@@ -78,7 +78,7 @@ export const JOBS: Job[] = [
     faqs: [
       {
         q: "Will I be working directly with clients?",
-        a: "Yes. We're a small team, so engineers regularly join client calls, scope features, and own the projects they build - not just tickets handed down from a PM.",
+        a: "Yes. We're a small team, so engineers regularly join client calls, scope features, and own the projects they build, not just tickets handed down from a PM.",
       },
       {
         q: "What does the tech stack actually look like day to day?",
@@ -106,9 +106,9 @@ export const JOBS: Job[] = [
     summary:
       "Help our US home service clients win local search through technical SEO, on page optimization, and Core Web Vitals improvements.",
     about:
-      "We're looking for an SEO Specialist to manage organic growth for our US home service clients - plumbers, HVAC and electrical contractors who depend on local search to fill their calendars. You'll own everything from technical audits to monthly reporting across multiple client accounts.",
+      "We're looking for an SEO Specialist to manage organic growth for our US home service clients: plumbers, HVAC and electrical contractors who depend on local search to fill their calendars. You'll own everything from technical audits to monthly reporting across multiple client accounts.",
     responsibilities: [
-      "Perform complete on page SEO - meta titles, meta descriptions, heading structure, internal linking",
+      "Perform complete on page SEO: meta titles, meta descriptions, heading structure, internal linking",
       "Implement schema markup across client sites",
       "Run technical SEO audits and identify broken links",
       "Fix 404 errors and resolve duplicate content issues",
@@ -145,7 +145,7 @@ export const JOBS: Job[] = [
       "Ability to manage multiple client accounts at once",
     ],
     benefits: [
-      "Remote first - work from anywhere in India",
+      "Remote first: work from anywhere in India",
       "5 day work week",
       "Ownership over real client accounts, not just task lists",
       "Direct exposure to US clients and their businesses",
@@ -163,7 +163,7 @@ export const JOBS: Job[] = [
       },
       {
         q: "Will I be doing any web development?",
-        a: "Light WordPress/Elementor work is part of the role - on page fixes, schema implementation, and performance tweaks. You won't need to build sites from scratch.",
+        a: "Light WordPress/Elementor work is part of the role: on page fixes, schema implementation, and performance tweaks. You won't need to build sites from scratch.",
       },
       {
         q: "Is this role remote?",
@@ -179,9 +179,24 @@ export function getJob(id: string | null | undefined): Job | undefined {
 
 export const HIRING_PROCESS = [
   { title: "Application", description: "You submit your details, resume and a short cover note." },
-  { title: "Resume Review", description: "Our team reviews your background against the role within 2-3 business days." },
-  { title: "Interview", description: "A 30-45 minute conversation about your experience, expectations and the role." },
-  { title: "Technical Round", description: "A practical, real world technical exercise relevant to the position." },
-  { title: "Offer", description: "We extend an offer with clear compensation and start date details." },
-  { title: "Welcome to Ethixweb", description: "Onboarding, tooling access and your first project kickoff." },
+  {
+    title: "Resume Review",
+    description: "Our team reviews your background against the role within 2-3 business days.",
+  },
+  {
+    title: "Interview",
+    description: "A 30-45 minute conversation about your experience, expectations and the role.",
+  },
+  {
+    title: "Technical Round",
+    description: "A practical, real world technical exercise relevant to the position.",
+  },
+  {
+    title: "Offer",
+    description: "We extend an offer with clear compensation and start date details.",
+  },
+  {
+    title: "Welcome to Ethixweb",
+    description: "Onboarding, tooling access and your first project kickoff.",
+  },
 ];

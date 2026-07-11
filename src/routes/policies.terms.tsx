@@ -2,15 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { PolicySection as Section } from "@/components/PolicySection";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/policies/terms")({
   head: () => ({
     meta: [
       { title: "Terms & Conditions - Ethixweb" },
-      { name: "description", content: "Ethixweb terms and conditions governing use of our services." },
+      {
+        name: "description",
+        content: "Ethixweb terms and conditions governing use of our services.",
+      },
       { property: "og:title", content: "Terms & Conditions - Ethixweb" },
-      { property: "og:description", content: "Terms and conditions governing use of Ethixweb services." },
+      {
+        property: "og:description",
+        content: "Terms and conditions governing use of Ethixweb services.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://ethixweb.com/policies/terms" },
       { name: "robots", content: "index, follow" },
@@ -24,8 +32,18 @@ export const Route = createFileRoute("/policies/terms")({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://ethixweb.com/" },
-            { "@type": "ListItem", position: 2, name: "Policies", item: "https://ethixweb.com/policies" },
-            { "@type": "ListItem", position: 3, name: "Terms & Conditions", item: "https://ethixweb.com/policies/terms" },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Policies",
+              item: "https://ethixweb.com/policies",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: "Terms & Conditions",
+              item: "https://ethixweb.com/policies/terms",
+            },
           ],
         }),
       },
@@ -34,23 +52,14 @@ export const Route = createFileRoute("/policies/terms")({
   component: TermsPolicy,
 });
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="glass rounded-2xl p-8">
-      <h2 className="font-display text-xl font-semibold text-foreground">{title}</h2>
-      <div className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">{children}</div>
-    </div>
-  );
-}
-
 function TermsPolicy() {
   return (
     <SiteLayout>
       <PageHero eyebrow="Policies" title="Terms & Conditions">
         Last updated: January 2025
       </PageHero>
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-3xl space-y-5">
+      <section className="py-20">
+        <Container size="narrow" className="space-y-5">
           <Reveal>
             <Section title="1. Agreement">
               <p>
@@ -64,18 +73,18 @@ function TermsPolicy() {
             <Section title="2. Services">
               <p>
                 Ethixweb provides digital services including web design, web development, AI
-                automation, digital marketing, SEO, CRM integrations, and related services.
-                Specific deliverables, timelines, and fees are defined in individual project
-                proposals or service agreements.
+                automation, digital marketing, SEO, CRM integrations, and related services. Specific
+                deliverables, timelines, and fees are defined in individual project proposals or
+                service agreements.
               </p>
             </Section>
           </Reveal>
           <Reveal delay={0.08}>
             <Section title="3. Payment Terms">
               <p>
-                Projects require a deposit (typically 50%) before work begins. The remaining
-                balance is due upon project completion or as outlined in the agreed payment
-                schedule. Monthly retainers are billed on the 1st of each month.
+                Projects require a deposit (typically 50%) before work begins. The remaining balance
+                is due upon project completion or as outlined in the agreed payment schedule.
+                Monthly retainers are billed on the 1st of each month.
               </p>
               <p>
                 Invoices unpaid beyond 14 days of the due date may incur a 1.5% monthly late fee.
@@ -98,8 +107,8 @@ function TermsPolicy() {
             <Section title="5. Intellectual Property">
               <p>
                 Upon receipt of full payment, all custom work product created for your project
-                becomes your property. Ethixweb retains the right to display completed work in
-                our portfolio unless otherwise agreed in writing.
+                becomes your property. Ethixweb retains the right to display completed work in our
+                portfolio unless otherwise agreed in writing.
               </p>
               <p>
                 Third party assets (stock images, fonts, plugins) are subject to their respective
@@ -119,8 +128,8 @@ function TermsPolicy() {
           <Reveal delay={0.16}>
             <Section title="7. Limitation of Liability">
               <p>
-                Ethixweb's total liability for any claim shall not exceed the total fees paid by
-                the client for the specific project in question. We are not liable for indirect,
+                Ethixweb's total liability for any claim shall not exceed the total fees paid by the
+                client for the specific project in question. We are not liable for indirect,
                 incidental, or consequential damages, including lost revenue or data.
               </p>
             </Section>
@@ -157,7 +166,7 @@ function TermsPolicy() {
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );

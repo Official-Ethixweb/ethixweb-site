@@ -21,7 +21,10 @@ export const Route = createFileRoute("/api/careers/upload")({
     handlers: {
       POST: async ({ request }) => {
         if (!checkRateLimit(`upload:${clientIp(request)}`, 20, 10 * 60 * 1000)) {
-          return Response.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+          return Response.json(
+            { error: "Too many requests. Please try again later." },
+            { status: 429 },
+          );
         }
 
         const body = (await request.json().catch(() => null)) as HandleUploadBody | null;

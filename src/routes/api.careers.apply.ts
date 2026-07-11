@@ -109,10 +109,7 @@ export const Route = createFileRoute("/api/careers/apply")({
           );
         }
         if (!payload.noticePeriod) {
-          return Response.json(
-            { ok: false, error: "Notice period is required" },
-            { status: 400 },
-          );
+          return Response.json({ ok: false, error: "Notice period is required" }, { status: 400 });
         }
         for (const [field, value] of [
           ["linkedin", payload.linkedin],
@@ -142,8 +139,14 @@ export const Route = createFileRoute("/api/careers/apply")({
         const summaryRows = [
           emailRow("Position", escapeHtml(payload.jobTitle)),
           emailRow("Name", escapeHtml(payload.fullName)),
-          emailRow("Email", `<a href="mailto:${escapeHtml(payload.email)}">${escapeHtml(payload.email)}</a>`),
-          emailRow("Phone", `<a href="tel:${escapeHtml(payload.phone)}">${escapeHtml(payload.phone)}</a>`),
+          emailRow(
+            "Email",
+            `<a href="mailto:${escapeHtml(payload.email)}">${escapeHtml(payload.email)}</a>`,
+          ),
+          emailRow(
+            "Phone",
+            `<a href="tel:${escapeHtml(payload.phone)}">${escapeHtml(payload.phone)}</a>`,
+          ),
           emailRow("Experience", escapeHtml(payload.experience)),
           payload.currentCompany && emailRow("Current company", escapeHtml(payload.currentCompany)),
           payload.currentCtc && emailRow("Current CTC", escapeHtml(payload.currentCtc)),
@@ -151,11 +154,20 @@ export const Route = createFileRoute("/api/careers/apply")({
           emailRow("Notice period", escapeHtml(noticeLabel)),
           payload.availability && emailRow("Availability", escapeHtml(payload.availability)),
           payload.linkedin &&
-            emailRow("LinkedIn", `<a href="${escapeHtml(payload.linkedin)}">${escapeHtml(payload.linkedin)}</a>`),
+            emailRow(
+              "LinkedIn",
+              `<a href="${escapeHtml(payload.linkedin)}">${escapeHtml(payload.linkedin)}</a>`,
+            ),
           payload.portfolio &&
-            emailRow("Portfolio", `<a href="${escapeHtml(payload.portfolio)}">${escapeHtml(payload.portfolio)}</a>`),
+            emailRow(
+              "Portfolio",
+              `<a href="${escapeHtml(payload.portfolio)}">${escapeHtml(payload.portfolio)}</a>`,
+            ),
           payload.github &&
-            emailRow("GitHub", `<a href="${escapeHtml(payload.github)}">${escapeHtml(payload.github)}</a>`),
+            emailRow(
+              "GitHub",
+              `<a href="${escapeHtml(payload.github)}">${escapeHtml(payload.github)}</a>`,
+            ),
         ]
           .filter(Boolean)
           .join("");
@@ -165,7 +177,8 @@ export const Route = createFileRoute("/api/careers/apply")({
 
         const notificationHtml = emailShell({
           eyebrow: `New application - ${payload.jobTitle}`,
-          footerText: "Sent automatically from the Ethixweb careers application form &middot; ethixweb.com",
+          footerText:
+            "Sent automatically from the Ethixweb careers application form &middot; ethixweb.com",
           bodyHtml: `
             <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#1a1a1a;">
               <strong>${escapeHtml(payload.fullName)}</strong> just applied for <strong>${escapeHtml(payload.jobTitle)}</strong>. Submitted ${escapeHtml(timestamp)} PT.

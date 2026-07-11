@@ -11,6 +11,7 @@ import {
   emailShell,
   emailButton,
 } from "@/lib/email";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 
 const TO_EMAIL = "info@ethixweb.com";
 
@@ -18,6 +19,13 @@ export const Route = createFileRoute("/api/contact")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!checkRateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+          return Response.json(
+            { ok: false, error: "Too many requests. Please try again later." },
+            { status: 429 },
+          );
+        }
+
         const body = await request.json().catch(() => null);
         if (!body || typeof body !== "object") {
           return Response.json({ ok: false, error: "Invalid request body" }, { status: 400 });

@@ -22,10 +22,17 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
 
   return (
     <nav aria-label="Breadcrumb" className="relative z-10 mx-auto max-w-7xl px-6">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <ol className="flex flex-wrap items-center gap-1.5 py-4 text-xs text-muted-foreground">
         <li className="flex items-center gap-1.5">
-          <Link to="/" className="flex items-center gap-1 hover:text-foreground transition-colors" aria-label="Home">
+          <Link
+            to="/"
+            className="flex items-center gap-1 hover:text-foreground transition-colors"
+            aria-label="Home"
+          >
             <Home className="h-3.5 w-3.5" />
           </Link>
           <ChevronRight className="h-3.5 w-3.5 opacity-50" aria-hidden="true" />
@@ -39,7 +46,10 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
                   {item.label}
                 </Link>
               ) : (
-                <span aria-current={isLast ? "page" : undefined} className={isLast ? "text-foreground font-medium" : ""}>
+                <span
+                  aria-current={isLast ? "page" : undefined}
+                  className={isLast ? "text-foreground font-medium" : ""}
+                >
                   {item.label}
                 </span>
               )}

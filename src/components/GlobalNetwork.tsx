@@ -77,7 +77,6 @@ const STATUS_CARDS = [
     city: "Seattle",
     icon: Activity,
     label: "Active Projects",
-    status: "Online Now",
     tz: "America/Los_Angeles",
     tone: "emerald",
   },
@@ -85,7 +84,6 @@ const STATUS_CARDS = [
     city: "Utah",
     icon: Wrench,
     label: "Maintenance & Support",
-    status: "Available",
     tz: "America/Denver",
     tone: "amber",
   },
@@ -93,17 +91,16 @@ const STATUS_CARDS = [
     city: "New York",
     icon: TrendingUp,
     label: "Strategy & Growth",
-    status: "Responding Fast",
     tz: "America/New_York",
     tone: "emerald",
   },
 ];
 
 const METRICS = [
-  { v: "50+", l: "Projects Delivered" },
-  { v: "<1h", l: "Avg. Response Time" },
-  { v: "US First", l: "Operations Focus" },
-  { v: "24/7", l: "Global Availability" },
+  { v: "50+", l: "Projects Delivered", d: "Live websites, apps, and automations delivered." },
+  { v: "<1h", l: "Avg. Response Time", d: "Real replies within the hour, always." },
+  { v: "US First", l: "Operations Focus", d: "Proudly based in the United States." },
+  { v: "24/7", l: "Global Availability", d: "Around-the-clock support, every day, everywhere." },
 ];
 
 // ─── Continent polygons for land detection ────────────────────────────────────
@@ -431,25 +428,25 @@ function _stopClock() {
   }
 }
 
-function makeFmt(tz: string) {
+function makeFmt(tz: string, withSeconds = true) {
   return (d: Date) =>
     new Intl.DateTimeFormat("en-US", {
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
+      ...(withSeconds ? { second: "2-digit" as const } : {}),
+      hour12: true,
       timeZone: tz,
     }).format(d);
 }
 
-function useClock(tz: string) {
+function useClock(tz: string, withSeconds = true) {
   // Starts as "--:--:--" (same on server and client) rather than formatting the
   // current time at render: a live clock rendered during SSR will almost never
   // match the client's hydration-time value down to the second, which is a
   // guaranteed hydration mismatch. The real time is applied post-mount instead.
-  const [time, setTime] = useState("--:--:--");
+  const [time, setTime] = useState(withSeconds ? "--:--:--" : "--:--");
   useEffect(() => {
-    const f = makeFmt(tz);
+    const f = makeFmt(tz, withSeconds);
     const tick = () => setTime(f(new Date()));
     tick();
     _clockSubs.add(tick);
@@ -458,7 +455,7 @@ function useClock(tz: string) {
       _clockSubs.delete(tick);
       _stopClock();
     };
-  }, [tz]);
+  }, [tz, withSeconds]);
   return time;
 }
 
@@ -582,7 +579,9 @@ const GlobeStage = forwardRef<GlobeStageHandle>(function GlobeStage(_props, ref)
     window.addEventListener("resize", update);
     // Pause rAF when globe is off-screen - biggest perf win on scroll
     const io = new IntersectionObserver(
-      ([entry]) => { visibleRef.current = entry.isIntersecting; },
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting;
+      },
       { threshold: 0.05 },
     );
     if (wrapRef.current) io.observe(wrapRef.current);
@@ -1215,7 +1214,7 @@ function StatusCard({
   idx: number;
   onFocus?: (city: string) => void;
 }) {
-  const time = useClock(data.tz);
+  const time = useClock(data.tz, false);
   const dot = data.tone === "emerald" ? "bg-emerald-400" : "bg-amber-400";
   return (
     <motion.div
@@ -1241,14 +1240,13 @@ function StatusCard({
             />
             <span className={`relative inline-flex h-2 w-2 rounded-full ${dot}`} />
           </span>
-          <span className="text-base font-bold">{data.city}</span>
+          <span className="text-lg font-bold">{data.city}</span>
         </div>
-        <data.icon className="h-4 w-4 text-primary" />
+        <data.icon className="h-5 w-5 text-primary" />
       </div>
-      <p className="mt-3 text-sm text-muted-foreground">{data.label}</p>
-      <div className="mt-4 flex items-end justify-between">
-        <span className="text-[11px] uppercase tracking-widest text-primary">{data.status}</span>
-        <span className="font-mono text-sm tabular-nums text-foreground/90">{time}</span>
+      <p className="mt-3 text-base text-muted-foreground">{data.label}</p>
+      <div className="mt-4 flex items-end justify-end">
+        <span className="font-mono text-xl font-bold tabular-nums text-foreground">{time}</span>
       </div>
     </motion.div>
   );
@@ -1315,66 +1313,77 @@ export function GlobalNetwork() {
   const focusOnCity = useCallback((city: string) => globeRef.current?.focusOn(city), []);
 
   return (
-    <section className="relative overflow-hidden px-6 py-12 sm:py-28 lg:py-32">
-        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
-        <div className="absolute left-1/2 top-1/3 h-216 w-216 -translate-x-1/2 rounded-full bg-primary/14 blur-[180px] pointer-events-none" />
-        <div className="relative mx-auto max-w-7xl">
-          <Reveal>
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
-                Global Operations Network
-              </p>
-              <h2 className="pb-1 text-4xl font-extrabold leading-[1.05] text-gradient lg:text-6xl">
-                Built for fast moving teams across time zones.
-              </h2>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                Seattle, Utah, New York, Canada, the United Kingdom, and India stay connected
-                through one responsive digital operations layer.
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-2">
-            {CLOCKS.map((c) => (
-              <ClockChip key={c.label} c={c} />
-            ))}
+    <section className="relative overflow-hidden px-6 py-8 sm:py-20 lg:py-24">
+      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+      <div className="absolute left-1/2 top-1/3 h-216 w-216 -translate-x-1/2 rounded-full bg-primary/14 blur-[180px] pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
+              Global Operations Network
+            </p>
+            <h2 className="pb-1 text-4xl font-extrabold leading-[1.05] text-gradient lg:text-6xl">
+              Built for fast moving teams across time zones.
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+              Seattle, Utah, New York, Canada, the United Kingdom, and India stay connected through
+              one responsive digital operations layer.
+            </p>
           </div>
+        </Reveal>
 
-          <div className="mt-12 grid items-center gap-10 lg:grid-cols-[2.2fr_0.9fr]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="relative"
-            >
-              <GlobeStage ref={globeRef} />
-              <p className="mt-2 text-center text-[10px] uppercase tracking-widest text-muted-foreground/70">
-                Drag to rotate · auto-spins when idle
-              </p>
-            </motion.div>
+        <div className="mt-10 flex flex-wrap justify-center gap-2">
+          {CLOCKS.map((c) => (
+            <ClockChip key={c.label} c={c} />
+          ))}
+        </div>
 
-            <div className="flex flex-col gap-4">
-              {STATUS_CARDS.map((s, i) => (
-                <StatusCard key={s.city} data={s} idx={i} onFocus={focusOnCity} />
-              ))}
-              <ActivityTicker onFocus={focusOnCity} />
-            </div>
-          </div>
+        <div className="mt-12 grid items-center gap-10 lg:grid-cols-[2.2fr_0.9fr]">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="relative"
+          >
+            <GlobeStage ref={globeRef} />
+            <p className="mt-2 text-center text-[10px] uppercase tracking-widest text-muted-foreground/70">
+              Drag to rotate · auto-spins when idle
+            </p>
+          </motion.div>
 
-          <div className="mt-20 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {METRICS.map((m, i) => (
-              <Reveal key={m.l} delay={i * 0.08}>
-                <div className="premium-card rounded-2xl p-4 sm:p-6 text-center transition hover:bg-white/6">
-                  <div className="text-xl sm:text-4xl font-extrabold text-gradient-brand whitespace-nowrap">{m.v}</div>
-                  <div className="mt-2 text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">
-                    {m.l}
-                  </div>
-                </div>
-              </Reveal>
+          <div className="flex flex-col gap-4">
+            {STATUS_CARDS.map((s, i) => (
+              <StatusCard key={s.city} data={s} idx={i} onFocus={focusOnCity} />
             ))}
+            <ActivityTicker onFocus={focusOnCity} />
           </div>
         </div>
-      </section>
+
+        <div className="mt-20 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {METRICS.map((m, i) => (
+            <Reveal key={m.l} delay={i * 0.08}>
+              <div className="premium-card web-card metric-flip rounded-2xl p-4 sm:p-6 text-center transition hover:bg-white/6">
+                <div className="metric-flip-inner relative">
+                  <div className="metric-flip-face flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-4xl font-extrabold text-gradient-brand whitespace-nowrap">
+                      {m.v}
+                    </div>
+                    <div className="mt-2 text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">
+                      {m.l}
+                    </div>
+                  </div>
+                  <div className="metric-flip-face metric-flip-back absolute inset-0 flex items-center justify-center px-2">
+                    <p className="text-xs sm:text-sm font-semibold leading-snug text-foreground/90">
+                      {m.d}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

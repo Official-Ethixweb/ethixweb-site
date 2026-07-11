@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
+import { Container } from "@/components/Container";
+import { GlowBlob } from "@/components/GlowBlob";
 import {
   Palette,
   Megaphone,
@@ -24,7 +26,7 @@ export const Route = createFileRoute("/graphic-design")({
       {
         name: "description",
         content:
-          "Logo design, brand identity, marketing collateral, social graphics and UI/UX - bespoke branding that builds trust and drives engagement.",
+          "Logo design, brand identity, marketing collateral, social graphics and UI/UX: bespoke branding that builds trust and drives engagement.",
       },
       { property: "og:title", content: "Graphic Design & Branding - Ethixweb" },
       { property: "og:description", content: "Create a powerful brand identity that stands out." },
@@ -33,7 +35,11 @@ export const Route = createFileRoute("/graphic-design")({
       { property: "og:url", content: "https://ethixweb.com/graphic-design" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Graphic Design & Branding - Ethixweb" },
-      { name: "twitter:description", content: "Logo design, brand identity, marketing collateral, social graphics and UI/UX - bespoke branding that builds trust and drives engagement." },
+      {
+        name: "twitter:description",
+        content:
+          "Logo design, brand identity, marketing collateral, social graphics and UI/UX: bespoke branding that builds trust and drives engagement.",
+      },
       { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
@@ -113,7 +119,8 @@ const SERVICE_SCHEMA = JSON.stringify({
   "@type": "Service",
   name: "Graphic Design & Branding",
   provider: { "@type": "Organization", name: "Ethixweb", url: "https://ethixweb.com" },
-  description: "Logo design, brand identity, marketing collateral, social graphics and UI/UX for modern businesses.",
+  description:
+    "Logo design, brand identity, marketing collateral, social graphics and UI/UX for modern businesses.",
   url: "https://ethixweb.com/graphic-design",
   areaServed: { "@type": "Country", name: "United States" },
   serviceType: "Graphic Design and Branding",
@@ -127,17 +134,17 @@ function Page() {
         eyebrow="Graphic Design & Branding"
         title="Create a Powerful Brand Identity That Stands Out"
       >
-        Rank your brand above others at the speed of light - distinctive visual identity that
+        Rank your brand above others at the speed of light with a distinctive visual identity that
         converts attention into trust.
       </PageHero>
 
       {/* Why It Matters */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Why Graphic Design & Branding Matter
               </h2>
             </div>
@@ -153,16 +160,16 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Services */}
-      <section className="px-6 py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24 border-y border-white/5 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">Our Services</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Graphic Design & Branding Services
               </h2>
             </div>
@@ -179,16 +186,16 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Why Choose Us */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="py-24">
+        <Container>
           <Reveal>
             <div className="max-w-2xl">
               <p className="text-sm uppercase tracking-widest text-primary mb-4">Why Choose Us</p>
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-gradient pb-1">
+              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Design that earns attention.
               </h2>
             </div>
@@ -204,24 +211,24 @@ function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Story Block */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-7xl glass-strong rounded-[2.5rem] p-10 lg:p-16 relative overflow-hidden">
-          <div className="absolute -top-32 -left-32 h-80 w-80 rounded-full bg-primary/20 blur-[120px]" />
-          <div className="absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-accent/20 blur-[120px]" />
+      <section className="py-24">
+        <Container className="glass-strong relative overflow-hidden rounded-[2.5rem] p-8 sm:p-10 lg:p-16">
+          <GlowBlob size="md" color="primary" blur={120} className="-top-32 -left-32" />
+          <GlowBlob size="md" color="brand" blur={120} className="-bottom-32 -right-32" />
           <Reveal>
             <p className="text-sm uppercase tracking-widest text-primary mb-4 relative">Why Us</p>
-            <h2 className="relative font-display text-4xl lg:text-5xl font-bold text-gradient max-w-3xl pb-1">
+            <h2 className="relative font-display text-5xl font-bold text-gradient max-w-3xl pb-1">
               Graphic Design & Branding
             </h2>
             <div className="relative mt-6 space-y-5 text-muted-foreground leading-relaxed max-w-3xl">
               <p>
-                Your brand is more than just a logo - it's the story, personality and visual
-                identity that sets your business apart. Strong branding and eye catching graphic
-                design create a lasting impression, build trust and connect with your audience.
+                Your brand is more than just a logo. It's the story, personality and visual identity
+                that sets your business apart. Strong branding and eye catching graphic design
+                create a lasting impression, build trust and connect with your audience.
               </p>
               <p>
                 Our Graphic Design & Branding services help businesses establish a unique and
@@ -259,7 +266,7 @@ function Page() {
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Container>
       </section>
     </SiteLayout>
   );
