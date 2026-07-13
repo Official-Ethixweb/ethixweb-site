@@ -425,6 +425,51 @@ html.dark {
     }
   }
 
+  /* ── Cursor-reactive glow over the signature web pattern - a real element
+     masked with the same spiderweb fan used by .web-card/.web-card-feature,
+     whose radial-gradient position tracks the pointer via CSS custom
+     properties (--mx/--my) set by a plain onMouseMove handler on the card -
+     no React state, no rAF loop, so it's cheap enough for many cards at once.
+     `.web-spotlight-lg` sizes the mask up for bigger, feature-style cards. ── */
+  .web-spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    -webkit-mask-image: var(--web-card-mask);
+    mask-image: var(--web-card-mask);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: top right;
+    mask-position: top right;
+    -webkit-mask-size: 140px 140px;
+    mask-size: 140px 140px;
+    background: radial-gradient(
+      110px circle at var(--mx, 85%) var(--my, 10%),
+      rgba(233, 54, 63, 0.6),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .web-spotlight-lg {
+    -webkit-mask-size: 260px 260px;
+    mask-size: 260px 260px;
+    background: radial-gradient(
+      180px circle at var(--mx, 85%) var(--my, 10%),
+      rgba(233, 54, 63, 0.6),
+      transparent 70%
+    );
+  }
+  .group:hover .web-spotlight {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .web-spotlight {
+      transition: none;
+    }
+  }
+
   /* ── Metric card flip - hover reveals a short plain-language explanation
      on the back face instead of the raw stat, e.g. "US First" → "Proudly
      based in the United States." ── */
