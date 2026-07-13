@@ -1,10 +1,12 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion } from "framer-motion";
 import { Star, ExternalLink } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { useTheme } from "./ThemeProvider";
 import { Container } from "./Container";
 import { GlowBlob } from "./GlowBlob";
+import { WebSpotlight } from "./WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 
 const BRAND_DARK = "#ffffff";
 const BRAND_LIGHT = "#c0272d";
@@ -42,10 +44,12 @@ function StarRow({
   className?: string;
 }) {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1" role="img" aria-label={`${count} out of ${total} stars`}>
       {Array.from({ length: total }).map((_, i) => {
         const color = i < count ? brand : "#6b7280";
-        return <Star key={i} className={className} style={{ fill: color, color }} />;
+        return (
+          <Star key={i} aria-hidden="true" className={className} style={{ fill: color, color }} />
+        );
       })}
     </div>
   );
@@ -60,13 +64,15 @@ function ReviewCard({ review, brand }: { review: (typeof REVIEWS)[number]; brand
   return (
     <motion.div
       whileHover={{ y: -4, scale: 1.015 }}
+      onMouseMove={trackWebSpotlight}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      className="premium-card relative min-w-60 sm:min-w-75 max-w-72 sm:max-w-90 shrink-0 overflow-hidden rounded-2xl p-6"
+      className="premium-card group relative min-w-60 sm:min-w-75 max-w-72 sm:max-w-90 shrink-0 overflow-hidden rounded-2xl p-6"
     >
       <div
         className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl"
         style={{ background: `${brand}18` }}
       />
+      <WebSpotlight />
 
       <StarRow count={review.stars} brand={brand} />
 
@@ -87,10 +93,30 @@ function ReviewCard({ review, brand }: { review: (typeof REVIEWS)[number]; brand
 
 function InfiniteCarousel({ brand }: { brand: string }) {
   const x = useMotionValue(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const dragging = useRef(false);
+  const visible = useRef(false);
   const reduceMotion = useReducedMotion();
+
+  // Watch the static outer wrapper, not the track itself - the track is
+  // constantly translated by the animation it's gating, so observing it
+  // directly means its own box drifts out of the intersection root as soon
+  // as it travels more than its width, permanently freezing the animation
+  // the first time it scrolls past that point.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible.current = entry.isIntersecting;
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useAnimationFrame((_, delta) => {
     const trackW = trackRef.current?.scrollWidth ?? 0;
@@ -101,6 +127,7 @@ function InfiniteCarousel({ brand }: { brand: string }) {
       initialized.current = true;
       return;
     }
+    if (!visible.current) return;
     if (!dragging.current && !reduceMotion) {
       x.set(x.get() + 0.4 * delta * 0.06);
     }
@@ -114,7 +141,7 @@ function InfiniteCarousel({ brand }: { brand: string }) {
   const duplicated = [...REVIEWS, ...REVIEWS, ...REVIEWS, ...REVIEWS];
 
   return (
-    <div className="overflow-x-hidden overflow-y-visible py-4">
+    <div ref={wrapRef} className="overflow-x-hidden overflow-y-visible py-4">
       <motion.div
         ref={trackRef}
         className="flex cursor-grab gap-5 active:cursor-grabbing"
