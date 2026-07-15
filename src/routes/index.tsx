@@ -358,9 +358,6 @@ function OperatingSystem() {
               Ethixweb brings software, automation, marketing operations, and support into one
               disciplined delivery system.
             </p>
-            <p className="mt-3 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              hover, tap, or tab through each stage
-            </p>
           </div>
         </Reveal>
         <Reveal delay={0.1}>

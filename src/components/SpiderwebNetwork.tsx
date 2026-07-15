@@ -225,14 +225,37 @@ function GlassEmblem({ mx, reduceMotion }: { mx: MotionValue<number>; reduceMoti
   // the hero.
   const wrapRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(true);
+  // The iframe itself only unmounts after being out of view for a bit (not
+  // instantly on `inView`) - a fresh iframe reload briefly shows its nested
+  // document's default white background before its own transparent CSS takes
+  // effect (a 566KB mostly-inline-script document, so that gap is real, not
+  // instant). Unmounting on every brief scroll-past-and-back bounce turned
+  // that into a visible white flash each time - glaring in dark mode against
+  // the maroon hero. Debouncing the unmount keeps the actual battery/GPU win
+  // (stops the WebGL loop once truly scrolled away) without reloading on
+  // every small scroll wobble.
+  const [mounted, setMounted] = useState(true);
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
-      threshold: 0.01,
-    });
+    let unmountTimer: ReturnType<typeof setTimeout> | null = null;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          if (unmountTimer) clearTimeout(unmountTimer);
+          setMounted(true);
+        } else {
+          unmountTimer = setTimeout(() => setMounted(false), 4000);
+        }
+      },
+      { threshold: 0.01 },
+    );
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      if (unmountTimer) clearTimeout(unmountTimer);
+    };
   }, []);
   const animate = !reduceMotion && inView;
   // Live 3D stays desktop/tablet-only for now: on narrow layouts the embedded
@@ -313,7 +336,7 @@ function GlassEmblem({ mx, reduceMotion }: { mx: MotionValue<number>; reduceMoti
            * iframe's WebGL render loop can't be paused from outside without
            * its own cooperation, so removing it from the DOM is what actually
            * stops the GPU/battery cost once it's off-screen. */}
-          {inView && (
+          {mounted && (
             <div
               className="pointer-events-none absolute left-0 top-0 select-none overflow-hidden"
               style={{
