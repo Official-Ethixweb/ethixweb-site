@@ -3,6 +3,7 @@ import type {} from "@tanstack/react-start";
 import { getSupabase } from "@/lib/supabase";
 import { verifyDecisionToken } from "@/lib/screening-tokens";
 import { escapeHtml, DARK, BRAND_RED } from "@/lib/email";
+import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 
 // Opened directly from the reviewer's email - a plain HTML confirmation page,
 // not JSON, since a human clicks this link in their browser.
@@ -25,16 +26,30 @@ export const Route = createFileRoute("/api/screening/decision")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        if (
+          !(await checkRateLimitDurable(
+            `screening-decision:${clientIp(request)}`,
+            20,
+            10 * 60 * 1000,
+          ))
+        ) {
+          return new Response(page("Too many requests", "Please try again in a few minutes."), {
+            status: 429,
+            headers: { "Content-Type": "text/html" },
+          });
+        }
+
         const url = new URL(request.url);
         const id = url.searchParams.get("id");
         const decision = url.searchParams.get("decision");
         const token = url.searchParams.get("token");
+        const exp = url.searchParams.get("exp");
 
         if (
           !id ||
           !token ||
           (decision !== "approved" && decision !== "rejected") ||
-          !verifyDecisionToken(id, decision, token)
+          !verifyDecisionToken(id, decision, token, exp)
         ) {
           return new Response(page("Invalid link", "This review link is invalid or has expired."), {
             status: 400,

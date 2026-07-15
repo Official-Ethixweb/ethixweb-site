@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, type LucideIcon } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { WebSpotlight } from "./WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { cn } from "@/lib/utils";
 
 export type CardGridItem = {
@@ -48,6 +50,7 @@ export function IconCard({ icon: Icon, title, description, to }: CardGridItem) {
       {to && (
         <ArrowUpRight className="mt-5 h-4 w-4 text-primary transition group-hover:rotate-45" />
       )}
+      <WebSpotlight />
     </>
   );
 
@@ -55,12 +58,20 @@ export function IconCard({ icon: Icon, title, description, to }: CardGridItem) {
     return (
       <Link
         to={to}
-        className="glass group block h-full rounded-3xl p-7 transition hover:bg-white/[0.06]"
+        onMouseMove={trackWebSpotlight}
+        className="glass group relative block h-full overflow-hidden rounded-3xl p-7 transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       >
         {content}
       </Link>
     );
   }
 
-  return <div className="glass h-full rounded-3xl p-7">{content}</div>;
+  return (
+    <div
+      onMouseMove={trackWebSpotlight}
+      className="glass group relative h-full overflow-hidden rounded-3xl p-7"
+    >
+      {content}
+    </div>
+  );
 }

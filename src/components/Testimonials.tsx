@@ -185,7 +185,7 @@ export function Testimonials() {
         <Reveal>
           <div className="flex flex-col items-center gap-24 text-center sm:gap-40 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:text-left">
             <div className="max-w-xl">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.24em] text-primary">
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.24em] text-primary-text">
                 Client Reviews
               </p>
               <h2 className="text-5xl font-extrabold leading-tight text-gradient pb-1">

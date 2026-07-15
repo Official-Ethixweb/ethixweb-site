@@ -1,6 +1,6 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, useMotionValue, useSpring } from "framer-motion";
 import {
   ArrowUpRight,
   Bot,
@@ -16,7 +16,6 @@ import {
   Workflow,
 } from "lucide-react";
 
-const LIVE_PATHS = new Set(["/", "/contact"]);
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
 import { RotatingText } from "@/components/RotatingText";
@@ -26,47 +25,12 @@ import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { HeroWebVisual } from "@/components/HeroWebVisual";
 import { SystemShift } from "@/components/SystemShift";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 
 const GlobalNetwork = lazy(() =>
   import("@/components/GlobalNetwork").then((m) => ({ default: m.GlobalNetwork })),
 );
-
-const MotionLink = motion(Link);
-
-/** CTA that gently follows the cursor within a small radius, then springs back. */
-function MagneticCTA({
-  to,
-  className,
-  children,
-}: {
-  to: string;
-  className: string;
-  children: React.ReactNode;
-}) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 200, damping: 15, mass: 0.4 });
-  const springY = useSpring(y, { stiffness: 200, damping: 15, mass: 0.4 });
-
-  return (
-    <MotionLink
-      to={to}
-      className={className}
-      style={{ x: springX, y: springY }}
-      onMouseMove={(e: React.MouseEvent<HTMLElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        x.set((e.clientX - (rect.left + rect.width / 2)) * 0.3);
-        y.set((e.clientY - (rect.top + rect.height / 2)) * 0.3);
-      }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-    >
-      {children}
-    </MotionLink>
-  );
-}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -100,7 +64,7 @@ export const Route = createFileRoute("/")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           name: "Ethixweb",
@@ -198,12 +162,37 @@ function Home() {
   );
 }
 
+/** Below lg, HeroWebVisual becomes a low-opacity backdrop sitting behind the
+ * text (see Hero below) instead of its own side-by-side column - the value-
+ * prop badges ("More booked jobs" etc.) are only meant to float in open space
+ * next to the text, not overlap on top of it, so they're hidden in that mode
+ * and only shown once a desktop-width (lg) viewport is confirmed. Defaults to
+ * false so mobile (the more common first paint) never flashes overlapping
+ * badges before this can check; a brief absence of badges on desktop before
+ * hydration confirms the width is the safer direction to default. */
+function useShowHeroBadges() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setShow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return show;
+}
+
 function Hero() {
+  const showBadges = useShowHeroBadges();
   return (
     <section className="relative -mt-24 overflow-hidden bg-gradient-hero pb-4 pt-20 sm:pb-28 sm:pt-36 lg:pt-40">
-      <div className="absolute inset-0 grid-bg opacity-50" />
-      <GlowBlob size="lg" color="primary" blur={100} className="left-1/2 top-0 -translate-x-1/2" />
-      <GlowBlob size="md" color="primary" blur={100} className="bottom-0 right-0" />
+      <div className="absolute inset-0 grid-bg opacity-30" />
+      <GlowBlob
+        size="md"
+        color="primary"
+        blur={140}
+        className="left-1/2 top-0 -translate-x-1/2 opacity-60"
+      />
 
       <Container className="relative grid items-center gap-14 pt-4 sm:pt-12 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="relative z-10">
@@ -240,17 +229,17 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.24}>
             <div className="mt-10 flex flex-wrap gap-4">
-              <MagneticCTA
+              <Link
                 to="/contact"
-                className="shine-cta magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
+                className="btn-primary group inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-bold"
               >
                 Start a project
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-              </MagneticCTA>
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
               <div
                 aria-disabled="true"
                 title="Coming soon"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground/40 backdrop-blur-xl cursor-not-allowed select-none"
+                className="btn-secondary inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-bold opacity-60 cursor-not-allowed select-none"
               >
                 See our work
                 <ArrowUpRight className="h-4 w-4" />
@@ -259,9 +248,12 @@ function Hero() {
           </Reveal>
         </div>
 
+        {/* Below lg, this becomes a low-opacity full-bleed backdrop sitting behind
+         * the text (one cohesive block) instead of a separate stacked section -
+         * at lg: and up it reverts to the original side-by-side grid column. */}
         <Reveal delay={0.18}>
-          <div className="relative z-0 lg:-ml-8">
-            <HeroWebVisual />
+          <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-25 lg:pointer-events-auto lg:static lg:opacity-100 lg:-ml-8">
+            <HeroWebVisual showBadges={showBadges} />
           </div>
         </Reveal>
       </Container>
@@ -289,12 +281,12 @@ function SignalStrip() {
 
 function Services() {
   return (
-    <section className="relative overflow-hidden py-16">
-      <GlowBlob size="lg" color="brand" blur={140} className="left-0 top-1/4" />
+    <section className="relative overflow-hidden py-20 sm:py-24">
+      <GlowBlob size="lg" color="brand" blur={160} className="left-0 top-1/4 opacity-70" />
       <Container className="relative">
         <Reveal>
           <div className="max-w-3xl">
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary-text">
               Robust Solutions
             </p>
             <h2 className="pb-1 text-6xl font-extrabold leading-tight text-gradient">
@@ -303,20 +295,22 @@ function Services() {
                 texts={["business.", "growth.", "revenue.", "pipeline."]}
                 mainClassName="align-bottom"
                 elementLevelClassName="text-primary"
-                staggerFrom="last"
-                staggerDuration={0.02}
                 rotationInterval={3500}
                 transition={{ type: "spring", damping: 28, stiffness: 380 }}
               />
             </h2>
           </div>
         </Reveal>
-        <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
             <Reveal key={service.title} delay={index * 0.04}>
               <div className="relative h-full">
-                <div className="premium-card relative h-full overflow-hidden rounded-2xl p-6 cursor-default">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group premium-card relative h-full overflow-hidden rounded-2xl p-7 cursor-default"
+                >
                   <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-primary/0 blur-3xl" />
+                  <WebSpotlight />
                   <service.icon className="h-7 w-7 text-primary/60" strokeWidth={1.7} />
                   <h3 className="mt-7 text-xl font-bold text-foreground">{service.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-foreground/75">{service.desc}</p>
@@ -350,11 +344,11 @@ const OS_ROWS = [
 
 function OperatingSystem() {
   return (
-    <section className="py-8 sm:py-16">
+    <section className="py-12 sm:py-20">
       <Container>
         <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
+          <div className="max-w-2xl">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary-text">
               Operating model
             </p>
             <h2 className="pb-1 text-6xl font-extrabold leading-tight text-gradient">
@@ -370,7 +364,7 @@ function OperatingSystem() {
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <div className="mt-14">
+          <div className="mt-16">
             <PipelineDiagram stages={OS_ROWS} />
           </div>
         </Reveal>
@@ -381,14 +375,14 @@ function OperatingSystem() {
 
 function Proof() {
   return (
-    <section className="py-7 sm:py-14">
-      <Container className="grid grid-cols-2 items-stretch gap-4 lg:grid-cols-4">
+    <section className="py-10 sm:py-20">
+      <Container className="grid grid-cols-2 items-stretch gap-5 lg:grid-cols-4">
         {metrics.map((metric, index) => (
           <Reveal key={metric.label} delay={index * 0.05} className="h-full">
             <div className="premium-card web-card metric-flip rounded-2xl p-4 sm:p-6 text-center h-full flex flex-col items-center justify-center transition hover:bg-white/6">
               <div className="metric-flip-inner relative w-full">
                 <div className="metric-flip-face flex flex-col items-center justify-center">
-                  <div className="text-xl sm:text-4xl font-extrabold text-gradient-brand whitespace-nowrap">
+                  <div className="text-xl sm:text-4xl font-extrabold text-gradient whitespace-nowrap">
                     {metric.value}
                   </div>
                   <div className="mt-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground">
@@ -411,12 +405,12 @@ function Proof() {
 
 function CTA() {
   return (
-    <section className="py-8 sm:py-16">
+    <section className="py-12 sm:py-24">
       <Reveal>
         <Container className="relative overflow-hidden rounded-4xl bg-card shadow-lg lg:aspect-25/12">
           <div className="grid grid-cols-1 items-center gap-8 px-8 py-14 sm:px-12 sm:py-16 lg:h-full lg:grid-cols-[1.13fr_1fr] lg:items-stretch lg:gap-2 lg:px-0 lg:py-0">
             <div className="relative z-10 flex flex-col justify-center text-center lg:pl-20 lg:pr-6 lg:text-left">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-primary sm:text-sm">
+              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-primary-text sm:text-sm">
                 Robust Solutions
               </p>
               <h2 className="mt-4 font-display text-[2.75rem] font-extrabold leading-[1.05] tracking-tight text-card-foreground sm:text-6xl lg:text-[5rem]">
@@ -430,7 +424,7 @@ function CTA() {
               </p>
               <Link
                 to="/contact"
-                className="mt-9 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
+                className="btn-primary mt-9 inline-flex items-center gap-2 rounded-full px-8 py-4 font-bold"
               >
                 Get in touch <ArrowUpRight className="h-4 w-4" />
               </Link>

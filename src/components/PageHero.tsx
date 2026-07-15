@@ -18,7 +18,7 @@ export function PageHero({
       <GlowBlob size="lg" color="primary" className="top-0 left-1/2 -translate-x-1/2" />
       <Container size="medium" className="relative text-center">
         <Reveal>
-          <p className="text-xs uppercase tracking-[0.3em] text-primary">{eyebrow}</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-primary-text">{eyebrow}</p>
           <h1 className="mt-5 font-display text-7xl font-bold leading-[1.15] text-gradient pb-1">
             {title}
           </h1>

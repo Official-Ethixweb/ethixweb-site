@@ -14,6 +14,8 @@ export interface Job {
   experience: string;
   location: string;
   salary: string;
+  /** ISO date this role was first posted - used for JobPosting structured data. */
+  datePosted: string;
   summary: string;
   about: string;
   responsibilities: string[];
@@ -34,6 +36,7 @@ export const JOBS: Job[] = [
     experience: "0-3 Years",
     location: "Remote (India)",
     salary: "Not disclosed",
+    datePosted: "2026-07-01",
     summary:
       "Build and ship scalable web applications end to end for our US clients: React on the frontend, Node.js on the backend.",
     about:
@@ -103,6 +106,7 @@ export const JOBS: Job[] = [
     experience: "0-1 Years",
     location: "Remote (India)",
     salary: "Not disclosed",
+    datePosted: "2026-07-01",
     summary:
       "Help our US home service clients win local search through technical SEO, on page optimization, and Core Web Vitals improvements.",
     about:

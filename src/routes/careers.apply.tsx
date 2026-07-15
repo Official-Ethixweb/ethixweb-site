@@ -9,8 +9,12 @@ import { Reveal } from "@/components/Reveal";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useTheme } from "@/components/ThemeProvider";
 import { SystemConstellation } from "@/components/SystemConstellation";
+import { HeroWebVisual } from "@/components/HeroWebVisual";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { JOBS, getJob } from "@/lib/careers-data";
 import { getScreeningConfig } from "@/lib/screening-rubrics";
+import { formLabelClass, formInputClass } from "@/lib/form-styles";
 import {
   Mail,
   MapPin,
@@ -239,14 +243,14 @@ function ApplyPage() {
                 <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary/30 blur-[90px]" />
                 <div className="pointer-events-none absolute bottom-0 right-0 h-48 w-48 rounded-full bg-primary/10 blur-[70px]" />
 
-                {/* System graphic - lights up node-by-node as the applicant moves through the
-                    form, instead of a static character. */}
+                {/* Same spiderweb + glass "E" emblem as the homepage hero (badges
+                    hidden - that value-prop copy doesn't apply here), scaled down
+                    into the corner instead of a generic step-progress graphic -
+                    keeps the apply flow visually tied to the rest of the site. */}
                 {!sent && (
-                  <SystemConstellation
-                    nodes={stepLabels.map((label) => ({ label }))}
-                    activeIndex={step - 1}
-                    className="pointer-events-none absolute -right-10 bottom-0 z-10 hidden h-64 w-64 opacity-70 sm:block lg:h-72 lg:w-72"
-                  />
+                  <div className="pointer-events-none absolute -right-60 -bottom-32 z-10 hidden w-190 origin-bottom-right scale-90 sm:block">
+                    <HeroWebVisual showBadges={false} webOpacity={0.3} />
+                  </div>
                 )}
 
                 <div className="relative z-20">
@@ -282,7 +286,7 @@ function ApplyPage() {
                               ) : (
                                 <span
                                   className={
-                                    active ? "text-primary-foreground" : "text-muted-foreground/70"
+                                    active ? "text-primary-foreground" : "text-muted-foreground"
                                   }
                                 >
                                   {i + 1}
@@ -307,7 +311,7 @@ function ApplyPage() {
                                 : done
                                   ? "text-muted-foreground"
                                   : pending
-                                    ? "text-muted-foreground/60"
+                                    ? "text-muted-foreground"
                                     : ""
                             }`}
                           >
@@ -327,7 +331,7 @@ function ApplyPage() {
                     transition={{ duration: 0.3 }}
                     className={`relative z-20 text-xs font-bold uppercase tracking-[0.22em] ${
                       status === "WAITING FOR YOU"
-                        ? "text-muted-foreground/70"
+                        ? "text-muted-foreground"
                         : status === "SENT ✓"
                           ? "text-primary"
                           : "text-primary/80"
@@ -403,22 +407,39 @@ function ApplyPage() {
                                     <motion.button
                                       key={value}
                                       type="button"
+                                      aria-pressed={active}
                                       initial={{ opacity: 0, y: 10 }}
-                                      animate={{ opacity: 1, y: 0 }}
+                                      animate={{ opacity: 1, y: 0, scale: active ? 1.015 : 1 }}
                                       transition={{
-                                        duration: 0.24,
-                                        delay: index * 0.035,
-                                        ease: "easeOut",
+                                        opacity: {
+                                          duration: 0.24,
+                                          delay: index * 0.035,
+                                          ease: "easeOut",
+                                        },
+                                        y: {
+                                          duration: 0.24,
+                                          delay: index * 0.035,
+                                          ease: "easeOut",
+                                        },
+                                        scale: { duration: 0.22, ease: "easeOut" },
                                       }}
                                       whileHover={{ scale: 1.03, y: -2 }}
                                       whileTap={{ scale: 0.97 }}
                                       onClick={() => setRoleId(value)}
-                                      className={`web-card group relative rounded-2xl p-4 text-left transition-all duration-200 ${
-                                        active
-                                          ? "premium-card ring-2 ring-primary/60"
-                                          : "premium-card"
+                                      onMouseMove={trackWebSpotlight}
+                                      className={`web-card group relative rounded-2xl p-4 text-left transition-all duration-200 premium-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                                        active ? "option-card-selected" : ""
                                       }`}
                                     >
+                                      <WebSpotlight />
+                                      {active && (
+                                        <span
+                                          style={{ position: "absolute" }}
+                                          className="right-3 top-3 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md"
+                                        >
+                                          <Check className="h-3 w-3" strokeWidth={3} />
+                                        </span>
+                                      )}
                                       <Icon
                                         className={`relative mb-2.5 h-5 w-5 transition-colors ${active ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`}
                                         strokeWidth={1.6}
@@ -543,13 +564,13 @@ function ApplyPage() {
                                 {!resumeFile || resumeStatus === "error" ? (
                                   <label
                                     htmlFor="resume-upload"
-                                    className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 bg-black/85 px-4 py-8 text-center transition hover:border-primary/40"
+                                    className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-input/60 px-4 py-8 text-center transition hover:border-primary/40"
                                   >
                                     <UploadCloud className="h-7 w-7 text-primary/70" />
-                                    <span className="text-sm text-white/80">
+                                    <span className="text-sm text-foreground/80">
                                       Click to upload your resume
                                     </span>
-                                    <span className="text-xs text-white/40">
+                                    <span className="text-xs text-muted-foreground">
                                       PDF, DOC or DOCX · Max 10MB
                                     </span>
                                     <input
@@ -562,17 +583,17 @@ function ApplyPage() {
                                     />
                                   </label>
                                 ) : (
-                                  <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/85 px-4 py-3.5">
+                                  <div className="flex items-center gap-3 rounded-xl border border-border bg-input/60 px-4 py-3.5">
                                     {resumeStatus === "uploading" ? (
                                       <Loader2 className="h-5 w-5 shrink-0 animate-spin text-primary" />
                                     ) : (
                                       <FileText className="h-5 w-5 shrink-0 text-primary" />
                                     )}
                                     <div className="min-w-0 flex-1">
-                                      <p className="truncate text-sm font-medium text-white">
+                                      <p className="truncate text-sm font-medium text-foreground">
                                         {resumeFile.name}
                                       </p>
-                                      <p className="text-xs text-white/40">
+                                      <p className="text-xs text-muted-foreground">
                                         {formatBytes(resumeFile.size)} ·{" "}
                                         {resumeStatus === "uploading" ? "Uploading…" : "Uploaded"}
                                       </p>
@@ -581,14 +602,16 @@ function ApplyPage() {
                                       type="button"
                                       onClick={clearResume}
                                       aria-label="Remove resume"
-                                      className="shrink-0 rounded-full p-1.5 text-white/40 hover:bg-white/10 hover:text-white"
+                                      className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                                     >
                                       <X className="h-4 w-4" />
                                     </button>
                                   </div>
                                 )}
                                 {resumeError && (
-                                  <p className="mt-2 text-sm text-red-400">{resumeError}</p>
+                                  <p role="alert" className="mt-2 text-sm text-error-text">
+                                    {resumeError}
+                                  </p>
                                 )}
                               </div>
                             </div>
@@ -624,11 +647,15 @@ function ApplyPage() {
                                 value={coverLetter}
                                 onChange={(e) => setCoverLetter(e.target.value)}
                                 placeholder="Tell us why you're a good fit…"
-                                className="mt-2 w-full resize-none rounded-xl bg-black/85 border border-white/10 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/25 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25 transition"
+                                className="mt-2 w-full resize-none rounded-xl border border-border bg-input/60 px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25 transition"
                               />
                             </div>
 
-                            {submitError && <p className="text-sm text-red-400">{submitError}</p>}
+                            {submitError && (
+                              <p role="alert" className="text-sm text-error-text">
+                                {submitError}
+                              </p>
+                            )}
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -760,7 +787,7 @@ function TextField({
   const id = useId();
   return (
     <div>
-      <label htmlFor={id} className="text-xs uppercase tracking-widest text-muted-foreground">
+      <label htmlFor={id} className={formLabelClass}>
         {label} {required && <span className="text-primary">*</span>}
       </label>
       <input
@@ -769,7 +796,9 @@ function TextField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl bg-black/85 border border-white/10 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/25 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+        required={required}
+        aria-required={required}
+        className={formInputClass}
       />
     </div>
   );
@@ -789,17 +818,19 @@ function SelectField({
   const id = useId();
   return (
     <div>
-      <label htmlFor={id} className="text-xs uppercase tracking-widest text-muted-foreground">
+      <label htmlFor={id} className={formLabelClass}>
         {label} <span className="text-primary">*</span>
       </label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full rounded-xl bg-black/85 border border-white/10 px-4 py-3 text-base sm:text-sm text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+        required
+        aria-required="true"
+        className={formInputClass}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-black text-white">
+          <option key={o.value} value={o.value} className="bg-background text-foreground">
             {o.label}
           </option>
         ))}

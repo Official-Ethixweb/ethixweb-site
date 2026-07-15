@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
@@ -57,7 +58,7 @@ const f = [
   },
 ];
 
-const SERVICE_SCHEMA = JSON.stringify({
+const SERVICE_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Service",
   name: "AI & Workflow Automation",
@@ -84,7 +85,7 @@ function Page() {
               <div className="absolute inset-0 grid-bg opacity-35" />
               <div className="relative rounded-2xl border border-white/10 bg-[#0C0D10]/70 p-5">
                 <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-4">
-                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-text">
                     Automation layer
                   </p>
                   <Sparkles className="h-4 w-4 shrink-0 text-primary" />

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
@@ -20,14 +21,22 @@ export const Route = createFileRoute("/policies/refunds")({
         content: "Ethixweb cancellation and refund policy for digital services.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://ethixweb.com/ethixweb.png" },
       { property: "og:url", content: "https://ethixweb.com/policies/refunds" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Cancellation & Refunds - Ethixweb" },
+      {
+        name: "twitter:description",
+        content: "Ethixweb cancellation and refund policy for digital services.",
+      },
+      { name: "twitter:image", content: "https://ethixweb.com/ethixweb.png" },
       { name: "robots", content: "index, follow" },
     ],
     links: [{ rel: "canonical", href: "https://ethixweb.com/policies/refunds" }],
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [

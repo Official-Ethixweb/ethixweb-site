@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -8,6 +9,9 @@ import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { useTheme } from "@/components/ThemeProvider";
 import { SystemConstellation } from "@/components/SystemConstellation";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
+import { formLabelClass, formInputClass } from "@/lib/form-styles";
 import {
   Mail,
   MapPin,
@@ -19,6 +23,7 @@ import {
   Code2,
   MessageSquare,
   Check,
+  Building2,
 } from "lucide-react";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
@@ -89,7 +94,7 @@ export const Route = createFileRoute("/contact")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "ContactPage",
           name: "Contact Ethixweb",
@@ -221,10 +226,17 @@ function ContactBody() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Request failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Request failed");
+      }
       setSent(true);
-    } catch {
-      setSubmitError("Something went wrong. Please email info@ethixweb.com directly.");
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please email info@ethixweb.com directly.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -345,7 +357,7 @@ function ContactBody() {
                               ) : (
                                 <span
                                   className={
-                                    active ? "text-primary-foreground" : "text-muted-foreground/70"
+                                    active ? "text-primary-foreground" : "text-muted-foreground"
                                   }
                                 >
                                   {i + 1}
@@ -370,7 +382,7 @@ function ContactBody() {
                                 : done
                                   ? "text-muted-foreground"
                                   : pending
-                                    ? "text-muted-foreground/60"
+                                    ? "text-muted-foreground"
                                     : ""
                             }`}
                           >
@@ -391,7 +403,7 @@ function ContactBody() {
                     transition={{ duration: 0.3 }}
                     className={`relative z-20 text-xs font-bold uppercase tracking-[0.22em] ${
                       status === "WAITING FOR YOU"
-                        ? "text-muted-foreground/70"
+                        ? "text-muted-foreground"
                         : status === "SENT ✓"
                           ? "text-primary"
                           : "text-primary/80"
@@ -404,6 +416,7 @@ function ContactBody() {
                   <div className="relative z-20 space-y-3 pt-2">
                     {[
                       { i: Mail, v: "info@ethixweb.com" },
+                      { i: Building2, v: "Ethixweb USA LLC · Wyoming, US" },
                       { i: MapPin, v: "Mon–Fri · 9 AM – 5 PM" },
                     ].map(({ i: I, v }) => (
                       <div
@@ -468,22 +481,36 @@ function ContactBody() {
                                 return (
                                   <motion.button
                                     key={id}
+                                    type="button"
+                                    aria-pressed={active}
                                     initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={{ opacity: 1, y: 0, scale: active ? 1.015 : 1 }}
                                     transition={{
-                                      duration: 0.24,
-                                      delay: index * 0.035,
-                                      ease: "easeOut",
+                                      opacity: {
+                                        duration: 0.24,
+                                        delay: index * 0.035,
+                                        ease: "easeOut",
+                                      },
+                                      y: { duration: 0.24, delay: index * 0.035, ease: "easeOut" },
+                                      scale: { duration: 0.22, ease: "easeOut" },
                                     }}
                                     whileHover={{ scale: 1.03, y: -2 }}
                                     whileTap={{ scale: 0.97 }}
                                     onClick={() => setSel((s) => ({ ...s, service: id }))}
-                                    className={`web-card group relative rounded-2xl p-4 text-left transition-all duration-200 ${
-                                      active
-                                        ? "premium-card ring-2 ring-primary/60"
-                                        : "premium-card"
+                                    onMouseMove={trackWebSpotlight}
+                                    className={`web-card group relative rounded-2xl p-4 text-left transition-all duration-200 premium-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                                      active ? "option-card-selected" : ""
                                     }`}
                                   >
+                                    <WebSpotlight />
+                                    {active && (
+                                      <span
+                                        style={{ position: "absolute" }}
+                                        className="right-3 top-3 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md"
+                                      >
+                                        <Check className="h-3 w-3" strokeWidth={3} />
+                                      </span>
+                                    )}
                                     <Icon
                                       className={`relative h-5 w-5 mb-2.5 transition-colors ${active ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`}
                                       strokeWidth={1.6}
@@ -502,7 +529,7 @@ function ContactBody() {
                             {/* Direct-contact fallback */}
                             <div
                               className={`glass mt-4 rounded-xl p-4 transition-all duration-200 ${
-                                isDirect ? "ring-2 ring-primary/40" : ""
+                                isDirect ? "option-card-selected" : ""
                               }`}
                             >
                               <p className="mb-3 text-sm leading-snug text-muted-foreground">
@@ -552,7 +579,9 @@ function ContactBody() {
                                 ))}
                               </div>
                               {isDirect && submitError && (
-                                <p className="mt-3 text-sm text-red-400">{submitError}</p>
+                                <p role="alert" className="mt-3 text-sm text-error-text">
+                                  {submitError}
+                                </p>
                               )}
                             </div>
                           </motion.div>
@@ -575,20 +604,36 @@ function ContactBody() {
                                 return (
                                   <motion.button
                                     key={id}
+                                    type="button"
+                                    aria-pressed={active}
                                     initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    animate={{ opacity: 1, y: 0, scale: active ? 1.015 : 1 }}
                                     transition={{
-                                      duration: 0.24,
-                                      delay: index * 0.04,
-                                      ease: "easeOut",
+                                      opacity: {
+                                        duration: 0.24,
+                                        delay: index * 0.04,
+                                        ease: "easeOut",
+                                      },
+                                      y: { duration: 0.24, delay: index * 0.04, ease: "easeOut" },
+                                      scale: { duration: 0.22, ease: "easeOut" },
                                     }}
                                     whileHover={{ scale: 1.03, y: -2 }}
                                     whileTap={{ scale: 0.97 }}
                                     onClick={() => setSel((s) => ({ ...s, timeline: id }))}
-                                    className={`premium-card relative rounded-2xl p-5 text-left transition-all duration-200 ${
-                                      active ? "ring-2 ring-primary/60" : ""
+                                    onMouseMove={trackWebSpotlight}
+                                    className={`group premium-card relative overflow-hidden rounded-2xl p-5 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                                      active ? "option-card-selected" : ""
                                     }`}
                                   >
+                                    <WebSpotlight />
+                                    {active && (
+                                      <span
+                                        style={{ position: "absolute" }}
+                                        className="right-3 top-3 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md"
+                                      >
+                                        <Check className="h-3 w-3" strokeWidth={3} />
+                                      </span>
+                                    )}
                                     <p className="font-semibold text-foreground">{label}</p>
                                     <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
                                   </motion.button>
@@ -661,7 +706,11 @@ function ContactBody() {
                                 type="tel"
                                 required={false}
                               />
-                              {submitError && <p className="text-sm text-red-400">{submitError}</p>}
+                              {submitError && (
+                                <p role="alert" className="text-sm text-error-text">
+                                  {submitError}
+                                </p>
+                              )}
                             </form>
                           </motion.div>
                         )}
@@ -894,16 +943,10 @@ function Field({
 }) {
   return (
     <div>
-      <label className="text-xs uppercase tracking-widest text-muted-foreground" htmlFor={name}>
+      <label className={formLabelClass} htmlFor={name}>
         {label}
       </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        className="mt-2 w-full rounded-xl border border-border bg-input/60 px-4 py-3 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
-      />
+      <input id={name} name={name} type={type} required={required} className={formInputClass} />
     </div>
   );
 }

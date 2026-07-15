@@ -1,16 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Briefcase, MapPin, Clock, IndianRupee, ArrowUpRight } from "lucide-react";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import type { Job } from "@/lib/careers-data";
 
 export function JobCard({ job }: { job: Job }) {
   return (
     <motion.div
       whileHover={{ y: -4 }}
+      onMouseMove={trackWebSpotlight}
       transition={{ duration: 0.25, ease: "easeOut" }}
       className="group glass web-card relative flex h-full flex-col rounded-3xl p-7 hover:bg-white/[0.06] transition-colors"
     >
-      <p className="text-xs font-bold uppercase tracking-widest text-primary">{job.department}</p>
+      <WebSpotlight />
+      <p className="text-xs font-bold uppercase tracking-widest text-primary-text">
+        {job.department}
+      </p>
       <h3 className="mt-2 font-display text-2xl font-semibold leading-snug">{job.title}</h3>
 
       <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
@@ -34,7 +40,7 @@ export function JobCard({ job }: { job: Job }) {
         <Link
           to="/careers/apply"
           search={{ role: job.id }}
-          className="magnetic inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow"
+          className="magnetic inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           Apply Now
           <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
@@ -42,7 +48,7 @@ export function JobCard({ job }: { job: Job }) {
         <Link
           to="/careers/$slug"
           params={{ slug: job.slug }}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold text-foreground hover:border-primary/40 hover:bg-primary/10 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-foreground hover:border-primary/40 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
         >
           View Details
         </Link>

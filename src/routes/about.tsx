@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { motion, useReducedMotion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
@@ -8,6 +9,8 @@ import { SystemConstellation } from "@/components/SystemConstellation";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { CardGrid } from "@/components/CardGrid";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { Target, Heart, Zap, ArrowUpRight, Compass, Eye, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
@@ -40,7 +43,7 @@ export const Route = createFileRoute("/about")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "AboutPage",
           name: "About Ethixweb",
@@ -177,7 +180,7 @@ function About() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="max-w-xl">
-              <p className="text-sm uppercase tracking-widest text-primary">Our story</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text">Our story</p>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.15] tracking-tight text-gradient pb-1">
                 Built for contractors tired of big agency theater.
               </h2>
@@ -200,7 +203,9 @@ function About() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">What drives us</p>
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                What drives us
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Mission &amp; vision
               </h2>
@@ -208,9 +213,13 @@ function About() {
           </Reveal>
           <div className="grid gap-6 md:grid-cols-2">
             <Reveal delay={0.05}>
-              <div className="glass rounded-3xl p-8 h-full lg:p-10">
+              <div
+                onMouseMove={trackWebSpotlight}
+                className="group relative h-full overflow-hidden rounded-3xl glass p-8 lg:p-10"
+              >
+                <WebSpotlight size="lg" />
                 <Compass className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
-                <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary">
+                <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary-text">
                   Our mission
                 </p>
                 <h3 className="font-display text-2xl font-semibold">
@@ -224,9 +233,13 @@ function About() {
               </div>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="glass rounded-3xl p-8 h-full lg:p-10">
+              <div
+                onMouseMove={trackWebSpotlight}
+                className="group relative h-full overflow-hidden rounded-3xl glass p-8 lg:p-10"
+              >
+                <WebSpotlight size="lg" />
                 <Eye className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
-                <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary">
+                <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary-text">
                   Our vision
                 </p>
                 <h3 className="font-display text-2xl font-semibold">
@@ -247,7 +260,9 @@ function About() {
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr] lg:items-start">
             <Reveal>
               <div>
-                <p className="mb-4 text-sm uppercase tracking-widest text-primary">How we work</p>
+                <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                  How we work
+                </p>
                 <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                   A clear process. Zero guesswork.
                 </h2>
@@ -264,7 +279,11 @@ function About() {
             <div className="grid gap-5 sm:grid-cols-2">
               {PROCESS_STEPS.map((s, i) => (
                 <Reveal key={s.t} delay={i * 0.08}>
-                  <div className="glass rounded-3xl p-8 h-full hover:bg-white/[0.06] transition">
+                  <div
+                    onMouseMove={trackWebSpotlight}
+                    className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition"
+                  >
+                    <WebSpotlight />
                     <div className="font-display text-5xl font-bold text-gradient-brand">{s.n}</div>
                     <h3 className="mt-4 font-display text-xl font-semibold">{s.t}</h3>
                     <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -280,7 +299,7 @@ function About() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
                 What we stand for
               </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
@@ -317,7 +336,9 @@ function About() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">Why Ethixweb</p>
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                Why Ethixweb
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Why clients choose us and stay.
               </h2>
@@ -327,7 +348,11 @@ function About() {
           <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {STATS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.06}>
-                <div className="glass rounded-3xl p-6 h-full text-center">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-6 text-center"
+                >
+                  <WebSpotlight />
                   <p className="font-display text-5xl font-bold text-gradient-brand">{s.value}</p>
                   <p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">
                     {s.label}
@@ -357,6 +382,24 @@ function About() {
                   <SignalTrace className="h-full w-full opacity-60" />
                 </div>
               </div>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      <section className="py-16">
+        <Container size="narrow">
+          <Reveal>
+            <div className="glass rounded-3xl p-8 text-center sm:p-10">
+              <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary-text">
+                US Business Entity
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Ethixweb operates in the United States through{" "}
+                <span className="font-semibold text-foreground">Ethixweb USA LLC</span>, a
+                Wyoming-registered company. When you work with us, you're contracting with a US
+                business entity, providing additional confidence, transparency, and accountability.
+              </p>
             </div>
           </Reveal>
         </Container>

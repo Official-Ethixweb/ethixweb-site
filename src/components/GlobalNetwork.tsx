@@ -8,100 +8,19 @@ import {
   useState,
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Activity, Radio, TrendingUp, Wrench, Zap } from "lucide-react";
+import { Radio, Zap } from "lucide-react";
 import { Reveal } from "./Reveal";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-type City = {
-  name: string;
-  lat: number;
-  lon: number;
-  tier: "primary" | "secondary" | "hub";
-  tz: string;
-};
-type Packet = { route: number; p: number; speed: number; opacity: number; r: number };
-
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const CITIES: City[] = [
-  { name: "Seattle", lat: 47.6, lon: -122.3, tier: "primary", tz: "America/Los_Angeles" },
-  { name: "Utah", lat: 40.76, lon: -111.89, tier: "primary", tz: "America/Denver" },
-  { name: "New York", lat: 40.71, lon: -74.0, tier: "primary", tz: "America/New_York" },
-  { name: "Canada", lat: 43.65, lon: -79.38, tier: "secondary", tz: "America/Toronto" },
-  { name: "United Kingdom", lat: 51.5, lon: -0.12, tier: "secondary", tz: "Europe/London" },
-  { name: "India", lat: 12.97, lon: 77.59, tier: "hub", tz: "Asia/Kolkata" },
-];
-
-const ROUTES: [string, string][] = [
-  ["India", "Seattle"],
-  ["India", "Utah"],
-  ["India", "New York"],
-  ["India", "United Kingdom"],
-  ["India", "Canada"],
-  ["Seattle", "Utah"],
-  ["Seattle", "New York"],
-  ["Seattle", "Canada"],
-  ["Seattle", "United Kingdom"],
-  ["Utah", "New York"],
-  ["Utah", "Canada"],
-  ["New York", "Canada"],
-  ["New York", "United Kingdom"],
-  ["Canada", "United Kingdom"],
-];
-
-const GHOST_ROUTES: [string, string, number, boolean][] = [
-  ["India", "Seattle", 0.8, false],
-  ["India", "Seattle", 0.28, true],
-  ["India", "New York", 0.74, false],
-  ["India", "United Kingdom", 0.64, false],
-  ["India", "Canada", 0.84, false],
-  ["India", "Utah", 0.72, false],
-  ["Seattle", "United Kingdom", 0.7, false],
-  ["Seattle", "New York", 0.58, true],
-  ["New York", "United Kingdom", 0.62, false],
-  ["Canada", "United Kingdom", 0.66, false],
-  ["India", "New York", 0.44, true],
-  ["India", "Seattle", 0.52, true],
-];
-
-const CLOCKS = [
-  { label: "India Hub", tz: "Asia/Kolkata" },
-  { label: "Seattle", tz: "America/Los_Angeles" },
-  { label: "Utah", tz: "America/Denver" },
-  { label: "New York", tz: "America/New_York" },
-  { label: "Canada", tz: "America/Toronto" },
-  { label: "UK", tz: "Europe/London" },
-];
-
-const STATUS_CARDS = [
-  {
-    city: "Seattle",
-    icon: Activity,
-    label: "Active Projects",
-    tz: "America/Los_Angeles",
-    tone: "emerald",
-  },
-  {
-    city: "Utah",
-    icon: Wrench,
-    label: "Maintenance & Support",
-    tz: "America/Denver",
-    tone: "amber",
-  },
-  {
-    city: "New York",
-    icon: TrendingUp,
-    label: "Strategy & Growth",
-    tz: "America/New_York",
-    tone: "emerald",
-  },
-];
-
-const METRICS = [
-  { v: "50+", l: "Projects Delivered", d: "Live websites, apps, and automations delivered." },
-  { v: "<1h", l: "Avg. Response Time", d: "Real replies within the hour, always." },
-  { v: "US First", l: "Operations Focus", d: "Proudly based in the United States." },
-  { v: "24/7", l: "Global Availability", d: "Around-the-clock support, every day, everywhere." },
-];
+import { WebSpotlight } from "./WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
+import {
+  CITIES,
+  ROUTES,
+  GHOST_ROUTES,
+  CLOCKS,
+  STATUS_CARDS,
+  METRICS,
+  type Packet,
+} from "@/lib/globe-data";
 
 // ─── Continent polygons for land detection ────────────────────────────────────
 // [lat, lon][] - equirectangular, used to fill an offscreen canvas once
@@ -492,6 +411,10 @@ const GlobeStage = forwardRef<GlobeStageHandle>(function GlobeStage(_props, ref)
   const [overlayTick, setOverlayTick] = useState(0);
   const [focusedCity, setFocusedCity] = useState<string | null>(null);
   const reduceMotion = useReducedMotion();
+  const reduceMotionRef = useRef(reduceMotion);
+  useEffect(() => {
+    reduceMotionRef.current = reduceMotion;
+  }, [reduceMotion]);
 
   const rotYRef = useRef(20);
   const rotXRef = useRef(-13);
@@ -670,7 +593,10 @@ const GlobeStage = forwardRef<GlobeStageHandle>(function GlobeStage(_props, ref)
         }
       } else {
         const idle = now - lastInteractRef.current > 1200 && !draggingRef.current;
-        if (idle) velYRef.current += (0.022 - velYRef.current) * 0.016;
+        // Respect prefers-reduced-motion: only ramp the idle auto-spin back
+        // up when motion is allowed, so a reduced-motion user's globe settles
+        // to a stop instead of spinning indefinitely.
+        if (idle && !reduceMotionRef.current) velYRef.current += (0.022 - velYRef.current) * 0.016;
         if (!draggingRef.current) {
           rotYRef.current += velYRef.current * dt;
           rotXRef.current += velXRef.current * dt;
@@ -1225,13 +1151,15 @@ function StatusCard({
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onFocus?.(data.city)}
+      onMouseMove={trackWebSpotlight}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") onFocus?.(data.city);
       }}
-      className="premium-card cursor-pointer rounded-2xl p-5 transition-colors hover:border-primary/35"
+      className="group premium-card relative cursor-pointer overflow-hidden rounded-2xl p-5 transition-colors hover:border-primary/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
     >
+      <WebSpotlight />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2">
@@ -1273,20 +1201,28 @@ function ActivityTicker({ onFocus }: { onFocus?: (city: string) => void }) {
     { t: "Push to prod", l: "Canada" },
   ];
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   useEffect(() => {
+    if (paused) return;
     const id = window.setInterval(() => setIndex((c) => (c + 1) % items.length), 3600);
     return () => window.clearInterval(id);
-  }, [items.length]);
+  }, [items.length, paused]);
   return (
     <div
-      className="premium-card cursor-pointer overflow-hidden rounded-2xl p-4 transition-colors hover:border-primary/35"
+      className="group premium-card relative cursor-pointer overflow-hidden rounded-2xl p-4 transition-colors hover:border-primary/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       onClick={() => onFocus?.(items[index].l)}
+      onMouseMove={trackWebSpotlight}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") onFocus?.(items[index].l);
       }}
     >
+      <WebSpotlight />
       <div className="mb-2 flex items-center gap-2">
         <Radio className="h-3.5 w-3.5 animate-pulse text-primary" />
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -1319,7 +1255,7 @@ export function GlobalNetwork() {
       <div className="relative mx-auto max-w-7xl">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary-text">
               Global Operations Network
             </p>
             <h2 className="pb-1 text-4xl font-extrabold leading-[1.05] text-gradient lg:text-6xl">

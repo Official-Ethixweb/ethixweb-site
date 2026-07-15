@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { jsonLdStringify } from "@/lib/json-ld";
 import {
   Outlet,
   Link,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouter,
   HeadContent,
   Scripts,
@@ -68,7 +68,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -121,7 +121,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-const SCHEMA_ORG_ORGANIZATION = JSON.stringify({
+const SCHEMA_ORG_ORGANIZATION = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Ethixweb",
@@ -138,7 +138,7 @@ const SCHEMA_ORG_ORGANIZATION = JSON.stringify({
   },
 });
 
-const SCHEMA_ORG_WEBSITE = JSON.stringify({
+const SCHEMA_ORG_WEBSITE = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Ethixweb",
@@ -169,11 +169,5 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  return <Outlet />;
 }

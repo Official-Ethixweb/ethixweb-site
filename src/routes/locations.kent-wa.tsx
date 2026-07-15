@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/locations/kent-wa")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
@@ -120,7 +121,7 @@ const industries = [
   "Professional Services (lawyers, consultants, healthcare)",
 ];
 
-const LOCAL_BUSINESS_SCHEMA = JSON.stringify({
+const LOCAL_BUSINESS_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "Ethixweb",
@@ -171,7 +172,7 @@ function Page() {
       <section className="py-16">
         <Container size="medium" className="glass-strong rounded-[2rem] p-8 sm:p-10 lg:p-14">
           <Reveal>
-            <p className="text-sm uppercase tracking-widest text-primary">Local web design</p>
+            <p className="text-sm uppercase tracking-widest text-primary-text">Local web design</p>
             <h2 className="mt-3 font-display text-4xl font-bold text-gradient pb-1">
               Professional web design for local businesses in Kent WA.
             </h2>
@@ -190,7 +191,7 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">
                 Our services in Kent WA
               </p>
               <h2 className="font-display text-4xl font-bold text-gradient pb-1">
@@ -208,7 +209,7 @@ function Page() {
         <Container className="grid items-start gap-10 sm:grid-cols-2">
           <Reveal>
             <div className="glass-strong rounded-3xl p-8">
-              <p className="text-sm uppercase tracking-widest text-primary">Why it matters</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text">Why it matters</p>
               <h3 className="mt-3 font-display text-2xl font-semibold">
                 Your Kent WA business needs a professional site.
               </h3>
@@ -228,7 +229,9 @@ function Page() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="glass-strong rounded-3xl p-8">
-              <p className="text-sm uppercase tracking-widest text-primary">Industries we serve</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text">
+                Industries we serve
+              </p>
               <h3 className="mt-3 font-display text-2xl font-semibold">
                 From plumbers to professional services.
               </h3>

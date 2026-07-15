@@ -45,6 +45,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-error-text: var(--error-text);
+  --color-primary-text: var(--primary-text);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -93,16 +95,30 @@
   --accent-foreground: #f8f3f2;
   --destructive: #c0272d;
   --destructive-foreground: #fafafa;
+  /* ── AA-contrast text variants: `--destructive`/`--primary` are tuned for
+     large surfaces (buttons, borders, icons) and fail 4.5:1 for small text
+     on `--background` in dark mode. These are for small red TEXT only
+     (error messages, eyebrow labels) - kept separate so button/icon colors
+     stay on-brand while text stays readable. ── */
+  --error-text: #f87171;
+  --primary-text: #e0555a;
   --border: rgba(255, 255, 255, 0.07);
   --input: #100f18;
   --ring: #c0272d;
   --gradient-brand: linear-gradient(135deg, #8a181c 0%, #391516 48%, #27121d 100%);
   --gradient-hero:
-    radial-gradient(ellipse 80% 55% at 72% 6%, rgba(138, 24, 28, 0.34), transparent 68%),
-    radial-gradient(ellipse 65% 46% at 18% 18%, rgba(57, 21, 22, 0.55), transparent 64%),
+    radial-gradient(ellipse 70% 48% at 72% 6%, rgba(138, 24, 28, 0.2), transparent 68%),
+    radial-gradient(ellipse 55% 40% at 18% 18%, rgba(57, 21, 22, 0.32), transparent 64%),
     linear-gradient(180deg, #0c0d10 0%, #100f18 48%, #180f0f 100%);
   --gradient-glow: radial-gradient(circle at center, rgba(138, 24, 28, 0.34), transparent 62%);
-  --shadow-glow: 0 0 48px rgba(138, 24, 28, 0.24), 0 0 120px rgba(57, 21, 22, 0.18);
+  --shadow-glow: 0 0 28px rgba(138, 24, 28, 0.14), 0 0 72px rgba(57, 21, 22, 0.1);
+
+  /* ── Primary CTA (Vercel/Apple-style inverted button): near-black on light
+     backgrounds, near-white on dark - keeps the loudest interactive element
+     neutral so red stays reserved for accents/focus rather than button fills. ── */
+  --cta-bg: #f5efee;
+  --cta-bg-hover: #e4dad8;
+  --cta-fg: #0c0d10;
 
   /* ── Shadow system: 3-tier elevation, consistent across cards/panels ── */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -122,7 +138,7 @@
 
 /* ── Light mode token overrides ───────────────────────────────────────────── */
 :root.light {
-  --background: #fff8f8;
+  --background: #fdfbfa;
   --foreground: #16100f;
   --charcoal: #ede9e5;
   --card: #ffffff;
@@ -136,21 +152,29 @@
   --secondary-foreground: #16100f;
   --muted: #ede9e5;
   --muted-foreground: #7a716b;
-  --accent: #f0e8e8;
+  --accent: #f1eeec;
   --accent-foreground: #16100f;
   --destructive: #8a181c;
   --destructive-foreground: #ffffff;
+  /* Already AA-compliant against the light background - see the dark-mode
+     definitions above for why these exist as separate tokens. */
+  --error-text: #8a181c;
+  --primary-text: #c0272d;
   --border: rgba(0, 0, 0, 0.08);
   --input: #ede9e5;
   --ring: #8a181c;
   --gradient-brand: linear-gradient(135deg, #8a181c 0%, #c0403c 48%, #e07070 100%);
   --gradient-hero:
-    radial-gradient(ellipse 90% 70% at 78% 5%, rgba(192, 39, 45, 0.45), transparent 58%),
-    radial-gradient(ellipse 65% 55% at 10% 25%, rgba(160, 28, 32, 0.28), transparent 55%),
-    radial-gradient(ellipse 55% 50% at 55% 60%, rgba(138, 24, 28, 0.18), transparent 65%),
-    linear-gradient(180deg, #fff5f5 0%, #fef0f0 50%, #fce8e8 100%);
+    radial-gradient(ellipse 60% 46% at 82% 0%, rgba(192, 39, 45, 0.16), transparent 62%),
+    radial-gradient(ellipse 46% 36% at 8% 15%, rgba(160, 28, 32, 0.08), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fdfbfa 55%, #fbf7f6 100%);
   --gradient-glow: radial-gradient(circle at center, rgba(138, 24, 28, 0.14), transparent 62%);
-  --shadow-glow: 0 0 48px rgba(138, 24, 28, 0.16), 0 0 120px rgba(138, 24, 28, 0.09);
+  --shadow-glow: 0 0 24px rgba(138, 24, 28, 0.09), 0 0 60px rgba(138, 24, 28, 0.05);
+
+  /* ── Primary CTA: inverted to near-black on light backgrounds ── */
+  --cta-bg: #15100f;
+  --cta-bg-hover: #2a201f;
+  --cta-fg: #ffffff;
 
   /* ── Shadow system: 3-tier elevation, consistent across cards/panels ── */
   --shadow-sm: 0 1px 2px rgba(20, 16, 15, 0.04), 0 1px 3px rgba(20, 16, 15, 0.05);
@@ -290,6 +314,72 @@ html.dark {
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
+  /* ── Primary/secondary CTA language: calm, reassuring hover instead of
+     dramatic transforms - a flat elevation + shadow + slight scale, tuned
+     for an older, less mouse-adventurous audience. Red is kept only for the
+     focus ring, never the fill. ── */
+  .btn-primary {
+    background: var(--cta-bg);
+    color: var(--cta-fg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 220ms cubic-bezier(var(--ease-premium)),
+      box-shadow 220ms cubic-bezier(var(--ease-premium)),
+      background-color 220ms ease;
+  }
+  .btn-primary:hover {
+    background: var(--cta-bg-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px) scale(1.015);
+  }
+  .btn-primary:focus-visible {
+    outline: none;
+    box-shadow:
+      var(--shadow-sm),
+      0 0 0 3px var(--ring);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:hover {
+      transform: none;
+    }
+  }
+
+  .btn-secondary {
+    background: var(--card);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease;
+  }
+  .btn-secondary:hover {
+    background: var(--muted);
+  }
+  .btn-secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  /* ── Neutral case-study mockup background - replaces the red-tinted hero
+     gradient so card visuals read as calm/premium rather than branded-red. ── */
+  .card-mockup-bg {
+    background: linear-gradient(150deg, #1c1b20 0%, #17151a 55%, #120f13 100%);
+  }
+
+  /* ── Selected/active state for choice cards (role pickers, service/timeline
+     selectors, and any future "pick one of several" option grid). A solid
+     2px ring + brand tint + soft glow, all via box-shadow so nothing shifts
+     layout - scale is applied separately per-component (Framer Motion owns
+     `transform` on cards that already use whileHover/whileTap, so a CSS
+     transform here would just get clobbered by its inline style). ── */
+  .option-card-selected {
+    box-shadow:
+      0 0 0 2px var(--color-primary),
+      inset 0 0 0 999px rgba(192, 39, 45, 0.055),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 28px -10px rgba(192, 39, 45, 0.4);
+  }
+
   /* ── Corner spiderweb accent for cards (echoes the Hero's SpiderwebNetwork) ──
      A quarter-web is masked into the card's top-right corner: near-invisible at
      rest, it fades in and "energises" on hover via a shimmer sweep confined to
@@ -353,9 +443,9 @@ html.dark {
   }
   .web-card:hover::before,
   .web-card:focus-within::before {
-    opacity: 0.4;
-    filter: drop-shadow(0 0 8px rgba(255, 90, 100, 0.6))
-      drop-shadow(0 0 18px rgba(220, 30, 40, 0.35));
+    opacity: 0.28;
+    filter: drop-shadow(0 0 6px rgba(255, 90, 100, 0.4))
+      drop-shadow(0 0 12px rgba(220, 30, 40, 0.22));
   }
   .web-card:hover::after,
   .web-card:focus-within::after {
@@ -463,6 +553,15 @@ html.dark {
   }
   .group:hover .web-spotlight {
     opacity: 1;
+  }
+  /* Touch devices can't hover, so the spotlight self-activates on scroll
+     instead (`.is-inview` toggled by an IntersectionObserver in
+     WebSpotlight.tsx). Scoped to `hover: none` so it never fights the real
+     hover effect on mouse/trackpad devices. */
+  @media (hover: none) {
+    .web-spotlight.is-inview {
+      opacity: 1;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .web-spotlight {
@@ -1168,11 +1267,13 @@ html.dark {
 .light body {
   background-color: var(--color-background);
   background-image:
-    radial-gradient(ellipse 70% 60% at 70% 12%, rgba(192, 39, 45, 0.22), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 20% 30%, rgba(160, 28, 32, 0.15), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 80%, rgba(138, 24, 28, 0.14), transparent 60%),
-    linear-gradient(180deg, #fff5f5 0%, #fef0f0 50%, #fce8e8 100%);
+    radial-gradient(ellipse 55% 46% at 85% 8%, rgba(192, 39, 45, 0.09), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fdfbfa 55%, #fbf7f6 100%);
   color-scheme: light;
+}
+
+.light .card-mockup-bg {
+  background: linear-gradient(150deg, #f7f4f2 0%, #efe9e6 55%, #e6dedb 100%);
 }
 
 .light .glass {
@@ -1324,6 +1425,34 @@ html.dark {
   }
 }
 
+/* ── Mobile scroll performance: backdrop-filter forces the browser to
+   re-sample everything behind an element on every single frame, which is
+   uniquely expensive versus a plain filter (blurred content that doesn't move
+   can be composited once). The navbar's glass-strong sits `position: fixed`
+   over actively-scrolling, animation-heavy content for essentially the whole
+   scroll session, making it one of the biggest janky-scroll offenders on
+   mobile GPUs. Coarse-pointer (touch) devices drop the blur entirely and fall
+   back to a flatter, more opaque background to keep contrast/legibility. ── */
+@media (pointer: coarse) {
+  .glass,
+  .glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass {
+    background: rgba(24, 13, 14, 0.92);
+  }
+  .glass-strong {
+    background: rgba(20, 11, 12, 0.96);
+  }
+  .light .glass {
+    background: rgba(255, 255, 255, 0.94);
+  }
+  .light .glass-strong {
+    background: rgba(255, 255, 255, 0.97);
+  }
+}
+
 /* ── Safe area insets for notched devices (iPhone X+, Android cutouts) ─────── */
 body {
   padding-left: env(safe-area-inset-left);
@@ -1353,6 +1482,7 @@ html {
   flex-wrap: wrap;
   white-space: pre-wrap;
   position: relative;
+  overflow: hidden;
 }
 .text-rotate-sr-only {
   position: absolute;

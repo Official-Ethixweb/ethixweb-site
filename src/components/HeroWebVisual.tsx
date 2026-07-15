@@ -48,7 +48,14 @@ function useIsSleeping() {
  * that wants the same "follow the cursor" moment as the homepage - the web
  * itself is static, only the hub emblem tilts toward mx/my.
  */
-export function HeroWebVisual({ showBadges = true }: { showBadges?: boolean }) {
+export function HeroWebVisual({
+  showBadges = true,
+  webOpacity = 1,
+}: {
+  showBadges?: boolean;
+  /** Fades the web artwork/strands while keeping the glass emblem at full opacity. */
+  webOpacity?: number;
+}) {
   const sleeping = useIsSleeping();
   const { theme } = useTheme();
   const reduceMotion = useReducedMotion();
@@ -105,6 +112,7 @@ export function HeroWebVisual({ showBadges = true }: { showBadges?: boolean }) {
           reduceMotion={!!reduceMotion}
           theme={theme}
           showBadges={showBadges}
+          webOpacity={webOpacity}
         />
         {/* starfield dots */}
         {STARFIELD_DOTS.map((dot, i) => (

@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { ChevronRight, Home } from "lucide-react";
+import { SITE_URL } from "@/lib/site";
 
 export interface BreadcrumbItem {
   label: string;
   to?: string;
 }
-
-const SITE_URL = "https://ethixweb.com";
 
 export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   const schema = {
@@ -24,7 +24,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
     <nav aria-label="Breadcrumb" className="relative z-10 mx-auto max-w-7xl px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdStringify(schema) }}
       />
       <ol className="flex flex-wrap items-center gap-1.5 py-4 text-xs text-muted-foreground">
         <li className="flex items-center gap-1.5">

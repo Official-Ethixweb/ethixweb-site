@@ -143,7 +143,10 @@ function ScreeningPage() {
               <Reveal key="intro">
                 <div className="premium-card rounded-3xl p-6 sm:p-8">
                   {stage === "error" && (
-                    <p className="mb-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                    <p
+                      role="alert"
+                      className="mb-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-error-text"
+                    >
                       {errorMsg}
                     </p>
                   )}
@@ -276,13 +279,13 @@ function QuestionCard({
       className="premium-card rounded-3xl p-6 sm:p-8"
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-xs font-bold uppercase tracking-widest text-primary">
+        <span className="text-xs font-bold uppercase tracking-widest text-primary-text">
           Question {index + 1} of {total} · {question.type === "critique" ? "Critique" : "Scenario"}
         </span>
         <span
           className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold tabular-nums ${
             secondsLeft <= 30
-              ? "border-red-500/40 text-red-400"
+              ? "border-red-500/40 text-error-text"
               : "border-white/10 text-muted-foreground"
           }`}
         >

@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -49,12 +50,16 @@ export const Route = createFileRoute("/careers/$slug")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify({
+          children: jsonLdStringify({
             "@context": "https://schema.org",
             "@type": "JobPosting",
             title: job.title,
             description: job.about,
-            datePosted: "2026-01-01",
+            datePosted: job.datePosted,
+            // Rolling window rather than a fixed date, since this is a
+            // standing/evergreen listing, not a one-off posting with a known
+            // close date - refreshed on every render.
+            validThrough: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
             employmentType: "FULL_TIME",
             hiringOrganization: {
               "@type": "Organization",
@@ -91,7 +96,7 @@ function JobDetail() {
         <Container size="medium" className="relative">
           <Breadcrumbs items={[{ label: "Careers", to: "/careers" }, { label: job.title }]} />
           <Reveal>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary">{job.department}</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary-text">{job.department}</p>
             <h1 className="mt-5 font-display text-6xl font-bold text-gradient leading-[1.1] pb-1">
               {job.title}
             </h1>

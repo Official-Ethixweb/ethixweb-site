@@ -5,13 +5,14 @@ import {
   SERVICE_LABELS,
   TIMELINE_LABELS,
   FROM_EMAIL,
-  REPLY_TO_INFO,
   escapeHtml,
   emailRow,
   emailShell,
   emailButton,
 } from "@/lib/email";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { recordContactSubmission, markNotificationSent } from "@/lib/leads";
+import { isSameOriginRequest } from "@/lib/origin-check";
 
 const TO_EMAIL = "info@ethixweb.com";
 
@@ -19,6 +20,10 @@ export const Route = createFileRoute("/api/contact")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!isSameOriginRequest(request)) {
+          return Response.json({ ok: false, error: "Invalid request origin" }, { status: 403 });
+        }
+
         if (!checkRateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
           return Response.json(
             { ok: false, error: "Too many requests. Please try again later." },
@@ -52,6 +57,18 @@ export const Route = createFileRoute("/api/contact")({
             { status: 400 },
           );
         }
+
+        // Durable record first - a bounced/filtered notification email must
+        // never be the only trace of this lead. Best-effort: never throws,
+        // and doesn't block the request if Supabase isn't configured.
+        const leadId = await recordContactSubmission({
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          service: typeof service === "string" ? service : null,
+          timeline: typeof timeline === "string" ? timeline : null,
+          projectDetails: cleanOther,
+        });
 
         const apiKey = process.env.RESEND_API_KEY;
         if (!apiKey) {
@@ -102,21 +119,6 @@ export const Route = createFileRoute("/api/contact")({
             </div>`,
         });
 
-        // ── Confirmation email (sent to the person who submitted the form) ──
-        const confirmationHtml = emailShell({
-          eyebrow: "We've got your message",
-          footerText: "This confirms your submission to Ethixweb &middot; ethixweb.com",
-          bodyHtml: `
-            <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#1a1a1a;">
-              Hi ${escapeHtml(firstName)}, thanks for reaching out to Ethixweb! We've received your details below and our team will follow up within one business day with a clear, no jargon plan.
-            </p>
-            ${summaryTable}
-            <p style="margin:20px 0 0;font-size:13px;line-height:1.6;color:#9aa0a6;">
-              Didn't submit this? You can safely ignore this email, or let us know at
-              <a href="mailto:${REPLY_TO_INFO}" style="color:#c0272d;">${REPLY_TO_INFO}</a>.
-            </p>`,
-        });
-
         const resend = new Resend(apiKey);
 
         // Notification to the Ethixweb team is the critical send - the lead
@@ -134,30 +136,18 @@ export const Route = createFileRoute("/api/contact")({
             console.error("[api/contact] Resend notification error:", error);
             return Response.json({ ok: false, error: "Failed to send email" }, { status: 502 });
           }
+          await markNotificationSent("contact_submissions", leadId);
         } catch (err) {
           console.error("[api/contact] Resend notification threw:", err);
           return Response.json({ ok: false, error: "Failed to send email" }, { status: 502 });
         }
 
-        // Confirmation to the user is best-effort - log failures but don't
-        // fail the request, since the lead has already been captured.
-        try {
-          const { error } = await resend.emails.send({
-            from: FROM_EMAIL,
-            to: cleanEmail,
-            replyTo: REPLY_TO_INFO,
-            subject: "We've received your message - Ethixweb",
-            html: confirmationHtml,
-          });
-
-          if (error) {
-            console.error("[api/contact] Resend confirmation error:", error);
-          }
-        } catch (err) {
-          console.error("[api/contact] Resend confirmation threw:", err);
-        }
-
-        return Response.json({ ok: true });
+        // No confirmation email is sent to the submitted address: doing so
+        // would let anyone use this endpoint to relay a branded email to an
+        // arbitrary inbox with no ownership check. The in-app success state
+        // already confirms receipt; the team reply (above) is the only
+        // outbound email tied to the submitted address.
+        return Response.json({ ok: true }, { status: 201 });
       },
     },
   },

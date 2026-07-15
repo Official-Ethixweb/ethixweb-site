@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Palette,
   Megaphone,
@@ -114,7 +117,7 @@ const whyUs = [
   { i: Eye, t: "Attention to Detail", d: "Every design element crafted for maximum impact." },
 ];
 
-const SERVICE_SCHEMA = JSON.stringify({
+const SERVICE_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Graphic Design & Branding",
@@ -143,7 +146,7 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">What We Do</p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Why Graphic Design & Branding Matter
               </h2>
@@ -152,7 +155,11 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-3 gap-5">
             {whyMatters.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.08}>
-                <div className="glass rounded-3xl p-8 h-full hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition"
+                >
+                  <WebSpotlight />
                   <s.i className="h-10 w-10 text-primary mb-5" strokeWidth={1.5} />
                   <h3 className="font-display text-xl font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -168,7 +175,9 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">Our Services</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">
+                Our Services
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Graphic Design & Branding Services
               </h2>
@@ -177,8 +186,12 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.05}>
-                <div className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition"
+                >
                   <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-primary/30 blur-3xl opacity-0 group-hover:opacity-100 transition" />
+                  <WebSpotlight />
                   <s.i className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
                   <h3 className="font-display text-xl font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -194,7 +207,9 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">Why Choose Us</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">
+                Why Choose Us
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Design that earns attention.
               </h2>
@@ -203,7 +218,11 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {whyUs.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.06}>
-                <div className="glass rounded-3xl p-7 h-full hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-7 hover:bg-white/[0.06] transition"
+                >
+                  <WebSpotlight />
                   <s.i className="h-9 w-9 text-primary mb-5" strokeWidth={1.5} />
                   <h3 className="font-display text-lg font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -220,7 +239,9 @@ function Page() {
           <GlowBlob size="md" color="primary" blur={120} className="-top-32 -left-32" />
           <GlowBlob size="md" color="brand" blur={120} className="-bottom-32 -right-32" />
           <Reveal>
-            <p className="text-sm uppercase tracking-widest text-primary mb-4 relative">Why Us</p>
+            <p className="text-sm uppercase tracking-widest text-primary-text mb-4 relative">
+              Why Us
+            </p>
             <h2 className="relative font-display text-5xl font-bold text-gradient max-w-3xl pb-1">
               Graphic Design & Branding
             </h2>

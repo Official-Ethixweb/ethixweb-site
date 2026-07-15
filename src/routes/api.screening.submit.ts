@@ -1,18 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { Resend } from "resend";
-import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { getSupabase, type ScreeningTestRow } from "@/lib/supabase";
 import { scoreScreeningTest } from "@/lib/anthropic";
 import { getScreeningConfig } from "@/lib/screening-rubrics";
 import { signDecisionToken } from "@/lib/screening-tokens";
 import { escapeHtml, emailRow, emailShell, emailButton, FROM_EMAIL, APP_URL } from "@/lib/email";
+import { isSameOriginRequest } from "@/lib/origin-check";
 
 export const Route = createFileRoute("/api/screening/submit")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!checkRateLimit(`screening-submit:${clientIp(request)}`, 10, 10 * 60 * 1000)) {
+        if (!isSameOriginRequest(request)) {
+          return Response.json({ ok: false, error: "Invalid request origin" }, { status: 403 });
+        }
+
+        if (
+          !(await checkRateLimitDurable(
+            `screening-submit:${clientIp(request)}`,
+            10,
+            10 * 60 * 1000,
+          ))
+        ) {
           return Response.json(
             { ok: false, error: "Too many requests. Please try again later." },
             { status: 429 },
@@ -55,6 +66,31 @@ export const Route = createFileRoute("/api/screening/submit")({
           return Response.json({ ok: false, error: "Unknown role for this test" }, { status: 400 });
         }
 
+        // Atomically claim the test before paying for an LLM scoring call.
+        // The WHERE clause only matches rows still in a claimable state, so
+        // under concurrent duplicate requests exactly one succeeds - the
+        // other gets zero rows back and bails out before ever calling
+        // scoreScreeningTest, instead of both scoring (and paying for) the
+        // same test.
+        const { data: claimed, error: claimError } = await supabase
+          .from("screening_tests")
+          .update({ status: "submitted", submitted_at: new Date().toISOString() })
+          .eq("id", testId)
+          .in("status", ["pending", "in_progress"])
+          .select("id")
+          .maybeSingle();
+
+        if (claimError) {
+          console.error("[api/screening/submit] Supabase claim error:", claimError);
+          return Response.json({ ok: false, error: "Could not save the result" }, { status: 502 });
+        }
+        if (!claimed) {
+          return Response.json(
+            { ok: false, error: "This test has already been submitted" },
+            { status: 409 },
+          );
+        }
+
         let scoring;
         try {
           scoring = await scoreScreeningTest(config, test.questions, answers);
@@ -80,7 +116,6 @@ export const Route = createFileRoute("/api/screening/submit")({
             overall_reasoning: scoring.overallReasoning,
             tab_switch_count: typeof tabSwitchCount === "number" ? tabSwitchCount : 0,
             blur_count: typeof blurCount === "number" ? blurCount : 0,
-            submitted_at: new Date().toISOString(),
           })
           .eq("id", testId);
 
@@ -111,8 +146,10 @@ async function notifyReviewer(
     return;
   }
 
-  const approveUrl = `${APP_URL}/api/screening/decision?id=${test.id}&decision=approved&token=${signDecisionToken(test.id, "approved")}`;
-  const rejectUrl = `${APP_URL}/api/screening/decision?id=${test.id}&decision=rejected&token=${signDecisionToken(test.id, "rejected")}`;
+  const approve = signDecisionToken(test.id, "approved");
+  const reject = signDecisionToken(test.id, "rejected");
+  const approveUrl = `${APP_URL}/api/screening/decision?id=${test.id}&decision=approved&token=${approve.token}&exp=${approve.exp}`;
+  const rejectUrl = `${APP_URL}/api/screening/decision?id=${test.id}&decision=rejected&token=${reject.token}&exp=${reject.exp}`;
 
   const perQuestionHtml = scoring.perQuestion
     .map(

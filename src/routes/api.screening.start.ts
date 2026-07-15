@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { getSupabase } from "@/lib/supabase";
 import { generateScreeningTest } from "@/lib/anthropic";
 import { getScreeningConfig } from "@/lib/screening-rubrics";
+import { isSameOriginRequest } from "@/lib/origin-check";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -11,7 +12,13 @@ export const Route = createFileRoute("/api/screening/start")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!checkRateLimit(`screening-start:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+        if (!isSameOriginRequest(request)) {
+          return Response.json({ ok: false, error: "Invalid request origin" }, { status: 403 });
+        }
+
+        if (
+          !(await checkRateLimitDurable(`screening-start:${clientIp(request)}`, 5, 10 * 60 * 1000))
+        ) {
           return Response.json(
             { ok: false, error: "Too many requests. Please try again later." },
             { status: 429 },
@@ -85,12 +92,15 @@ export const Route = createFileRoute("/api/screening/start")({
           );
         }
 
-        return Response.json({
-          ok: true,
-          testId: data.id,
-          expiresAt: data.expires_at,
-          questions,
-        });
+        return Response.json(
+          {
+            ok: true,
+            testId: data.id,
+            expiresAt: data.expires_at,
+            questions,
+          },
+          { status: 201 },
+        );
       },
     },
   },

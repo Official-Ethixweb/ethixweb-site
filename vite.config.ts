@@ -25,7 +25,11 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
-    tanstackStart(),
+    // @ts-expect-error - `autoCodeSplitting` is the stable, runtime-required
+    // option (the plugin throws at startup if the old `experimental.
+    // enableCodeSplitting` path is used instead), but this package's shipped
+    // .d.ts hasn't caught up yet. Verified via `npm run dev`/`npm run build`.
+    tanstackStart({ router: { autoCodeSplitting: true } }),
     nitro({ preset: "vercel" }),
     viteReact(),
   ],

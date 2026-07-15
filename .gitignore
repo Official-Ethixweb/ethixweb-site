@@ -44,3 +44,8 @@ dist-ssr
 /task */
 Screenshot *.png
 image (*.png
+
+# Design reference material (not app assets, never shipped)
+/DESIRED ONE/
+/Favicon/
+/HERO/

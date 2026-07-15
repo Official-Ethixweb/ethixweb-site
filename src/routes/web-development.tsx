@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Code2,
   Smartphone,
@@ -113,7 +116,7 @@ const promises = [
   "Fast loading",
 ];
 
-const SERVICE_SCHEMA = JSON.stringify({
+const SERVICE_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Website Design & Development",
@@ -141,7 +144,7 @@ function Page() {
       <section className="py-24">
         <Container size="medium" className="text-center">
           <Reveal>
-            <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
+            <p className="text-sm uppercase tracking-widest text-primary-text mb-4">What We Do</p>
             <h2 className="font-display text-5xl font-bold text-gradient pb-1">
               Expert Website Design for Home Service Businesses
             </h2>
@@ -166,7 +169,9 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">Website Process</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">
+                Website Process
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Designing digital experiences that inspire.
               </h2>
@@ -178,7 +183,11 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {processSteps.map((s, i) => (
               <Reveal key={s.n} delay={i * 0.08}>
-                <div className="glass rounded-3xl p-8 h-full hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition"
+                >
+                  <WebSpotlight />
                   <div className="font-display text-5xl font-bold text-gradient-brand">{s.n}</div>
                   <h3 className="mt-6 font-display text-xl font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -194,7 +203,7 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">Services</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">Services</p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Everything you need under one roof.
               </h2>
@@ -203,8 +212,12 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.05}>
-                <div className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-8 hover:bg-white/[0.06] transition"
+                >
                   <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-primary/30 blur-3xl opacity-0 group-hover:opacity-100 transition" />
+                  <WebSpotlight />
                   <s.i className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
                   <h3 className="font-display text-xl font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -222,7 +235,7 @@ function Page() {
           <Reveal>
             <div className="flex items-center gap-3 mb-6">
               <Sparkles className="h-5 w-5 text-primary" />
-              <p className="text-sm uppercase tracking-widest text-primary">
+              <p className="text-sm uppercase tracking-widest text-primary-text">
                 All of Our Websites Are
               </p>
             </div>

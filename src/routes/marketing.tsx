@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
 import { CTASection } from "@/components/CTASection";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Megaphone,
   BarChart3,
@@ -92,7 +95,7 @@ const plans = [
   },
 ];
 
-const SERVICE_SCHEMA = JSON.stringify({
+const SERVICE_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Social Media Marketing",
@@ -119,7 +122,7 @@ function Page() {
       <section className="py-24">
         <Container size="medium" className="text-center">
           <Reveal>
-            <p className="text-sm uppercase tracking-widest text-primary mb-4">What We Do</p>
+            <p className="text-sm uppercase tracking-widest text-primary-text mb-4">What We Do</p>
             <h2 className="font-display text-5xl font-bold text-gradient pb-1">
               Elevate Your Brand with Social Media Marketing
             </h2>
@@ -148,7 +151,9 @@ function Page() {
               <div className="absolute -inset-8 bg-gradient-glow blur-3xl opacity-50" />
               <div className="relative glass-strong rounded-[2rem] p-10 text-center">
                 <Users className="h-10 w-10 text-primary mx-auto mb-4" />
-                <p className="text-sm uppercase tracking-widest text-primary">Interesting Fact</p>
+                <p className="text-sm uppercase tracking-widest text-primary-text">
+                  Interesting Fact
+                </p>
                 <div className="mt-4 font-display text-6xl font-bold text-gradient-brand">
                   3.4B+
                 </div>
@@ -179,7 +184,9 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">We'll Help You</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">
+                We'll Help You
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Strategy. Content. Conversion.
               </h2>
@@ -192,7 +199,11 @@ function Page() {
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {helpItems.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.06}>
-                <div className="glass rounded-3xl p-7 h-full hover:bg-white/[0.06] transition">
+                <div
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative h-full overflow-hidden rounded-3xl glass p-7 hover:bg-white/[0.06] transition"
+                >
+                  <WebSpotlight />
                   <s.i className="h-9 w-9 text-primary mb-5" strokeWidth={1.5} />
                   <h3 className="font-display text-lg font-semibold">{s.t}</h3>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.d}</p>
@@ -216,7 +227,7 @@ function Page() {
         <Container>
           <Reveal>
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-widest text-primary mb-4">Pricing</p>
+              <p className="text-sm uppercase tracking-widest text-primary-text mb-4">Pricing</p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Become the social media leader in your local market.
               </h2>
@@ -226,12 +237,14 @@ function Page() {
             {plans.map((p, i) => (
               <Reveal key={p.name} delay={i * 0.08}>
                 <div
-                  className={`relative h-full rounded-3xl p-8 ${
+                  onMouseMove={trackWebSpotlight}
+                  className={`group relative h-full overflow-hidden rounded-3xl p-8 ${
                     p.featured
                       ? "bg-gradient-brand shadow-glow ring-1 ring-primary/40"
                       : "glass hover:bg-white/[0.06] transition"
                   }`}
                 >
+                  <WebSpotlight />
                   {p.featured && (
                     <span className="absolute -top-3 right-6 rounded-full bg-background px-3 py-1 text-[10px] uppercase tracking-widest">
                       Most Popular

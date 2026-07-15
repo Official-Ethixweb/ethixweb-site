@@ -2,7 +2,6 @@
 // Used by every lead-capture API route so notification + confirmation
 // emails share one branded layout, helpers, and copy.
 
-export const SITE_URL = "https://ethixweb.com";
 export const APP_URL = "https://ethixweb-reimagined.vercel.app";
 export const LOGO_URL = `${APP_URL}/ethixweb.png`;
 export const BRAND_RED = "#c0272d";

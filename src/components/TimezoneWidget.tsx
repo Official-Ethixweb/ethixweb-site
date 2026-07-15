@@ -105,8 +105,15 @@ export function TimezoneWidget() {
         setOpen(false);
       }
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, []);
 
   // The dropdown is portaled to <body> (its trigger sits inside a navbar container
@@ -152,7 +159,9 @@ export function TimezoneWidget() {
       <button
         ref={buttonRef}
         onClick={toggleOpen}
-        className="hidden md:inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+        aria-haspopup="true"
+        aria-expanded={open}
+        className="hidden md:inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       >
         <span className="sr-only">Global timezone: </span>
         <span className="relative flex h-1.5 w-1.5 shrink-0">

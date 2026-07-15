@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { jsonLdStringify } from "@/lib/json-ld";
+import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
@@ -48,7 +50,7 @@ export const Route = createFileRoute("/careers/")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
+        children: jsonLdStringify({
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: "Open roles at Ethixweb",
@@ -168,6 +170,8 @@ function CardPhoto({ src, alt, aspect }: { src: string; alt: string; aspect: str
 }
 
 function Careers() {
+  const reduceMotion = useReducedMotion();
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -226,7 +230,7 @@ function Careers() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
                 Life at Ethixweb
               </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
@@ -295,7 +299,9 @@ function Careers() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-16 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">Hiring process</p>
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                Hiring process
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 A clear path from application to offer.
               </h2>
@@ -304,24 +310,54 @@ function Careers() {
 
           <div className="relative">
             <div
-              className="absolute top-5 left-0 right-0 hidden h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent lg:block"
+              className="absolute top-[17px] hidden h-1.5 overflow-hidden rounded-full lg:block"
+              style={{
+                left: `${(0.5 / HIRING_PROCESS.length) * 100}%`,
+                right: `${(0.5 / HIRING_PROCESS.length) * 100}%`,
+              }}
               aria-hidden="true"
-            />
+            >
+              {/* Faint rail for the full path */}
+              <div className="absolute inset-0 bg-primary/15" />
+              {/* Loading-style sweep that keeps travelling the path on a loop,
+                  instead of a one-time draw that then just sits static */}
+              {!reduceMotion && (
+                <motion.div
+                  className="absolute top-0 h-full w-1/4 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent"
+                  animate={{ left: ["-25%", "100%"] }}
+                  transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                />
+              )}
+              {/* Hover progress fill - hovering step N solidly lights up the
+                  path from step 1 through step N */}
+              <motion.div
+                className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-primary"
+                animate={{
+                  scaleX: hoveredStep !== null ? hoveredStep / (HIRING_PROCESS.length - 1) : 0,
+                }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+              />
+            </div>
             <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {HIRING_PROCESS.map((step, i) => (
-                <Reveal
-                  key={step.title}
-                  as="li"
-                  delay={i * 0.08}
-                  className="relative flex flex-col items-start lg:items-center lg:text-center"
-                >
-                  <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-sm font-bold text-white shadow-glow">
-                    {i + 1}
-                  </span>
-                  <h3 className="mt-4 font-display text-base font-semibold">{step.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                    {step.description}
-                  </p>
+                <Reveal key={step.title} as="li" delay={i * 0.08} className="group relative">
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    onHoverStart={() => setHoveredStep(i)}
+                    onHoverEnd={() => setHoveredStep(null)}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                    className="flex flex-col items-start lg:items-center lg:text-center"
+                  >
+                    <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-brand text-sm font-bold text-white shadow-glow transition-transform duration-300 group-hover:scale-110">
+                      {i + 1}
+                    </span>
+                    <h3 className="mt-4 font-display text-base font-semibold transition-colors duration-300 group-hover:text-primary">
+                      {step.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      {step.description}
+                    </p>
+                  </motion.div>
                 </Reveal>
               ))}
             </ol>
@@ -334,7 +370,9 @@ function Careers() {
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary">Open positions</p>
+              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                Open positions
+              </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
                 Roles we&apos;re hiring for right now.
               </h2>

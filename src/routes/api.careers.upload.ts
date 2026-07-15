@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { isSameOriginRequest } from "@/lib/origin-check";
 
 const ALLOWED_RESUME_TYPES = [
   "application/pdf",
@@ -20,16 +21,20 @@ export const Route = createFileRoute("/api/careers/upload")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!isSameOriginRequest(request)) {
+          return Response.json({ ok: false, error: "Invalid request origin" }, { status: 403 });
+        }
+
         if (!checkRateLimit(`upload:${clientIp(request)}`, 20, 10 * 60 * 1000)) {
           return Response.json(
-            { error: "Too many requests. Please try again later." },
+            { ok: false, error: "Too many requests. Please try again later." },
             { status: 429 },
           );
         }
 
         const body = (await request.json().catch(() => null)) as HandleUploadBody | null;
         if (!body) {
-          return Response.json({ error: "Invalid request body" }, { status: 400 });
+          return Response.json({ ok: false, error: "Invalid request body" }, { status: 400 });
         }
 
         try {
@@ -46,13 +51,12 @@ export const Route = createFileRoute("/api/careers/upload")({
               // blob URL directly from the client once upload() resolves.
             },
           });
-          return Response.json(jsonResponse);
+          return Response.json({ ok: true, ...jsonResponse });
         } catch (err) {
+          // Log the real error server-side only - don't pass raw exception
+          // text (which can include internal details) to the client.
           console.error("[api/careers/upload] handleUpload threw:", err);
-          return Response.json(
-            { error: err instanceof Error ? err.message : "Upload failed" },
-            { status: 400 },
-          );
+          return Response.json({ ok: false, error: "Upload failed" }, { status: 400 });
         }
       },
     },

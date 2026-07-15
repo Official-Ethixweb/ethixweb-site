@@ -22,10 +22,11 @@ type ShiftItem = {
 
 const HUB = { x: 50, y: 50 };
 
-// Same color-only recolor used for the Hero's "E" emblem: re-tints the
-// frosted-white source art without reshading its alpha/bevels/highlights.
-const EMBLEM_CRIMSON_FILTER =
-  "brightness(0.42) sepia(1) saturate(18) hue-rotate(-31deg) contrast(1.3)";
+// The source art (@/assets/emblem-transparent.webp) is now a pre-rendered
+// crimson-glass "E" - already the right color, so no recolor filter is
+// needed here. Kept as a named constant (rather than inlining "none") so the
+// active/dark swap to EMBLEM_WHITE_FILTER below reads the same as before.
+const EMBLEM_CRIMSON_FILTER = "none";
 const EMBLEM_WHITE_FILTER = "brightness(0) invert(1)";
 
 // 5 points on a regular pentagon around the hub - equal radius, 72° apart,
@@ -57,7 +58,7 @@ export function SystemShift() {
       tabIndex={0}
       aria-pressed={active}
       aria-label="Preview how Ethixweb resolves common operational problems"
-      className="relative h-full w-full cursor-pointer select-none"
+      className="relative h-full w-full cursor-pointer select-none rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
       onClick={() => setActive((a) => !a)}
@@ -165,11 +166,11 @@ export function SystemShift() {
       {SHIFT_ITEMS.map((item) => (
         <div
           key={item.before}
-          className="absolute w-28 -translate-x-1/2 -translate-y-1/2 sm:w-40"
+          className="absolute w-[92px] -translate-x-1/2 -translate-y-1/2 sm:w-40"
           style={{ left: `${item.x}%`, top: `${item.y}%` }}
         >
           <div
-            className="flex items-center gap-2 rounded-xl border px-2.5 py-2 backdrop-blur-md transition-[border-color,box-shadow,background] duration-500 ease-out sm:gap-2.5 sm:px-3.5 sm:py-2.5"
+            className="flex items-center gap-1.5 rounded-xl border px-2 py-1.5 backdrop-blur-md transition-[border-color,box-shadow,background] duration-500 ease-out sm:gap-2.5 sm:px-3.5 sm:py-2.5"
             style={{
               borderColor: active
                 ? isDark
@@ -195,12 +196,12 @@ export function SystemShift() {
             }}
           >
             <span
-              className={`relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8 ${
+              className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full sm:h-8 sm:w-8 ${
                 isDark ? "bg-white/5" : "bg-foreground/5"
               }`}
             >
               <item.icon
-                className={`h-3.5 w-3.5 transition-colors duration-500 sm:h-4 sm:w-4 ${
+                className={`h-3 w-3 transition-colors duration-500 sm:h-4 sm:w-4 ${
                   active
                     ? isDark
                       ? "text-white"
@@ -211,7 +212,7 @@ export function SystemShift() {
                 }`}
                 strokeWidth={1.8}
               />
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence initial={false}>
                 <motion.span
                   key={active ? "on" : "off"}
                   initial={reduceMotion ? false : { opacity: 0, scale: 0.5, rotate: -45 }}
@@ -230,20 +231,30 @@ export function SystemShift() {
                 </motion.span>
               </AnimatePresence>
             </span>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={active ? item.after : item.before}
-                initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
-                transition={{ duration: 0.3 }}
-                className={`min-w-0 flex-1 text-[11px] font-semibold leading-tight sm:text-sm ${
-                  isDark ? "text-white/90" : "text-[#16100f]"
-                }`}
+            <span className="relative min-w-0 flex-1">
+              {/* Invisible spacer holding the taller of the two strings' box size,
+                  so the cross-fading text below never causes a layout jump. */}
+              <span
+                aria-hidden="true"
+                className="invisible block text-[11px] font-semibold leading-tight sm:text-sm"
               >
-                {active ? item.after : item.before}
-              </motion.span>
-            </AnimatePresence>
+                {item.before.length > item.after.length ? item.before : item.after}
+              </span>
+              <AnimatePresence initial={false}>
+                <motion.span
+                  key={active ? item.after : item.before}
+                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  className={`absolute inset-0 text-[11px] font-semibold leading-tight sm:text-sm ${
+                    isDark ? "text-white/90" : "text-[#16100f]"
+                  }`}
+                >
+                  {active ? item.after : item.before}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </div>
         </div>
       ))}

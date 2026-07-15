@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 import { TimezoneWidget } from "./TimezoneWidget";
 import { useTheme } from "./ThemeProvider";
 
-const LIVE_PATHS = new Set(["/", "/contact", "/careers"]);
+const LIVE_PATHS = new Set(["/", "/contact"]);
 
 export const links = [
   { to: "/", label: "Home" },
@@ -23,7 +23,7 @@ function ThemeToggle() {
   return (
     <motion.button
       onClick={toggle}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
       whileTap={{ scale: 0.9 }}
       aria-label="Toggle theme"
     >
@@ -52,9 +52,18 @@ export function Navbar() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   useEffect(
     () => () => {
@@ -84,9 +93,10 @@ export function Navbar() {
                 <Link
                   key={l.to}
                   to={l.to}
-                  className="flex h-9 items-center px-3.5 text-sm text-muted-foreground/80 transition-colors hover:text-foreground"
+                  className="flex h-9 items-center px-3.5 text-sm text-muted-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg"
                   activeProps={{
-                    className: "flex h-9 items-center px-3.5 text-sm font-medium text-foreground",
+                    className:
+                      "flex h-9 items-center px-3.5 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg",
                   }}
                   activeOptions={{ exact: l.to === "/" }}
                 >
@@ -99,7 +109,7 @@ export function Navbar() {
                   onClick={() => announceComingSoon(l.label)}
                   className="group relative flex h-9 items-center px-3.5 select-none"
                 >
-                  <span className="text-sm text-muted-foreground/40 transition-colors group-hover:text-muted-foreground/60">
+                  <span className="text-sm text-muted-foreground/65 transition-colors group-hover:text-muted-foreground/80">
                     {l.label}
                   </span>
                 </button>
@@ -111,18 +121,20 @@ export function Navbar() {
             <ThemeToggle />
             <Link
               to="/contact"
-              className="magnetic group inline-flex h-9 items-center gap-2 rounded-full bg-primary px-4.5 text-sm font-semibold text-primary-foreground shadow-glow"
+              className="btn-primary group inline-flex h-9 items-center gap-2 rounded-full px-4.5 text-sm font-semibold"
             >
               Start a project
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
           <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
               onClick={() => setOpen((v) => !v)}
               aria-label="Menu"
+              aria-expanded={open}
+              aria-controls="mobile-nav-menu"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -131,37 +143,40 @@ export function Navbar() {
         <AnimatePresence>
           {open && (
             <motion.div
+              id="mobile-nav-menu"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="lg:hidden overflow-hidden border-t border-border backdrop-blur-2xl"
             >
               <div className="flex flex-col gap-1 p-4">
-                {links.map((l) =>
-                  LIVE_PATHS.has(l.to) ? (
-                    <Link
-                      key={l.to}
-                      to={l.to}
-                      onClick={() => setOpen(false)}
-                      className="px-4 py-3 rounded-lg hover:bg-foreground/5 text-foreground"
-                    >
-                      {l.label}
-                    </Link>
-                  ) : (
-                    <button
-                      key={l.to}
-                      type="button"
-                      onClick={() => announceComingSoon(l.label)}
-                      className="flex items-center px-4 py-3 rounded-lg select-none text-left transition-colors hover:bg-foreground/5"
-                    >
-                      <span className="text-sm text-muted-foreground/35">{l.label}</span>
-                    </button>
-                  ),
-                )}
+                <nav aria-label="Mobile" className="flex flex-col gap-1">
+                  {links.map((l) =>
+                    LIVE_PATHS.has(l.to) ? (
+                      <Link
+                        key={l.to}
+                        to={l.to}
+                        onClick={() => setOpen(false)}
+                        className="px-4 py-3 rounded-lg hover:bg-foreground/5 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                      >
+                        {l.label}
+                      </Link>
+                    ) : (
+                      <button
+                        key={l.to}
+                        type="button"
+                        onClick={() => announceComingSoon(l.label)}
+                        className="flex items-center px-4 py-3 rounded-lg select-none text-left transition-colors hover:bg-foreground/5"
+                      >
+                        <span className="text-sm text-muted-foreground/65">{l.label}</span>
+                      </button>
+                    ),
+                  )}
+                </nav>
                 <Link
                   to="/contact"
                   onClick={() => setOpen(false)}
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+                  className="btn-primary mt-2 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   Start a project <ArrowUpRight className="h-4 w-4" />
                 </Link>

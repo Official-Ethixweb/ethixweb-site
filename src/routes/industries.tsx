@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdStringify } from "@/lib/json-ld";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/Container";
 import { CTASection } from "@/components/CTASection";
 import { Reveal } from "@/components/Reveal";
+import { WebSpotlight } from "@/components/WebSpotlight";
+import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { Wrench, Anchor, Bot, ShieldCheck, MapPin, ShoppingBag, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/industries")({
@@ -84,7 +87,7 @@ const fishing = [
   },
 ];
 
-const INDUSTRIES_SCHEMA = JSON.stringify({
+const INDUSTRIES_SCHEMA = jsonLdStringify({
   "@context": "https://schema.org",
   "@type": "Service",
   name: "Industry-Specific Technology Systems",
@@ -176,7 +179,12 @@ function IndustryBlock({
           <Reveal delay={0.1}>
             <div className="grid sm:grid-cols-2 gap-4">
               {items.map((x) => (
-                <div key={x.t} className="glass rounded-2xl p-5">
+                <div
+                  key={x.t}
+                  onMouseMove={trackWebSpotlight}
+                  className="group relative overflow-hidden rounded-2xl glass p-5"
+                >
+                  <WebSpotlight />
                   <x.i className="h-7 w-7 text-primary mb-3" strokeWidth={1.5} />
                   <h3 className="font-display text-base font-semibold">{x.t}</h3>
                   <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{x.d}</p>
