@@ -171,8 +171,8 @@ function useIsSmall() {
  * removed. Shrinking the gap (paired with a longer `perspective` on the
  * wrapper, below) reduces that parallax split to where it's no longer
  * noticeable at this element's small on-screen size. */
-const FRONT_Z = 1;
-const BACK_Z = -5;
+const FRONT_Z = 0.4;
+const BACK_Z = -1.4;
 
 /** Shared treatment for both the front and back faces: the source art is already
  * crimson glass, so this is just a thin polished-silver border plus a soft crimson
