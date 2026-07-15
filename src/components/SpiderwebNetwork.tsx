@@ -309,20 +309,21 @@ function GlassEmblem({ mx, reduceMotion }: { mx: MotionValue<number>; reduceMoti
           {/* Fixed-resolution stage (see EMBLEM_3D_STAGE_PX): the 3D tool always
            * renders at this same size, then gets scaled down via the measured
            * stageScale to fit whatever this box's real on-page size turns out
-           * to be. Mounted once and never removed from the DOM again - it used
-           * to unmount whenever scrolled out of view, but a fresh iframe load
-           * briefly shows its nested document's default white background
-           * before its own transparent CSS applies (this is a 566KB
-           * mostly-inline-script document, so that gap is real), and *any*
-           * scroll-away-then-back reloaded it, flashing white every time -
-           * glaring in dark mode. `display: none` (not removal) still gets the
-           * GPU/battery win while off-screen, without ever reloading the
-           * document, so the flash can't recur no matter how long or how many
-           * times it's scrolled past. */}
+           * to be. Always mounted AND always visible - no unmount-on-scroll,
+           * no display:none toggle, no visibility toggle, nothing that hides
+           * or removes it. Two different "pause it off-screen" attempts each
+           * reintroduced the same white-flash bug (unmounting reloads the
+           * iframe, which briefly shows its nested document's default white
+           * background before its own transparent CSS applies; `display:none`
+           * risks the browser discarding/resetting the iframe's WebGL
+           * compositing layer, which showed the same white flash again on
+           * scroll-back). The only way to guarantee this can never happen
+           * again is to never toggle its rendering state at all - this is a
+           * tiny canvas, the always-on GPU cost is not worth reintroducing a
+           * visible bug for. */}
           <div
             className="pointer-events-none absolute left-0 top-0 select-none overflow-hidden"
             style={{
-              display: inView ? undefined : "none",
               width: EMBLEM_3D_STAGE_PX,
               height: stageHeightPx,
               transform: `scale(${stageScale})`,
