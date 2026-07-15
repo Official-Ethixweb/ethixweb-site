@@ -1,5 +1,4 @@
 import { useState, type ComponentType } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
 export type PipelineStage = {
   icon: ComponentType<{ className?: string; strokeWidth?: number }>;
@@ -15,7 +14,6 @@ export type PipelineStage = {
 export function PipelineDiagram({ stages }: { stages: PipelineStage[] }) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [pinnedId, setPinnedId] = useState(0);
-  const reduceMotion = useReducedMotion();
 
   return (
     <div className="flex flex-col lg:flex-row lg:items-stretch">
@@ -53,21 +51,13 @@ export function PipelineDiagram({ stages }: { stages: PipelineStage[] }) {
               >
                 {stage.title}
               </h3>
-              {resolved ? (
-                <motion.p
-                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-sm leading-6 text-muted-foreground"
-                >
-                  {stage.desc}
-                </motion.p>
-              ) : (
-                <div className="space-y-2" aria-hidden="true">
-                  <div className="h-2 w-4/5 rounded-full bg-white/8" />
-                  <div className="h-2 w-3/5 rounded-full bg-white/8" />
-                </div>
-              )}
+              <p
+                className={`text-sm leading-6 transition-colors duration-300 ${
+                  resolved ? "text-muted-foreground" : "text-muted-foreground/50"
+                }`}
+              >
+                {stage.desc}
+              </p>
             </button>
             {i < stages.length - 1 && <div className="pipeline-connector" aria-hidden="true" />}
           </div>
