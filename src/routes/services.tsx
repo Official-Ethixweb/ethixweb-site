@@ -1,13 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { Container } from "@/components/Container";
 import { Reveal } from "@/components/Reveal";
 import { GlowBlob } from "@/components/GlowBlob";
 import { HeroWebVisual } from "@/components/HeroWebVisual";
 import { MarqueeBand } from "@/components/MarqueeBand";
+import { EditorialHeader } from "@/components/EditorialHeader";
 import {
   ArrowUpRight,
+  ChevronDown,
   Code2,
   Megaphone,
   Search,
@@ -16,6 +20,10 @@ import {
   PhoneCall,
   ShoppingCart,
   Share2,
+  Telescope,
+  Map,
+  Hammer,
+  TrendingUp,
 } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -143,6 +151,84 @@ const SERVICES = [
   },
 ];
 
+const ENGAGEMENT_STEPS = [
+  {
+    icon: Telescope,
+    t: "Audit",
+    d: "We tear down your current site, ads and tracking, and show you exactly where leads leak.",
+  },
+  {
+    icon: Map,
+    t: "Plan",
+    d: "A prioritized roadmap with expected impact per item - you approve what we build, and why.",
+  },
+  {
+    icon: Hammer,
+    t: "Build",
+    d: "Senior hands ship the site, campaigns and integrations in weeks, not quarters.",
+  },
+  {
+    icon: TrendingUp,
+    t: "Optimize",
+    d: "Weekly iteration on real data: calls, bookings and revenue - not vanity dashboards.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Do you only work with home service businesses?",
+    a: "It's our specialty, not a limit. Most of our playbooks were sharpened on plumbing, HVAC and electrical contractors - but we also run systems for charter operators, healthcare providers and DTC brands. If your business lives on leads and bookings, the system fits.",
+  },
+  {
+    q: "Can you work with my existing website?",
+    a: "Usually, yes. We audit what you have first - if the foundation is solid we improve it instead of rebuilding for the sake of it. If a rebuild genuinely pays for itself, we'll show you the math before touching anything.",
+  },
+  {
+    q: "How do you price projects?",
+    a: "Fixed scope, fixed price for builds; a flat monthly rate for ongoing marketing and management. No percentage-of-ad-spend games, and no surprise invoices - every engagement starts with a written scope you approve.",
+  },
+  {
+    q: "How fast can we start?",
+    a: "The audit starts within a few business days of a signed scope. Most websites launch in 2-4 weeks; campaigns typically go live in the first two weeks alongside tracking setup.",
+  },
+  {
+    q: "Who actually does the work?",
+    a: "The senior team you talk to. No account managers relaying messages, no outsourced production line - the people on your kickoff call are the people building your system.",
+  },
+];
+
+function ServiceFaq({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="glass overflow-hidden rounded-2xl">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+      >
+        <span className="text-sm font-medium sm:text-base">{q}</span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-primary transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <p className="px-5 pb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function Services() {
   return (
     <SiteLayout>
@@ -266,6 +352,62 @@ function Services() {
                   </span>
                 </Link>
               </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ── How an engagement runs - this page's signature strip ─────────── */}
+      <section className="border-y border-border bg-foreground/[0.015] py-20">
+        <Container>
+          <EditorialHeader
+            className="mb-12"
+            index="04"
+            eyebrow="How an engagement runs"
+            title="Audit first. Build second. Optimize forever."
+            sub="Every service above plugs into the same four-beat operating rhythm, so you always know what happens next."
+          />
+          <div className="relative">
+            {/* Connector rail behind the steps (desktop) */}
+            <div
+              aria-hidden="true"
+              className="absolute left-[12.5%] right-[12.5%] top-6 hidden h-px bg-gradient-to-r from-primary/40 via-primary/20 to-primary/40 lg:block"
+            />
+            <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {ENGAGEMENT_STEPS.map((step, i) => (
+                <Reveal as="li" key={step.t} delay={i * 0.08} className="relative">
+                  <div className="flex flex-col items-start lg:items-center lg:text-center">
+                    <span className="relative z-10 flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-4 ring-background">
+                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
+                      <step.icon className="relative h-5 w-5" strokeWidth={2} />
+                    </span>
+                    <p className="mt-4 text-xs font-bold uppercase tracking-widest text-primary-text">
+                      Step {i + 1}
+                    </p>
+                    <h3 className="mt-1 font-display text-xl font-semibold">{step.t}</h3>
+                    <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
+                      {step.d}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
+        </Container>
+      </section>
+
+      {/* ── FAQs ─────────────────────────────────────────────────────────── */}
+      <section className="py-20">
+        <Container size="medium">
+          <EditorialHeader
+            className="mb-10"
+            index="?"
+            eyebrow="Before you ask"
+            title="The questions every new client asks."
+          />
+          <div className="space-y-3">
+            {FAQS.map((faq) => (
+              <ServiceFaq key={faq.q} q={faq.q} a={faq.a} />
             ))}
           </div>
         </Container>

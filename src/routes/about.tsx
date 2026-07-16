@@ -2,16 +2,24 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
 import { motion, useReducedMotion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
+import { MarqueeBand } from "@/components/MarqueeBand";
+import { EditorialHeader } from "@/components/EditorialHeader";
 import { Reveal } from "@/components/Reveal";
-import { SignalTrace } from "@/components/SignalTrace";
-import { SystemConstellation } from "@/components/SystemConstellation";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { CardGrid } from "@/components/CardGrid";
 import { WebSpotlight } from "@/components/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
-import { Target, Heart, Zap, ArrowUpRight, Compass, Eye, CheckCircle2 } from "lucide-react";
+import {
+  Target,
+  Heart,
+  Zap,
+  ArrowUpRight,
+  Compass,
+  Eye,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -105,18 +113,32 @@ const STATS = [
   { value: "5.0", label: "Avg. client rating" },
 ];
 
-const TEAM_NODES = [
-  { label: "Strategy" },
-  { label: "Design" },
-  { label: "Engineering" },
-  { label: "Growth" },
-];
-
-const PROCESS_NODES = [
-  { label: "Discover" },
-  { label: "Design" },
-  { label: "Launch" },
-  { label: "Grow" },
+const COMPARISON = [
+  {
+    k: "Who does the work",
+    us: "The senior team on your kickoff call",
+    them: "Juniors behind an account manager",
+  },
+  {
+    k: "Pricing",
+    us: "Fixed scope, agreed in writing upfront",
+    them: "Open-ended retainers and surprise invoices",
+  },
+  {
+    k: "What gets reported",
+    us: "Calls, bookings and revenue",
+    them: "Impressions, clicks and vanity dashboards",
+  },
+  {
+    k: "Time to launch",
+    us: "2-4 weeks",
+    them: "A quarter of discovery theater",
+  },
+  {
+    k: "Getting answers",
+    us: "A direct line to the people building",
+    them: "Ticket queues and message relays",
+  },
 ];
 
 const REASONS = [
@@ -132,27 +154,67 @@ function About() {
   const reduceMotion = useReducedMotion();
   return (
     <SiteLayout>
-      <PageHero
-        eyebrow="About us"
-        title={
-          <>
-            A small, senior team. No account{" "}
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: "linear-gradient(135deg, #D13A40 0%, #B32228 50%, #8A181C 100%)",
-              }}
-            >
-              managers.
-            </span>
-          </>
-        }
-      >
-        <span className="light:text-foreground">
-          Ethixweb is a digital marketing &amp; web development agency built for businesses that
-          want measurable growth, not marketing noise.
-        </span>
-      </PageHero>
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section className="relative -mt-24 overflow-hidden bg-gradient-hero pb-20 pt-36 sm:pb-24 sm:pt-44">
+        <div className="absolute inset-0 grid-bg opacity-30" />
+        <GlowBlob
+          size="md"
+          color="primary"
+          blur={130}
+          className="left-1/2 top-0 -translate-x-1/2 opacity-60"
+        />
+        <Container className="relative">
+          <div className="max-w-3xl">
+            <Reveal>
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_18px_rgba(138,24,28,0.9)]" />
+                About us
+              </div>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h1 className="mt-7 max-w-3xl pb-1 text-[clamp(2.5rem,5.2vw,4.5rem)] font-extrabold leading-[1.06] text-gradient">
+                A small, senior team.{" "}
+                <span className="text-primary">No account managers.</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                Ethixweb is a digital marketing &amp; web development agency built for businesses
+                that want measurable growth, not marketing noise.
+              </p>
+            </Reveal>
+            <Reveal delay={0.24}>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/contact"
+                  className="btn-primary group inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-bold"
+                >
+                  Start a project
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+                <a
+                  href="#how-we-work"
+                  className="btn-secondary group inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-bold"
+                >
+                  How we work
+                  <ArrowUpRight className="h-4 w-4 rotate-90 transition-transform duration-200 group-hover:rotate-[100deg]" />
+                </a>
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
+      <MarqueeBand
+        items={[
+          "Senior-led",
+          "No account managers",
+          "Remote-first",
+          "US clients",
+          "Revenue over vanity metrics",
+          "Since 2020",
+        ]}
+      />
 
       <section className="relative py-20">
         <GlowBlob
@@ -163,24 +225,62 @@ function About() {
         />
         <Container className="relative grid items-center gap-16 sm:grid-cols-2">
           <Reveal>
+            {/* Layered photo collage - photos are the same free-to-use set
+                used on the careers page (see that file's note); swap in real
+                team photos whenever they exist. */}
             <motion.div
-              className="relative mx-auto max-w-80"
-              animate={{ y: reduceMotion ? 0 : [0, -10, 0] }}
+              className="relative mx-auto mb-12 w-full max-w-md"
+              animate={{ y: reduceMotion ? 0 : [0, -8, 0] }}
               transition={
                 reduceMotion
                   ? { duration: 0 }
                   : { duration: 7, repeat: Infinity, ease: "easeInOut" }
               }
             >
-              <div className="absolute inset-6 rounded-full bg-primary/[0.14] blur-[90px]" />
-              <div className="relative aspect-320/468 sm:h-117 sm:aspect-auto">
-                <SystemConstellation nodes={TEAM_NODES} className="p-8" />
+              <div className="absolute -inset-6 rounded-full bg-primary/[0.12] blur-[90px]" />
+              <div className="relative">
+                <div className="relative rotate-[1.5deg] overflow-hidden rounded-3xl shadow-lg ring-1 ring-white/10">
+                  <img
+                    src="/images/careers/real-client-impact.webp"
+                    alt="The team reviewing a client project together"
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                </div>
+                <div className="absolute -bottom-10 -left-4 w-44 -rotate-[5deg] overflow-hidden rounded-2xl shadow-lg ring-1 ring-white/15 sm:w-56">
+                  <img
+                    src="/images/careers/direct-collaboration.webp"
+                    alt="The team gathered around a table collaborating"
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                </div>
+                <div className="absolute -right-4 -top-5 rotate-[3deg] rounded-2xl border border-primary/20 bg-background/90 px-4 py-3 shadow-lg backdrop-blur">
+                  <p className="font-display text-2xl font-extrabold text-gradient-brand">
+                    Since 2020
+                  </p>
+                  <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                    Senior-led team
+                  </p>
+                </div>
               </div>
             </motion.div>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="max-w-xl">
-              <p className="text-sm uppercase tracking-widest text-primary-text">Our story</p>
+              <div className="flex items-baseline gap-4">
+                <span
+                  aria-hidden="true"
+                  className="select-none font-display text-5xl font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(165,28,34,0.5)]"
+                >
+                  01
+                </span>
+                <div className="h-px flex-1 bg-gradient-to-r from-primary/40 to-transparent" />
+              </div>
+              <p className="mt-5 text-sm uppercase tracking-widest text-primary-text">Our story</p>
               <h2 className="mt-5 font-display text-4xl font-bold leading-[1.15] tracking-tight text-gradient pb-1">
                 Built for contractors tired of big agency theater.
               </h2>
@@ -201,16 +301,12 @@ function About() {
 
       <section className="py-20">
         <Container>
-          <Reveal>
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
-                What drives us
-              </p>
-              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
-                Mission &amp; vision
-              </h2>
-            </div>
-          </Reveal>
+          <EditorialHeader
+            className="mb-12"
+            index="02"
+            eyebrow="What drives us"
+            title={<>Mission &amp; vision</>}
+          />
           <div className="grid gap-6 md:grid-cols-2">
             <Reveal delay={0.05}>
               <div
@@ -218,7 +314,10 @@ function About() {
                 className="group relative h-full overflow-hidden rounded-3xl glass p-8 lg:p-10"
               >
                 <WebSpotlight size="lg" />
-                <Compass className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
+                <span className="relative mb-6 flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
+                  <Compass className="relative h-5 w-5" strokeWidth={2} />
+                </span>
                 <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary-text">
                   Our mission
                 </p>
@@ -238,7 +337,10 @@ function About() {
                 className="group relative h-full overflow-hidden rounded-3xl glass p-8 lg:p-10"
               >
                 <WebSpotlight size="lg" />
-                <Eye className="h-10 w-10 text-primary mb-6" strokeWidth={1.5} />
+                <span className="relative mb-6 flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
+                  <Eye className="relative h-5 w-5" strokeWidth={2} />
+                </span>
                 <p className="mb-3 text-sm font-bold uppercase tracking-widest text-primary-text">
                   Our vision
                 </p>
@@ -255,12 +357,21 @@ function About() {
         </Container>
       </section>
 
-      <section className="py-20">
+      <section id="how-we-work" className="scroll-mt-24 py-20">
         <Container>
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr] lg:items-start">
             <Reveal>
               <div>
-                <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
+                <div className="flex items-baseline gap-4">
+                  <span
+                    aria-hidden="true"
+                    className="select-none font-display text-5xl font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(165,28,34,0.5)]"
+                  >
+                    03
+                  </span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-primary/40 to-transparent" />
+                </div>
+                <p className="mb-4 mt-5 text-sm uppercase tracking-widest text-primary-text">
                   How we work
                 </p>
                 <h2 className="font-display text-5xl font-bold text-gradient pb-1">
@@ -270,9 +381,42 @@ function About() {
                   From the first call to launch day, you'll always know what's happening, why, and
                   what's next. No black boxes, no surprise invoices.
                 </p>
-                <div className="relative mx-auto mt-10 hidden h-64 w-full max-w-xs lg:block">
-                  <div className="absolute inset-8 rounded-full bg-primary/15 blur-[80px]" />
-                  <SystemConstellation nodes={PROCESS_NODES} className="p-6" />
+                {/* Dark branded panel (matches the process cards beside it) -
+                    a washed-out photo looked out of place against them. */}
+                <div className="relative mx-auto mt-10 hidden w-full max-w-xs lg:block">
+                  <div className="absolute -inset-4 rounded-3xl bg-primary/10 blur-[60px]" />
+                  <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3a0b0d_0%,#1c0607_55%,#120405_100%)] p-6 ring-1 ring-white/10">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -right-3 -top-7 select-none font-display text-[6.5rem] font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.08)]"
+                    >
+                      ✓
+                    </span>
+                    <p className="relative text-xs font-bold uppercase tracking-widest text-[#f2545b]">
+                      Every single week
+                    </p>
+                    <ul className="relative mt-4 space-y-4">
+                      {[
+                        "You know what's shipping",
+                        "You know why it's prioritized",
+                        "You see what it moved",
+                      ].map((line) => (
+                        <li
+                          key={line}
+                          className="flex items-start gap-2.5 border-b border-white/10 pb-4 text-sm font-medium text-white/85 last:border-b-0 last:pb-0"
+                        >
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#f2545b]" />
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="relative mt-5 font-display text-2xl font-extrabold text-white">
+                      2-4 weeks
+                      <span className="mt-1 block text-[11px] font-semibold uppercase tracking-widest text-white/55">
+                        Typical time to launch
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </Reveal>
@@ -297,16 +441,12 @@ function About() {
 
       <section className="py-20">
         <Container>
-          <Reveal>
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
-                What we stand for
-              </p>
-              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
-                Core values that shape everything we build.
-              </h2>
-            </div>
-          </Reveal>
+          <EditorialHeader
+            className="mb-12"
+            index="04"
+            eyebrow="What we stand for"
+            title="Core values that shape everything we build."
+          />
           <CardGrid
             items={[
               {
@@ -334,16 +474,12 @@ function About() {
 
       <section className="py-20">
         <Container>
-          <Reveal>
-            <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
-                Why Ethixweb
-              </p>
-              <h2 className="font-display text-5xl font-bold text-gradient pb-1">
-                Why clients choose us and stay.
-              </h2>
-            </div>
-          </Reveal>
+          <EditorialHeader
+            className="mb-12"
+            index="05"
+            eyebrow="Why Ethixweb"
+            title="Why clients choose us and stay."
+          />
 
           <div className="mb-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {STATS.map((s, i) => (
@@ -377,11 +513,87 @@ function About() {
                     </div>
                   ))}
                 </div>
-                <div className="relative mx-auto hidden h-64 w-full max-w-xs lg:block">
-                  <div className="absolute inset-8 rounded-full bg-primary/15 blur-[80px]" />
-                  <SignalTrace className="h-full w-full opacity-60" />
+                {/* Real client words instead of a stock photo - quote from the
+                    Trustpilot set used in the Testimonials component. */}
+                <div className="relative mx-auto hidden w-full max-w-xs lg:block">
+                  <div className="absolute -inset-6 rounded-full bg-primary/15 blur-[80px]" />
+                  <div className="relative rotate-[1.5deg] overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3a0b0d_0%,#1c0607_55%,#120405_100%)] p-6 ring-1 ring-white/10">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -right-2 -top-10 select-none font-display text-[8rem] font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.08)]"
+                    >
+                      &rdquo;
+                    </span>
+                    <p className="relative font-display text-3xl font-extrabold text-white">
+                      5.0 ★
+                      <span className="mt-1 block text-[11px] font-semibold uppercase tracking-widest text-white/55">
+                        Avg. client rating
+                      </span>
+                    </p>
+                    <p className="relative mt-5 border-t border-white/10 pt-5 text-sm leading-relaxed text-white/80">
+                      &ldquo;The team communicated clearly, worked efficiently, and delivered
+                      beyond expectations.&rdquo;
+                    </p>
+                    <p className="relative mt-3 text-xs font-semibold uppercase tracking-widest text-[#f2545b]">
+                      Kayla Kjl - verified client
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* ── The difference - this page's signature comparison block ──────── */}
+      <section className="py-20">
+        <Container size="medium">
+          <EditorialHeader
+            className="mb-12"
+            index="06"
+            eyebrow="The difference"
+            title="Ethixweb vs. the typical agency."
+          />
+          <Reveal delay={0.1}>
+            <div className="overflow-hidden rounded-3xl border border-border">
+              {/* Header row (desktop) */}
+              <div className="hidden border-b border-border bg-foreground/[0.03] text-xs font-bold uppercase tracking-widest sm:grid sm:grid-cols-[1fr_1.2fr_1.2fr]">
+                <div className="p-4" />
+                <div className="border-l border-primary/25 bg-primary/[0.05] p-4 text-primary-text">
+                  Ethixweb
+                </div>
+                <div className="border-l border-border p-4 text-muted-foreground">
+                  Typical agency
+                </div>
+              </div>
+              {COMPARISON.map((row) => (
+                <div
+                  key={row.k}
+                  className="grid border-b border-border text-sm last:border-b-0 sm:grid-cols-[1fr_1.2fr_1.2fr]"
+                >
+                  <div className="bg-foreground/[0.02] p-4 font-semibold sm:bg-transparent">
+                    {row.k}
+                  </div>
+                  <div className="flex items-start gap-2.5 p-4 sm:border-l sm:border-primary/25 sm:bg-primary/[0.05]">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>
+                      <span className="mr-2 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-text sm:hidden">
+                        Us
+                      </span>
+                      {row.us}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5 p-4 text-muted-foreground sm:border-l sm:border-border">
+                    <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/60" />
+                    <span>
+                      <span className="mr-2 rounded bg-foreground/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest sm:hidden">
+                        Them
+                      </span>
+                      {row.them}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </Reveal>
         </Container>
@@ -405,39 +617,48 @@ function About() {
         </Container>
       </section>
 
+      {/* ── Final CTA ────────────────────────────────────────────────────────
+          Crimson finale panel matching the rest of the site; forced-dark,
+          hardcoded colors. */}
       <section className="py-24">
-        <Container>
-          <div className="premium-card relative overflow-hidden rounded-4xl px-6 py-16 text-center sm:px-12 lg:py-24">
-            <div className="absolute inset-0 ambient-red opacity-80" />
-            <div className="absolute inset-0 grid-bg opacity-30" />
-            <Reveal>
-              <div className="relative mx-auto max-w-3xl">
-                <h2 className="pb-1 text-7xl font-extrabold leading-tight text-gradient">
-                  Ready for a sharper digital operation?
-                </h2>
-                <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-                  Bring us the messy stack, missed leads, slow site, or stalled automation. We will
-                  turn it into a system.
-                </p>
-                <div className="mt-10 flex flex-wrap justify-center gap-4">
-                  <Link
-                    to="/contact"
-                    className="magnetic group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
-                  >
-                    Start a project
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                  </Link>
-                  <Link
-                    to="/portfolio"
-                    className="magnetic inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    See our work
-                  </Link>
-                </div>
+        <Reveal>
+          <Container className="relative overflow-hidden rounded-4xl bg-[linear-gradient(135deg,#9d1b20_0%,#6b1114_45%,#30090b_100%)] px-6 py-12 text-center shadow-glow ring-1 ring-white/10 sm:px-12 sm:py-14 lg:py-16">
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(55%_60%_at_50%_0%,rgba(255,255,255,0.14),transparent_70%)]"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-display text-[16vw] font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.09)] lg:text-[9rem]"
+            >
+              SENIOR
+            </span>
+            <div className="relative mx-auto max-w-2xl">
+              <h2 className="pb-1 font-display text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+                Ready for a sharper digital operation?
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-white/75 sm:text-lg">
+                Bring us the messy stack, missed leads, slow site, or stalled automation. We will
+                turn it into a system.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  to="/contact"
+                  className="magnetic group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-bold text-[#7a1418] shadow-[0_14px_40px_-12px_rgba(0,0,0,0.55)]"
+                >
+                  Start a project
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                </Link>
+                <Link
+                  to="/portfolio"
+                  className="magnetic inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 font-bold text-white transition-colors hover:bg-white/10"
+                >
+                  See our work
+                </Link>
               </div>
-            </Reveal>
-          </div>
-        </Container>
+            </div>
+          </Container>
+        </Reveal>
       </section>
     </SiteLayout>
   );

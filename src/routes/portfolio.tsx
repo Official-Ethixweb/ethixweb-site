@@ -8,8 +8,8 @@ import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { HeroWebVisual } from "@/components/HeroWebVisual";
-import { MarqueeBand } from "@/components/MarqueeBand";
 import { CaseStudyCard } from "@/components/CaseStudyCard";
+import { Testimonials } from "@/components/Testimonials";
 import { AnimatedStat } from "@/components/AnimatedStat";
 import { CASE_STUDIES, SERVICE_FILTERS } from "@/lib/portfolio-data";
 
@@ -60,13 +60,6 @@ export const Route = createFileRoute("/portfolio")({
   }),
   component: Portfolio,
 });
-
-const TRUST_STATS = [
-  { value: "6", label: "Featured case studies" },
-  { value: "2-4 wks", label: "Typical time to launch" },
-  { value: "100%", label: "Senior-led delivery" },
-  { value: "5.0", label: "Avg. client rating" },
-];
 
 function Portfolio() {
   const [filter, setFilter] = useState<string>("All");
@@ -136,27 +129,38 @@ function Portfolio() {
         </Container>
       </section>
 
-      {/* Real client names from the case-study data, kept in sync automatically */}
-      <MarqueeBand items={["Real clients · Real results", ...CASE_STUDIES.map((s) => s.client)]} />
-
-      {/* ── Trust strip ──────────────────────────────────────────────────── */}
-      <section className="border-b border-border pb-12 pt-16">
-        <Container className="grid grid-cols-2 gap-y-8 sm:grid-cols-4">
-          {TRUST_STATS.map((s, i) => (
+      {/* ── Impact band - this page's signature: aggregate results summed from
+          the featured case studies below (real numbers, not marketing copy).
+          Forced-dark, colors hardcoded. ── */}
+      <section className="relative overflow-hidden border-y border-white/10 bg-[linear-gradient(105deg,#1c0607_0%,#3a0b0d_50%,#1c0607_100%)] py-10">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(50%_80%_at_50%_0%,rgba(157,27,32,0.35),transparent_70%)]"
+        />
+        <Container className="relative grid grid-cols-2 gap-y-8 lg:grid-cols-4">
+          {[
+            { value: "11,500+", label: "Qualified leads generated" },
+            { value: "$3.50", label: "Lowest cost per lead" },
+            { value: "+60%", label: "Best traffic lift" },
+            { value: "6", label: "Industries represented" },
+          ].map((s, i) => (
             <Reveal
               key={s.label}
               delay={i * 0.06}
-              className={`text-center ${i > 0 ? "sm:border-l sm:border-border" : ""}`}
+              className={`text-center ${i > 0 ? "lg:border-l lg:border-white/10" : ""}`}
             >
               <AnimatedStat
                 value={s.value}
-                className="block font-display text-4xl font-extrabold text-gradient sm:text-5xl"
+                className="block font-display text-4xl font-extrabold text-white sm:text-5xl"
               />
-              <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-white/55">
                 {s.label}
               </p>
             </Reveal>
           ))}
+          <p className="col-span-2 -mb-2 mt-2 text-center text-[11px] text-white/40 lg:col-span-4">
+            Totals across the featured case studies on this page.
+          </p>
         </Container>
       </section>
 
@@ -230,6 +234,9 @@ function Portfolio() {
           )}
         </Container>
       </section>
+
+      {/* ── What clients say - real Trustpilot reviews, shared with home ──── */}
+      <Testimonials />
 
       {/* ── Final CTA ────────────────────────────────────────────────────────
           Full-crimson finale panel, matching the careers page closer. Same in
