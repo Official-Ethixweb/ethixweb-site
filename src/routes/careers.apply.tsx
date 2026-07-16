@@ -13,7 +13,6 @@ import { HeroWebVisual } from "@/components/HeroWebVisual";
 import { WebSpotlight } from "@/components/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { JOBS, getJob } from "@/lib/careers-data";
-import { getScreeningConfig } from "@/lib/screening-rubrics";
 import { formLabelClass, formInputClass } from "@/lib/form-styles";
 import {
   Mail,
@@ -745,15 +744,15 @@ function ApplyPage() {
                       nodes={stepLabels.map((label) => ({ label }))}
                       className="h-40 w-40 opacity-80"
                     />
-                    {getScreeningConfig(roleId) && (
+                    {getJob(roleId) && (
                       <motion.a
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
-                        href={`/careers/screening?role=${encodeURIComponent(roleId)}&name=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&resume=${encodeURIComponent(resumeUrl)}`}
+                        href={`/careers/assessment?role=${encodeURIComponent(roleId)}&name=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&resume=${encodeURIComponent(resumeUrl)}&experience=${encodeURIComponent(experience)}`}
                         className="magnetic group relative z-10 mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-bold text-primary-foreground shadow-glow"
                       >
-                        Take the screening test now
+                        Take the assessment now
                         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
                       </motion.a>
                     )}

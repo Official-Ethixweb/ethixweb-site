@@ -13,6 +13,7 @@ policies, so RLS default-denies direct browser access regardless.
 | --- | --- | --- |
 | `0001_screening_tests.sql` | `screening_tests` | AI candidate screening flow (start/submit/decision) |
 | `0002_leads.sql` | `contact_submissions`, `career_applications`, `rate_limits` + `check_rate_limit()` | Durable record of every contact/application submission (independent of whether the notification email is delivered), plus a shared, cross-instance rate limiter for the screening endpoints |
+| `0003_assessments.sql` | `assessments` | AI assessment platform (`/careers/assessment`): 40 Gemini-generated questions with the server-only answer key, auto-saved answers, proctoring violations, deterministic scores, and webcam recording URLs |
 
 When the schema needs to change, add a new numbered file rather than editing
 an existing one - this keeps prod/staging in sync and gives every change a

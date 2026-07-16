@@ -30,7 +30,16 @@ export default defineConfig({
     // enableCodeSplitting` path is used instead), but this package's shipped
     // .d.ts hasn't caught up yet. Verified via `npm run dev`/`npm run build`.
     tanstackStart({ router: { autoCodeSplitting: true } }),
-    nitro({ preset: "vercel" }),
+    nitro({
+      preset: "vercel",
+      vercel: {
+        // Assessment generation waits on multiple Gemini calls - give those
+        // routes room beyond the default serverless duration.
+        functionRules: {
+          "/api/assessment/**": { maxDuration: 300 },
+        },
+      },
+    }),
     viteReact(),
   ],
 });

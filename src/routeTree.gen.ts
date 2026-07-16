@@ -27,6 +27,7 @@ import { Route as PoliciesRefundsRouteImport } from './routes/policies.refunds'
 import { Route as PoliciesPrivacyRouteImport } from './routes/policies.privacy'
 import { Route as LocationsKentWaRouteImport } from './routes/locations.kent-wa'
 import { Route as CareersScreeningRouteImport } from './routes/careers.screening'
+import { Route as CareersAssessmentRouteImport } from './routes/careers.assessment'
 import { Route as CareersApplyRouteImport } from './routes/careers.apply'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
@@ -35,6 +36,11 @@ import { Route as ApiScreeningStartRouteImport } from './routes/api.screening.st
 import { Route as ApiScreeningDecisionRouteImport } from './routes/api.screening.decision'
 import { Route as ApiCareersUploadRouteImport } from './routes/api.careers.upload'
 import { Route as ApiCareersApplyRouteImport } from './routes/api.careers.apply'
+import { Route as ApiAssessmentSubmitRouteImport } from './routes/api.assessment.submit'
+import { Route as ApiAssessmentStateRouteImport } from './routes/api.assessment.state'
+import { Route as ApiAssessmentStartRouteImport } from './routes/api.assessment.start'
+import { Route as ApiAssessmentSaveRouteImport } from './routes/api.assessment.save'
+import { Route as ApiAssessmentRecordingUploadRouteImport } from './routes/api.assessment.recording-upload'
 
 const WebDevelopmentRoute = WebDevelopmentRouteImport.update({
   id: '/web-development',
@@ -126,6 +132,11 @@ const CareersScreeningRoute = CareersScreeningRouteImport.update({
   path: '/screening',
   getParentRoute: () => CareersRoute,
 } as any)
+const CareersAssessmentRoute = CareersAssessmentRouteImport.update({
+  id: '/assessment',
+  path: '/assessment',
+  getParentRoute: () => CareersRoute,
+} as any)
 const CareersApplyRoute = CareersApplyRouteImport.update({
   id: '/apply',
   path: '/apply',
@@ -166,6 +177,32 @@ const ApiCareersApplyRoute = ApiCareersApplyRouteImport.update({
   path: '/api/careers/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAssessmentSubmitRoute = ApiAssessmentSubmitRouteImport.update({
+  id: '/api/assessment/submit',
+  path: '/api/assessment/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAssessmentStateRoute = ApiAssessmentStateRouteImport.update({
+  id: '/api/assessment/state',
+  path: '/api/assessment/state',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAssessmentStartRoute = ApiAssessmentStartRouteImport.update({
+  id: '/api/assessment/start',
+  path: '/api/assessment/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAssessmentSaveRoute = ApiAssessmentSaveRouteImport.update({
+  id: '/api/assessment/save',
+  path: '/api/assessment/save',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAssessmentRecordingUploadRoute =
+  ApiAssessmentRecordingUploadRouteImport.update({
+    id: '/api/assessment/recording-upload',
+    path: '/api/assessment/recording-upload',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -183,12 +220,18 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/assessment': typeof CareersAssessmentRoute
   '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
   '/careers/': typeof CareersIndexRoute
+  '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
+  '/api/assessment/save': typeof ApiAssessmentSaveRoute
+  '/api/assessment/start': typeof ApiAssessmentStartRoute
+  '/api/assessment/state': typeof ApiAssessmentStateRoute
+  '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
@@ -210,12 +253,18 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/assessment': typeof CareersAssessmentRoute
   '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
   '/careers': typeof CareersIndexRoute
+  '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
+  '/api/assessment/save': typeof ApiAssessmentSaveRoute
+  '/api/assessment/start': typeof ApiAssessmentStartRoute
+  '/api/assessment/state': typeof ApiAssessmentStateRoute
+  '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
@@ -239,12 +288,18 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/careers/apply': typeof CareersApplyRoute
+  '/careers/assessment': typeof CareersAssessmentRoute
   '/careers/screening': typeof CareersScreeningRoute
   '/locations/kent-wa': typeof LocationsKentWaRoute
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
   '/careers/': typeof CareersIndexRoute
+  '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
+  '/api/assessment/save': typeof ApiAssessmentSaveRoute
+  '/api/assessment/start': typeof ApiAssessmentStartRoute
+  '/api/assessment/state': typeof ApiAssessmentStateRoute
+  '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
@@ -269,12 +324,18 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/assessment'
     | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
     | '/careers/'
+    | '/api/assessment/recording-upload'
+    | '/api/assessment/save'
+    | '/api/assessment/start'
+    | '/api/assessment/state'
+    | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
     | '/api/screening/decision'
@@ -296,12 +357,18 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/assessment'
     | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
     | '/careers'
+    | '/api/assessment/recording-upload'
+    | '/api/assessment/save'
+    | '/api/assessment/start'
+    | '/api/assessment/state'
+    | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
     | '/api/screening/decision'
@@ -324,12 +391,18 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/careers/$slug'
     | '/careers/apply'
+    | '/careers/assessment'
     | '/careers/screening'
     | '/locations/kent-wa'
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
     | '/careers/'
+    | '/api/assessment/recording-upload'
+    | '/api/assessment/save'
+    | '/api/assessment/start'
+    | '/api/assessment/state'
+    | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
     | '/api/screening/decision'
@@ -355,6 +428,11 @@ export interface RootRouteChildren {
   PoliciesPrivacyRoute: typeof PoliciesPrivacyRoute
   PoliciesRefundsRoute: typeof PoliciesRefundsRoute
   PoliciesTermsRoute: typeof PoliciesTermsRoute
+  ApiAssessmentRecordingUploadRoute: typeof ApiAssessmentRecordingUploadRoute
+  ApiAssessmentSaveRoute: typeof ApiAssessmentSaveRoute
+  ApiAssessmentStartRoute: typeof ApiAssessmentStartRoute
+  ApiAssessmentStateRoute: typeof ApiAssessmentStateRoute
+  ApiAssessmentSubmitRoute: typeof ApiAssessmentSubmitRoute
   ApiCareersApplyRoute: typeof ApiCareersApplyRoute
   ApiCareersUploadRoute: typeof ApiCareersUploadRoute
   ApiScreeningDecisionRoute: typeof ApiScreeningDecisionRoute
@@ -490,6 +568,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CareersScreeningRouteImport
       parentRoute: typeof CareersRoute
     }
+    '/careers/assessment': {
+      id: '/careers/assessment'
+      path: '/assessment'
+      fullPath: '/careers/assessment'
+      preLoaderRoute: typeof CareersAssessmentRouteImport
+      parentRoute: typeof CareersRoute
+    }
     '/careers/apply': {
       id: '/careers/apply'
       path: '/apply'
@@ -546,12 +631,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCareersApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/assessment/submit': {
+      id: '/api/assessment/submit'
+      path: '/api/assessment/submit'
+      fullPath: '/api/assessment/submit'
+      preLoaderRoute: typeof ApiAssessmentSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/assessment/state': {
+      id: '/api/assessment/state'
+      path: '/api/assessment/state'
+      fullPath: '/api/assessment/state'
+      preLoaderRoute: typeof ApiAssessmentStateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/assessment/start': {
+      id: '/api/assessment/start'
+      path: '/api/assessment/start'
+      fullPath: '/api/assessment/start'
+      preLoaderRoute: typeof ApiAssessmentStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/assessment/save': {
+      id: '/api/assessment/save'
+      path: '/api/assessment/save'
+      fullPath: '/api/assessment/save'
+      preLoaderRoute: typeof ApiAssessmentSaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/assessment/recording-upload': {
+      id: '/api/assessment/recording-upload'
+      path: '/api/assessment/recording-upload'
+      fullPath: '/api/assessment/recording-upload'
+      preLoaderRoute: typeof ApiAssessmentRecordingUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface CareersRouteChildren {
   CareersSlugRoute: typeof CareersSlugRoute
   CareersApplyRoute: typeof CareersApplyRoute
+  CareersAssessmentRoute: typeof CareersAssessmentRoute
   CareersScreeningRoute: typeof CareersScreeningRoute
   CareersIndexRoute: typeof CareersIndexRoute
 }
@@ -559,6 +680,7 @@ interface CareersRouteChildren {
 const CareersRouteChildren: CareersRouteChildren = {
   CareersSlugRoute: CareersSlugRoute,
   CareersApplyRoute: CareersApplyRoute,
+  CareersAssessmentRoute: CareersAssessmentRoute,
   CareersScreeningRoute: CareersScreeningRoute,
   CareersIndexRoute: CareersIndexRoute,
 }
@@ -584,6 +706,11 @@ const rootRouteChildren: RootRouteChildren = {
   PoliciesPrivacyRoute: PoliciesPrivacyRoute,
   PoliciesRefundsRoute: PoliciesRefundsRoute,
   PoliciesTermsRoute: PoliciesTermsRoute,
+  ApiAssessmentRecordingUploadRoute: ApiAssessmentRecordingUploadRoute,
+  ApiAssessmentSaveRoute: ApiAssessmentSaveRoute,
+  ApiAssessmentStartRoute: ApiAssessmentStartRoute,
+  ApiAssessmentStateRoute: ApiAssessmentStateRoute,
+  ApiAssessmentSubmitRoute: ApiAssessmentSubmitRoute,
   ApiCareersApplyRoute: ApiCareersApplyRoute,
   ApiCareersUploadRoute: ApiCareersUploadRoute,
   ApiScreeningDecisionRoute: ApiScreeningDecisionRoute,
