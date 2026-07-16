@@ -37,6 +37,22 @@ export const Route = createFileRoute("/api/careers/upload")({
           return Response.json({ ok: false, error: "Invalid request body" }, { status: 400 });
         }
 
+        // Fail fast, loudly, when the Blob store isn't provisioned. Without
+        // this guard handleUpload throws the same generic error as any other
+        // failure, and "every resume upload fails" looks like a user problem
+        // instead of a missing BLOB_READ_WRITE_TOKEN.
+        if (!process.env.BLOB_READ_WRITE_TOKEN) {
+          console.error(
+            "[api/careers/upload] BLOB_READ_WRITE_TOKEN is not set - resume uploads cannot work. " +
+              "Create a Blob store on the Vercel project (Dashboard -> Storage -> Create -> Blob) and redeploy. " +
+              "For local dev, run `vercel link` then `vercel env pull` to write the token into .env.",
+          );
+          return Response.json(
+            { ok: false, error: "Resume uploads are temporarily unavailable." },
+            { status: 503 },
+          );
+        }
+
         try {
           const jsonResponse = await handleUpload({
             body,

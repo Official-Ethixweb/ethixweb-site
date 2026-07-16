@@ -163,7 +163,12 @@ function ApplyPage() {
       setResumeStatus("done");
     } catch {
       setResumeStatus("error");
-      setResumeError("Upload failed. Please try again.");
+      // The blob client throws the same message for every server-side token
+      // failure, so we can't tell the user *why* - but we can make sure a
+      // candidate is never dead-ended on the required field.
+      setResumeError(
+        "Upload failed. Please try again - or email your resume to info@ethixweb.com and we'll take it from there.",
+      );
     }
   }
 

@@ -62,7 +62,7 @@ export const Route = createFileRoute("/careers/")({
               "@type": "JobPosting",
               title: job.title,
               description: job.about,
-              datePosted: "2026-01-01",
+              datePosted: job.datePosted,
               employmentType: "FULL_TIME",
               hiringOrganization: {
                 "@type": "Organization",
@@ -191,7 +191,7 @@ function Careers() {
           <Reveal>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_18px_rgba(138,24,28,0.9)]" />
-              We&apos;re hiring
+              We&apos;re hiring - {JOBS.length} open role{JOBS.length === 1 ? "" : "s"}
             </div>
           </Reveal>
           <Reveal delay={0.08}>
@@ -215,79 +215,40 @@ function Careers() {
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
               </a>
               <a
-                href="#life-at-ethixweb"
+                href="#hiring-process"
                 className="magnetic inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4.5 px-7 py-3.5 font-bold text-foreground hover:border-primary/40 hover:bg-primary/10"
               >
-                Life at Ethixweb
+                How we hire
               </a>
             </div>
           </Reveal>
         </Container>
       </section>
 
-      {/* ── Life at Ethixweb ─────────────────────────────────────────────── */}
-      <section id="life-at-ethixweb" className="py-20">
+      {/* ── Open positions ───────────────────────────────────────────────────
+          First section after the hero on purpose: candidates come to a careers
+          page to see what's in it for them, so the hierarchy is open roles →
+          how we hire → life at Ethixweb. */}
+      <section id="open-positions" className="scroll-mt-24 py-20">
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
-                Life at Ethixweb
+                Open positions
               </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
-                Built for people who like to build.
+                Roles we&apos;re hiring for right now.
               </h2>
+              <p className="mt-5 text-base leading-7 text-muted-foreground">
+                Every role is full time, remote within India, and works directly with US
+                clients - no layers in between.
+              </p>
             </div>
           </Reveal>
-          {/* Primary values - the 4 that matter most, shown large with a
-              photo each. Wide cards alternate with narrow ones so the grid
-              reads as a deliberate layout, not a repeated tile. */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {PRIMARY_VALUES.map((item, i) => (
-              <Reveal
-                key={item.t}
-                delay={i * 0.06}
-                className={item.wide ? "sm:col-span-2 lg:col-span-2" : "lg:col-span-1"}
-              >
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="premium-card flex h-full flex-col rounded-3xl p-6"
-                >
-                  <CardPhoto
-                    src={item.image}
-                    alt={item.alt}
-                    aspect={item.wide ? "aspect-[16/7]" : "aspect-[4/3]"}
-                  />
-                  <span className="relative -mt-7 ml-1 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
-                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
-                    <item.icon className="relative h-6 w-6" strokeWidth={2} />
-                  </span>
-                  <h3 className="mt-4 font-display text-lg font-semibold">{item.t}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.d}</p>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Supporting values - same card treatment as the 4 above, just
-              standard-size (no wide/featured cards) so the primary 4 still
-              read first without these four losing their presence. */}
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {SECONDARY_VALUES.map((item, i) => (
-              <Reveal key={item.t} delay={0.3 + i * 0.05}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="premium-card flex h-full flex-col rounded-3xl p-6"
-                >
-                  <CardPhoto src={item.image} alt={item.alt} aspect="aspect-[4/3]" />
-                  <span className="relative -mt-7 ml-1 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
-                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
-                    <item.icon className="relative h-6 w-6" strokeWidth={2} />
-                  </span>
-                  <h3 className="mt-4 font-display text-lg font-semibold">{item.t}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.d}</p>
-                </motion.div>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {JOBS.map((job, i) => (
+              <Reveal key={job.id} delay={i * 0.08}>
+                <JobCard job={job} />
               </Reveal>
             ))}
           </div>
@@ -295,7 +256,7 @@ function Careers() {
       </section>
 
       {/* ── Hiring process timeline ──────────────────────────────────────── */}
-      <section className="py-20">
+      <section id="hiring-process" className="scroll-mt-24 py-20">
         <Container>
           <Reveal>
             <div className="mx-auto mb-16 max-w-2xl text-center">
@@ -362,26 +323,80 @@ function Careers() {
               ))}
             </ol>
           </div>
+
+          <Reveal delay={0.4}>
+            <p className="mt-14 text-center text-sm text-muted-foreground">
+              No take-home marathons, no whiteboard trivia - most candidates go from
+              application to offer{" "}
+              <span className="font-semibold text-foreground">within two weeks</span>.
+            </p>
+          </Reveal>
         </Container>
       </section>
 
-      {/* ── Open positions ───────────────────────────────────────────────── */}
-      <section id="open-positions" className="py-20">
+      {/* ── Life at Ethixweb ─────────────────────────────────────────────── */}
+      <section id="life-at-ethixweb" className="scroll-mt-24 py-20">
         <Container>
           <Reveal>
             <div className="mx-auto mb-12 max-w-2xl text-center">
               <p className="mb-4 text-sm uppercase tracking-widest text-primary-text">
-                Open positions
+                Life at Ethixweb
               </p>
               <h2 className="font-display text-5xl font-bold text-gradient pb-1">
-                Roles we&apos;re hiring for right now.
+                Built for people who like to build.
               </h2>
             </div>
           </Reveal>
-          <div className="grid gap-6 lg:grid-cols-2">
-            {JOBS.map((job, i) => (
-              <Reveal key={job.id} delay={i * 0.08}>
-                <JobCard job={job} />
+          {/* Primary values - the 4 that matter most, shown large with a
+              photo each. Wide cards alternate with narrow ones so the grid
+              reads as a deliberate layout, not a repeated tile. */}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {PRIMARY_VALUES.map((item, i) => (
+              <Reveal
+                key={item.t}
+                delay={i * 0.06}
+                className={item.wide ? "sm:col-span-2 lg:col-span-2" : "lg:col-span-1"}
+              >
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="premium-card flex h-full flex-col rounded-3xl p-6"
+                >
+                  <CardPhoto
+                    src={item.image}
+                    alt={item.alt}
+                    aspect={item.wide ? "aspect-[16/7]" : "aspect-[4/3]"}
+                  />
+                  <span className="relative -mt-7 ml-1 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
+                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
+                    <item.icon className="relative h-6 w-6" strokeWidth={2} />
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-semibold">{item.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.d}</p>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Supporting values - same card treatment as the 4 above, just
+              standard-size (no wide/featured cards) so the primary 4 still
+              read first without these four losing their presence. */}
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {SECONDARY_VALUES.map((item, i) => (
+              <Reveal key={item.t} delay={0.3 + i * 0.05}>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="premium-card flex h-full flex-col rounded-3xl p-6"
+                >
+                  <CardPhoto src={item.image} alt={item.alt} aspect="aspect-[4/3]" />
+                  <span className="relative -mt-7 ml-1 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-glow ring-1 ring-white/15">
+                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
+                    <item.icon className="relative h-6 w-6" strokeWidth={2} />
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-semibold">{item.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.d}</p>
+                </motion.div>
               </Reveal>
             ))}
           </div>
