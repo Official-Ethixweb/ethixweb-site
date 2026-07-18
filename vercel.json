@@ -32,6 +32,15 @@
       ]
     },
     {
+      "source": "/assessment/google-ads/:token",
+      "headers": [
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=(self), fullscreen=(self), geolocation=()"
+        }
+      ]
+    },
+    {
       "source": "/emblem-3d.html",
       "headers": [
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },

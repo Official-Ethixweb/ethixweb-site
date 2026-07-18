@@ -31,9 +31,16 @@ import { Route as CareersAssessmentRouteImport } from './routes/careers.assessme
 import { Route as CareersApplyRouteImport } from './routes/careers.apply'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as ApiContactRouteImport } from './routes/api.contact'
+import { Route as AssessmentGoogleAdsTokenRouteImport } from './routes/assessment.google-ads.$token'
 import { Route as ApiScreeningSubmitRouteImport } from './routes/api.screening.submit'
 import { Route as ApiScreeningStartRouteImport } from './routes/api.screening.start'
 import { Route as ApiScreeningDecisionRouteImport } from './routes/api.screening.decision'
+import { Route as ApiGadsSubmitRouteImport } from './routes/api.gads.submit'
+import { Route as ApiGadsStateRouteImport } from './routes/api.gads.state'
+import { Route as ApiGadsSaveRouteImport } from './routes/api.gads.save'
+import { Route as ApiGadsMediaUploadRouteImport } from './routes/api.gads.media-upload'
+import { Route as ApiGadsBeginRouteImport } from './routes/api.gads.begin'
+import { Route as ApiGadsAdvanceRouteImport } from './routes/api.gads.advance'
 import { Route as ApiCareersUploadRouteImport } from './routes/api.careers.upload'
 import { Route as ApiCareersApplyRouteImport } from './routes/api.careers.apply'
 import { Route as ApiAssessmentSubmitRouteImport } from './routes/api.assessment.submit'
@@ -152,6 +159,12 @@ const ApiContactRoute = ApiContactRouteImport.update({
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssessmentGoogleAdsTokenRoute =
+  AssessmentGoogleAdsTokenRouteImport.update({
+    id: '/assessment/google-ads/$token',
+    path: '/assessment/google-ads/$token',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiScreeningSubmitRoute = ApiScreeningSubmitRouteImport.update({
   id: '/api/screening/submit',
   path: '/api/screening/submit',
@@ -165,6 +178,36 @@ const ApiScreeningStartRoute = ApiScreeningStartRouteImport.update({
 const ApiScreeningDecisionRoute = ApiScreeningDecisionRouteImport.update({
   id: '/api/screening/decision',
   path: '/api/screening/decision',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsSubmitRoute = ApiGadsSubmitRouteImport.update({
+  id: '/api/gads/submit',
+  path: '/api/gads/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsStateRoute = ApiGadsStateRouteImport.update({
+  id: '/api/gads/state',
+  path: '/api/gads/state',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsSaveRoute = ApiGadsSaveRouteImport.update({
+  id: '/api/gads/save',
+  path: '/api/gads/save',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsMediaUploadRoute = ApiGadsMediaUploadRouteImport.update({
+  id: '/api/gads/media-upload',
+  path: '/api/gads/media-upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsBeginRoute = ApiGadsBeginRouteImport.update({
+  id: '/api/gads/begin',
+  path: '/api/gads/begin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGadsAdvanceRoute = ApiGadsAdvanceRouteImport.update({
+  id: '/api/gads/advance',
+  path: '/api/gads/advance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCareersUploadRoute = ApiCareersUploadRouteImport.update({
@@ -234,9 +277,16 @@ export interface FileRoutesByFullPath {
   '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/gads/advance': typeof ApiGadsAdvanceRoute
+  '/api/gads/begin': typeof ApiGadsBeginRoute
+  '/api/gads/media-upload': typeof ApiGadsMediaUploadRoute
+  '/api/gads/save': typeof ApiGadsSaveRoute
+  '/api/gads/state': typeof ApiGadsStateRoute
+  '/api/gads/submit': typeof ApiGadsSubmitRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
   '/api/screening/start': typeof ApiScreeningStartRoute
   '/api/screening/submit': typeof ApiScreeningSubmitRoute
+  '/assessment/google-ads/$token': typeof AssessmentGoogleAdsTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -267,9 +317,16 @@ export interface FileRoutesByTo {
   '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/gads/advance': typeof ApiGadsAdvanceRoute
+  '/api/gads/begin': typeof ApiGadsBeginRoute
+  '/api/gads/media-upload': typeof ApiGadsMediaUploadRoute
+  '/api/gads/save': typeof ApiGadsSaveRoute
+  '/api/gads/state': typeof ApiGadsStateRoute
+  '/api/gads/submit': typeof ApiGadsSubmitRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
   '/api/screening/start': typeof ApiScreeningStartRoute
   '/api/screening/submit': typeof ApiScreeningSubmitRoute
+  '/assessment/google-ads/$token': typeof AssessmentGoogleAdsTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -302,9 +359,16 @@ export interface FileRoutesById {
   '/api/assessment/submit': typeof ApiAssessmentSubmitRoute
   '/api/careers/apply': typeof ApiCareersApplyRoute
   '/api/careers/upload': typeof ApiCareersUploadRoute
+  '/api/gads/advance': typeof ApiGadsAdvanceRoute
+  '/api/gads/begin': typeof ApiGadsBeginRoute
+  '/api/gads/media-upload': typeof ApiGadsMediaUploadRoute
+  '/api/gads/save': typeof ApiGadsSaveRoute
+  '/api/gads/state': typeof ApiGadsStateRoute
+  '/api/gads/submit': typeof ApiGadsSubmitRoute
   '/api/screening/decision': typeof ApiScreeningDecisionRoute
   '/api/screening/start': typeof ApiScreeningStartRoute
   '/api/screening/submit': typeof ApiScreeningSubmitRoute
+  '/assessment/google-ads/$token': typeof AssessmentGoogleAdsTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -338,9 +402,16 @@ export interface FileRouteTypes {
     | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/gads/advance'
+    | '/api/gads/begin'
+    | '/api/gads/media-upload'
+    | '/api/gads/save'
+    | '/api/gads/state'
+    | '/api/gads/submit'
     | '/api/screening/decision'
     | '/api/screening/start'
     | '/api/screening/submit'
+    | '/assessment/google-ads/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -371,9 +442,16 @@ export interface FileRouteTypes {
     | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/gads/advance'
+    | '/api/gads/begin'
+    | '/api/gads/media-upload'
+    | '/api/gads/save'
+    | '/api/gads/state'
+    | '/api/gads/submit'
     | '/api/screening/decision'
     | '/api/screening/start'
     | '/api/screening/submit'
+    | '/assessment/google-ads/$token'
   id:
     | '__root__'
     | '/'
@@ -405,9 +483,16 @@ export interface FileRouteTypes {
     | '/api/assessment/submit'
     | '/api/careers/apply'
     | '/api/careers/upload'
+    | '/api/gads/advance'
+    | '/api/gads/begin'
+    | '/api/gads/media-upload'
+    | '/api/gads/save'
+    | '/api/gads/state'
+    | '/api/gads/submit'
     | '/api/screening/decision'
     | '/api/screening/start'
     | '/api/screening/submit'
+    | '/assessment/google-ads/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -435,9 +520,16 @@ export interface RootRouteChildren {
   ApiAssessmentSubmitRoute: typeof ApiAssessmentSubmitRoute
   ApiCareersApplyRoute: typeof ApiCareersApplyRoute
   ApiCareersUploadRoute: typeof ApiCareersUploadRoute
+  ApiGadsAdvanceRoute: typeof ApiGadsAdvanceRoute
+  ApiGadsBeginRoute: typeof ApiGadsBeginRoute
+  ApiGadsMediaUploadRoute: typeof ApiGadsMediaUploadRoute
+  ApiGadsSaveRoute: typeof ApiGadsSaveRoute
+  ApiGadsStateRoute: typeof ApiGadsStateRoute
+  ApiGadsSubmitRoute: typeof ApiGadsSubmitRoute
   ApiScreeningDecisionRoute: typeof ApiScreeningDecisionRoute
   ApiScreeningStartRoute: typeof ApiScreeningStartRoute
   ApiScreeningSubmitRoute: typeof ApiScreeningSubmitRoute
+  AssessmentGoogleAdsTokenRoute: typeof AssessmentGoogleAdsTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -596,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assessment/google-ads/$token': {
+      id: '/assessment/google-ads/$token'
+      path: '/assessment/google-ads/$token'
+      fullPath: '/assessment/google-ads/$token'
+      preLoaderRoute: typeof AssessmentGoogleAdsTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/screening/submit': {
       id: '/api/screening/submit'
       path: '/api/screening/submit'
@@ -615,6 +714,48 @@ declare module '@tanstack/react-router' {
       path: '/api/screening/decision'
       fullPath: '/api/screening/decision'
       preLoaderRoute: typeof ApiScreeningDecisionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/submit': {
+      id: '/api/gads/submit'
+      path: '/api/gads/submit'
+      fullPath: '/api/gads/submit'
+      preLoaderRoute: typeof ApiGadsSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/state': {
+      id: '/api/gads/state'
+      path: '/api/gads/state'
+      fullPath: '/api/gads/state'
+      preLoaderRoute: typeof ApiGadsStateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/save': {
+      id: '/api/gads/save'
+      path: '/api/gads/save'
+      fullPath: '/api/gads/save'
+      preLoaderRoute: typeof ApiGadsSaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/media-upload': {
+      id: '/api/gads/media-upload'
+      path: '/api/gads/media-upload'
+      fullPath: '/api/gads/media-upload'
+      preLoaderRoute: typeof ApiGadsMediaUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/begin': {
+      id: '/api/gads/begin'
+      path: '/api/gads/begin'
+      fullPath: '/api/gads/begin'
+      preLoaderRoute: typeof ApiGadsBeginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gads/advance': {
+      id: '/api/gads/advance'
+      path: '/api/gads/advance'
+      fullPath: '/api/gads/advance'
+      preLoaderRoute: typeof ApiGadsAdvanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/careers/upload': {
@@ -713,9 +854,16 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAssessmentSubmitRoute: ApiAssessmentSubmitRoute,
   ApiCareersApplyRoute: ApiCareersApplyRoute,
   ApiCareersUploadRoute: ApiCareersUploadRoute,
+  ApiGadsAdvanceRoute: ApiGadsAdvanceRoute,
+  ApiGadsBeginRoute: ApiGadsBeginRoute,
+  ApiGadsMediaUploadRoute: ApiGadsMediaUploadRoute,
+  ApiGadsSaveRoute: ApiGadsSaveRoute,
+  ApiGadsStateRoute: ApiGadsStateRoute,
+  ApiGadsSubmitRoute: ApiGadsSubmitRoute,
   ApiScreeningDecisionRoute: ApiScreeningDecisionRoute,
   ApiScreeningStartRoute: ApiScreeningStartRoute,
   ApiScreeningSubmitRoute: ApiScreeningSubmitRoute,
+  AssessmentGoogleAdsTokenRoute: AssessmentGoogleAdsTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

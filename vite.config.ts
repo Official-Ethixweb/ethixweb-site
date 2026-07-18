@@ -37,6 +37,10 @@ export default defineConfig({
         // routes room beyond the default serverless duration.
         functionRules: {
           "/api/assessment/**": { maxDuration: 300 },
+          // Finalizing a Google Ads assessment renders a PDF and sends two
+          // emails synchronously - comfortably under a minute, but well
+          // beyond the platform default.
+          "/api/gads/submit": { maxDuration: 60 },
         },
       },
     }),
