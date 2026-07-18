@@ -40,8 +40,8 @@ export function MarqueeBand({ items, rotate = true }: { items: string[]; rotate?
 
   if (!rotate) {
     return (
-      <div aria-hidden="true" className="relative z-10 my-10 w-full sm:my-12">
-        <div className="w-full overflow-hidden bg-primary py-3.5 shadow-glow">{track}</div>
+      <div aria-hidden="true" className="relative z-10 mb-10 w-full sm:mb-12">
+        <div className="w-full overflow-hidden bg-primary py-7 shadow-glow">{track}</div>
       </div>
     );
   }
