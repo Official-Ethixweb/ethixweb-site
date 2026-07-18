@@ -159,18 +159,27 @@ const LIFE_VALUES = [
   },
 ];
 
-// Ticker content for the rotated marquee band under the hero. Short,
-// scannable claims only - it's set dressing, not documentation.
+// Ticker content for the horizontal marquee band under the hero. Short,
+// scannable positive highlights only - it's set dressing, not documentation.
 const MARQUEE_ITEMS = [
   "We're hiring",
+  "Remote-first",
   "React",
   "TypeScript",
   "Node.js",
-  "Technical SEO",
   "AI-first workflow",
-  "Remote · India",
-  "US clients",
-  "Flexible hours",
+  "Technical SEO",
+  "Performance focused",
+  "Modern web apps",
+  "UX driven",
+  "Growth opportunities",
+  "Continuous learning",
+  "Open communication",
+  "Ownership culture",
+  "Client impact",
+  "Problem solvers",
+  "Global clients",
+  "Engineering excellence",
 ];
 
 // "What we value" cards inside the founder-note section.
@@ -188,7 +197,7 @@ const CULTURE_VALUES = [
   {
     icon: TrendingUp,
     t: "Continuous Growth",
-    d: "Every project is an opportunity to improve. We care more about your willingness to learn than pretending to know everything.",
+    d: "Every project is a chance to improve. We care far more about your willingness to learn than about having all the answers.",
   },
   {
     icon: Users,
@@ -437,7 +446,7 @@ function Careers() {
         </Container>
       </section>
 
-      <MarqueeBand items={MARQUEE_ITEMS} />
+      <MarqueeBand items={MARQUEE_ITEMS} rotate={false} />
 
       {/* ── Open positions ───────────────────────────────────────────────────
           First section after the hero on purpose: candidates come to a careers
@@ -601,8 +610,9 @@ function Careers() {
             </Reveal>
             <Reveal delay={0.14}>
               <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-[2.75rem] sm:leading-[1.15]">
-                If your favorite part of the day is watching the clock hit{" "}
-                <span className="text-[#f2545b]">5:00 PM</span>, we might not be your people.
+                If you love solving{" "}
+                <span className="text-[#f2545b]">one more interesting problem</span> before
+                logging off, you&apos;ll feel right at home here.
               </h2>
             </Reveal>
 
@@ -622,8 +632,8 @@ function Careers() {
 
             <ManifestoLine className="mt-9">
               <p className="text-xl font-semibold leading-relaxed text-white sm:text-2xl">
-                If your favorite part is solving one more interesting problem before logging
-                off - keep reading.
+                We built this team for people who show up curious, take ownership, and
+                genuinely enjoy the craft of building good things - keep reading.
               </p>
             </ManifestoLine>
 
@@ -638,21 +648,21 @@ function Careers() {
               <ManifestoLine>
                 <p>
                   We value <Hl>ownership over titles</Hl>, <Hl>initiative over instructions</Hl>
-                  , and the confidence to respectfully question ideas - including our own.
+                  , and the confidence to speak up, share an idea, or respectfully push back -
+                  including on us.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
-                  Technology moves fast. We expect our team to move faster - by staying
-                  curious, continuously learning, experimenting, and always striving to become{" "}
-                  <Hl>a little better than yesterday</Hl>.
+                  Technology moves fast, and we love that. We stay curious, keep experimenting,
+                  and aim to become <Hl>a little better than yesterday</Hl> on every project.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
-                  We are not looking for people who simply complete tasks. We are looking for{" "}
-                  <Hl>builders</Hl> - people who enjoy solving meaningful problems, embrace
-                  responsibility, and are excited by challenges that help them grow.
+                  We are looking for <Hl>builders</Hl> - people who enjoy solving meaningful
+                  problems, take on responsibility with enthusiasm, and treat every hard problem
+                  as a chance to grow.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
@@ -712,7 +722,7 @@ function Careers() {
           <div className="mx-auto mt-24 max-w-3xl text-center">
             <Reveal>
               <p className="font-display text-3xl font-bold leading-snug text-white sm:text-[2.6rem] sm:leading-tight">
-                &ldquo;If this excites you more than it scares you,{" "}
+                &ldquo;If this sounds like your kind of work,{" "}
                 <span className="text-[#f2545b]">we would love to meet you</span>.&rdquo;
               </p>
             </Reveal>

@@ -1,13 +1,14 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 /**
- * Slightly rotated, full-bleed crimson ticker - the one deliberately loud
- * element on a page. Duplicated content + a -50% translate loop makes the
- * scroll seamless; when the user prefers reduced motion it just sits still.
- * Shared by the Careers and Our Work pages so the band feels like one
- * site-level motif rather than two similar one-offs.
+ * Full-bleed crimson ticker - the one deliberately loud element on a page.
+ * Duplicated content + a -50% translate loop makes the scroll seamless; when
+ * the user prefers reduced motion it just sits still. Shared across several
+ * marketing pages so the band feels like one site-level motif rather than
+ * several similar one-offs. Defaults to the signature slight tilt; pass
+ * `rotate={false}` for a perfectly horizontal band (used on Careers).
  */
-export function MarqueeBand({ items }: { items: string[] }) {
+export function MarqueeBand({ items, rotate = true }: { items: string[]; rotate?: boolean }) {
   const reduceMotion = useReducedMotion();
 
   const row = (key: string) => (
@@ -26,17 +27,29 @@ export function MarqueeBand({ items }: { items: string[] }) {
     </div>
   );
 
+  const track = (
+    <motion.div
+      className="flex w-max"
+      animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
+      transition={{ duration: 28, ease: "linear", repeat: Infinity }}
+    >
+      {row("a")}
+      {row("b")}
+    </motion.div>
+  );
+
+  if (!rotate) {
+    return (
+      <div aria-hidden="true" className="relative z-10 my-10 w-full sm:my-12">
+        <div className="w-full overflow-hidden bg-primary py-3.5 shadow-glow">{track}</div>
+      </div>
+    );
+  }
+
   return (
     <div aria-hidden="true" className="relative z-10 -my-5 -rotate-[1.2deg]">
       <div className="-mx-[2%] w-[104%] overflow-hidden bg-primary py-3.5 shadow-glow">
-        <motion.div
-          className="flex w-max"
-          animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
-          transition={{ duration: 28, ease: "linear", repeat: Infinity }}
-        >
-          {row("a")}
-          {row("b")}
-        </motion.div>
+        {track}
       </div>
     </div>
   );
