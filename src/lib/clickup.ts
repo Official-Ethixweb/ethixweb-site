@@ -6,9 +6,9 @@
 
 import { SERVICE_LABELS, TIMELINE_LABELS, HEAR_ABOUT_LABELS } from "./email";
 
-// Default follow-up owners for new leads (auto-assignment): Akash + Yash.
+// Default follow-up owner for new leads (auto-assignment): Amar only.
 // Override with CLICKUP_LEADS_ASSIGNEES (comma-separated ClickUp user ids).
-const DEFAULT_ASSIGNEES = [101061628, 101095459];
+const DEFAULT_ASSIGNEES = [95288619];
 
 export interface ClickUpLeadInput {
   name: string;
