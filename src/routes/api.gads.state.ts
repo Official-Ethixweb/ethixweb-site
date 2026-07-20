@@ -3,8 +3,8 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { loadGadsAssessment } from "@/lib/gads-service";
-import { GADS_TIME_LIMITS, sanitizeGadsQuestion } from "@/lib/gads-types";
+import { loadGadsAssessment } from "@/lib/gads/service";
+import { GADS_TIME_LIMITS, sanitizeGadsQuestion } from "@/lib/gads/types";
 
 // Resolves the one-time link on load / refresh. Deliberately does not
 // distinguish "token not found" from "link expired" from "malformed token" -

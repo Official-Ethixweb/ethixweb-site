@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { getSupabase } from "@/lib/supabase";
-import { generateScreeningTest } from "@/lib/anthropic";
-import { getScreeningConfig } from "@/lib/screening-rubrics";
+import { generateScreeningTest } from "@/lib/screening/anthropic";
+import { getScreeningConfig } from "@/lib/screening/rubrics";
 import { isSameOriginRequest } from "@/lib/origin-check";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

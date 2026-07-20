@@ -3,7 +3,7 @@ import {
   GADS_MAJOR_VIOLATIONS,
   type GadsViolation,
   type GadsViolationType,
-} from "@/lib/gads-types";
+} from "@/lib/gads/types";
 
 // Exam-mode proctoring for the Google Ads assessment - a fork of
 // useExamGuard.ts (generic platform) extended with the additional signals

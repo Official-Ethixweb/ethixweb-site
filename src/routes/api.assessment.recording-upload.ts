@@ -4,7 +4,7 @@ import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
 import { getSupabase } from "@/lib/supabase";
-import { verifySessionToken } from "@/lib/assessment-session";
+import { verifySessionToken } from "@/lib/assessment/session";
 
 // Token handshake for direct-to-Blob webcam/mic recording uploads (same
 // pattern as resume uploads - the video bytes never touch our serverless

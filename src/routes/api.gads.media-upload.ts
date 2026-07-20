@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { findGadsByToken } from "@/lib/gads-service";
+import { findGadsByToken } from "@/lib/gads/service";
 
 // Token handshake for direct-to-Blob webcam/mic recording and periodic
 // snapshot uploads - the media bytes never touch our serverless function.

@@ -17,6 +17,32 @@ The official marketing website for [Ethixweb](https://ethixweb.com), a digital o
 - **File storage** — [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
 - **Deployment** — [Vercel](https://vercel.com)
 
+## Project Structure
+
+```
+src/
+  routes/                 File-based routes (TanStack Router) - filenames define URLs, do not rename
+  components/
+    layout/               Site chrome on every page (SiteLayout, Navbar, Footer, ThemeProvider, ...)
+    shared/               Cross-page building blocks (Container, Reveal, PageHero, hero web system, ...)
+    home/                 Homepage-only sections (SystemShift, PipelineDiagram, GlobalNetwork)
+    portfolio/            Portfolio-only (CaseStudyCard, AnimatedStat)
+    careers/              Careers pages (JobCard, SystemConstellation)
+    policies/             Policy pages (PolicySection)
+    assessment/           Careers assessment exam UI
+    gads/                 Standalone Google Ads assessment UI
+  lib/
+    assessment/           Assessment domain: Gemini generation, scoring, session, report
+    gads/                 Google Ads assessment domain: questions, scoring, PDF, store
+    screening/            Screening domain: Anthropic client, rubrics, tokens
+    *.ts                  Cross-cutting: supabase, email, clickup, leads, rate-limit, json-ld, ...
+  hooks/                  React hooks
+  assets/                 Bundled images (hashed at build)
+public/                   Static files served by URL (fonts, og-image, emblem-3d.html, careers images)
+```
+
+Components are grouped by the pages that use them; a component moves to `shared/` only once a second page needs it. `public/emblem-3d.html` contains a minified three.js bundle and is deliberately excluded from Prettier (see `.prettierignore`).
+
 ## Local Setup
 
 1. **Prerequisites** — Node.js v20.19+ or v22.12+, npm v10+

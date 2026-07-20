@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { GadsMicSample } from "@/lib/gads-types";
+import type { GadsMicSample } from "@/lib/gads/types";
 
 // Periodic webcam stills + microphone activity sampling, layered on top of
 // the continuous recording useMediaRecording already provides (reused

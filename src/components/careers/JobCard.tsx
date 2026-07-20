@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Briefcase, Clock, IndianRupee, MapPin } from "lucide-react";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import type { Job } from "@/lib/careers-data";
 

@@ -3,10 +3,10 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { getGadsStore } from "@/lib/gads-store";
-import { loadGadsAssessment, resetGadsRowForRetest } from "@/lib/gads-service";
-import { buildGadsExam } from "@/lib/gads-questions";
-import { GADS_EXAM_DURATION_SECONDS, sanitizeGadsQuestion } from "@/lib/gads-types";
+import { getGadsStore } from "@/lib/gads/store";
+import { loadGadsAssessment, resetGadsRowForRetest } from "@/lib/gads/service";
+import { buildGadsExam } from "@/lib/gads/questions";
+import { GADS_EXAM_DURATION_SECONDS, sanitizeGadsQuestion } from "@/lib/gads/types";
 
 // The actual access-control gate: pending -> in_progress only fires when the
 // typed email matches the invited address exactly. Heavily rate-limited

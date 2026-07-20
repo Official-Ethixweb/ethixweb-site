@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
-import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { PolicySection as Section } from "@/components/PolicySection";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { PageHero } from "@/components/shared/PageHero";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { PolicySection as Section } from "@/components/policies/PolicySection";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/policies/privacy")({

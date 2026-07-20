@@ -6,7 +6,7 @@ import { NameEmailGate } from "@/components/gads/NameEmailGate";
 import { PermissionGate } from "@/components/gads/PermissionGate";
 import { ExamRunner } from "@/components/gads/ExamRunner";
 import { useMediaRecording } from "@/hooks/useMediaRecording";
-import type { GadsAnswerMap, GadsAnswerValue, GadsCandidateQuestion } from "@/lib/gads-types";
+import type { GadsAnswerMap, GadsAnswerValue, GadsCandidateQuestion } from "@/lib/gads/types";
 
 // Standalone, single-candidate, single-use Google Ads assessment. No
 // careers-page integration, no admin dashboard, no login - the URL's token

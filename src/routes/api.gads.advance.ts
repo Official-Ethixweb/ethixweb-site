@@ -3,8 +3,8 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { advanceGadsQuestion, loadGadsAssessment } from "@/lib/gads-service";
-import { GADS_TOTAL_QUESTIONS } from "@/lib/gads-types";
+import { advanceGadsQuestion, loadGadsAssessment } from "@/lib/gads/service";
+import { GADS_TOTAL_QUESTIONS } from "@/lib/gads/types";
 
 // The forced-advance state machine step: commits the answer for
 // `questionIndex` and moves current_index forward by one. Elapsed time and

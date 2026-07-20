@@ -3,9 +3,9 @@ import type {} from "@tanstack/react-start";
 import { Resend } from "resend";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { getSupabase, type ScreeningTestRow } from "@/lib/supabase";
-import { scoreScreeningTest } from "@/lib/anthropic";
-import { getScreeningConfig } from "@/lib/screening-rubrics";
-import { signDecisionToken } from "@/lib/screening-tokens";
+import { scoreScreeningTest } from "@/lib/screening/anthropic";
+import { getScreeningConfig } from "@/lib/screening/rubrics";
+import { signDecisionToken } from "@/lib/screening/tokens";
 import { escapeHtml, emailRow, emailShell, emailButton, FROM_EMAIL, APP_URL } from "@/lib/email";
 import { isSameOriginRequest } from "@/lib/origin-check";
 

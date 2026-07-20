@@ -3,9 +3,9 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { loadAssessment, finalizeAssessment } from "@/lib/assessment-service";
-import { verifySessionToken } from "@/lib/assessment-session";
-import { TOTAL_QUESTIONS } from "@/lib/assessment-types";
+import { loadAssessment, finalizeAssessment } from "@/lib/assessment/service";
+import { verifySessionToken } from "@/lib/assessment/session";
+import { TOTAL_QUESTIONS } from "@/lib/assessment/types";
 
 // Final submission: manual, timer-driven, or violation-driven. Scoring and
 // the HR report run inside finalizeAssessment behind an atomic claim, so a

@@ -4,9 +4,9 @@ import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
 import { getSupabase } from "@/lib/supabase";
-import { loadAssessment, isPastGrace } from "@/lib/assessment-service";
-import { verifySessionToken } from "@/lib/assessment-session";
-import { TOTAL_QUESTIONS } from "@/lib/assessment-types";
+import { loadAssessment, isPastGrace } from "@/lib/assessment/service";
+import { verifySessionToken } from "@/lib/assessment/session";
+import { TOTAL_QUESTIONS } from "@/lib/assessment/types";
 
 // Auto-save endpoint, hit (debounced) after every interaction. Accepts the
 // full answer map + full violation list each time - idempotent, so a lost or

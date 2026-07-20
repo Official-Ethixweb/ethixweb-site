@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { getSupabase } from "@/lib/supabase";
-import { verifyDecisionToken } from "@/lib/screening-tokens";
+import { verifyDecisionToken } from "@/lib/screening/tokens";
 import { escapeHtml, DARK, BRAND_RED } from "@/lib/email";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 

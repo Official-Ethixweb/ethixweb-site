@@ -16,20 +16,20 @@ import {
   Workflow,
 } from "lucide-react";
 
-import { SiteLayout } from "@/components/SiteLayout";
-import { Reveal } from "@/components/Reveal";
-import { RotatingText } from "@/components/RotatingText";
-import { Testimonials } from "@/components/Testimonials";
-import { PipelineDiagram } from "@/components/PipelineDiagram";
-import { Container } from "@/components/Container";
-import { GlowBlob } from "@/components/GlowBlob";
-import { HeroWebVisual } from "@/components/HeroWebVisual";
-import { SystemShift } from "@/components/SystemShift";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Reveal } from "@/components/shared/Reveal";
+import { RotatingText } from "@/components/shared/RotatingText";
+import { Testimonials } from "@/components/shared/Testimonials";
+import { PipelineDiagram } from "@/components/home/PipelineDiagram";
+import { Container } from "@/components/shared/Container";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { HeroWebVisual } from "@/components/shared/HeroWebVisual";
+import { SystemShift } from "@/components/home/SystemShift";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 
 const GlobalNetwork = lazy(() =>
-  import("@/components/GlobalNetwork").then((m) => ({ default: m.GlobalNetwork })),
+  import("@/components/home/GlobalNetwork").then((m) => ({ default: m.GlobalNetwork })),
 );
 
 export const Route = createFileRoute("/")({

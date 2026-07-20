@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Loader2, ShieldCheck } from "lucide-react";
-import { Reveal } from "@/components/Reveal";
+import { Reveal } from "@/components/shared/Reveal";
 import { formInputClass, formLabelClass } from "@/lib/form-styles";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

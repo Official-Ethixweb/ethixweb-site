@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
-import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { CardGrid } from "@/components/CardGrid";
-import { CTASection } from "@/components/CTASection";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { PageHero } from "@/components/shared/PageHero";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { CardGrid } from "@/components/shared/CardGrid";
+import { CTASection } from "@/components/shared/CTASection";
 import {
   Check,
   MapPin,

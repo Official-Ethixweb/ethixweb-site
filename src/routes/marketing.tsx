@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
-import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { CTASection } from "@/components/CTASection";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { PageHero } from "@/components/shared/PageHero";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { CTASection } from "@/components/shared/CTASection";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Megaphone,

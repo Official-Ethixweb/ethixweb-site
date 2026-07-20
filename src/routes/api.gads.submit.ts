@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { finalizeGadsAssessment, loadGadsAssessment } from "@/lib/gads-service";
+import { finalizeGadsAssessment, loadGadsAssessment } from "@/lib/gads/service";
 
 // Terminal finalize: called after the last question's advance response
 // comes back `done: true`, or forced early by the overall timer / the

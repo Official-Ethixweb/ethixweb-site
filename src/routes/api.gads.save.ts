@@ -3,14 +3,14 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { getGadsStore } from "@/lib/gads-store";
+import { getGadsStore } from "@/lib/gads/store";
 import {
   GADS_MAX_CAMERA_SNAPSHOTS,
   GADS_MAX_MIC_SAMPLES,
   GADS_MAX_VIOLATIONS,
   loadGadsAssessment,
-} from "@/lib/gads-service";
-import { GADS_TOTAL_QUESTIONS, type GadsAssessmentRow } from "@/lib/gads-types";
+} from "@/lib/gads/service";
+import { GADS_TOTAL_QUESTIONS, type GadsAssessmentRow } from "@/lib/gads/types";
 
 // Batched, debounced flush - the client accumulates violations/mic-activity
 // in its own state (same convention as useExamGuard) and piggybacks the

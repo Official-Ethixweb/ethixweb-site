@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Maximize, Mic, ShieldAlert } from "lucide-react";
-import { Reveal } from "@/components/Reveal";
+import { Reveal } from "@/components/shared/Reveal";
 import type { useMediaRecording, PermissionState } from "@/hooks/useMediaRecording";
 
 interface PermissionGateProps {

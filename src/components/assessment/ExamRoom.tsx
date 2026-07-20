@@ -20,7 +20,7 @@ import {
   type CandidateQuestion,
   type SubmitReason,
   type Violation,
-} from "@/lib/assessment-types";
+} from "@/lib/assessment/types";
 
 // The live exam. Renders as a full-viewport layer above the site chrome:
 // server-authoritative countdown, question palette, per-interaction autosave,

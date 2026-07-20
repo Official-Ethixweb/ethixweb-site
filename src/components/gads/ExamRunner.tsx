@@ -5,7 +5,7 @@ import { useGadsExamGuard } from "@/hooks/useGadsExamGuard";
 import { useGadsMediaCapture } from "@/hooks/useGadsMediaCapture";
 import { useQuestionTimer } from "@/hooks/useQuestionTimer";
 import type { useMediaRecording } from "@/hooks/useMediaRecording";
-import { playGadsClick } from "@/lib/gads-sound";
+import { playGadsClick } from "@/lib/gads/sound";
 import { GadsQuestionCard } from "./GadsQuestionCard";
 import {
   GADS_MAX_MAJOR_VIOLATIONS,
@@ -17,7 +17,7 @@ import {
   type GadsMicSample,
   type GadsSubmitReason,
   type GadsViolation,
-} from "@/lib/gads-types";
+} from "@/lib/gads/types";
 
 const SAVE_INTERVAL_MS = 5000;
 

@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
 import { motion, useReducedMotion } from "framer-motion";
-import { SiteLayout } from "@/components/SiteLayout";
-import { MarqueeBand } from "@/components/MarqueeBand";
-import { EditorialHeader } from "@/components/EditorialHeader";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { GlowBlob } from "@/components/GlowBlob";
-import { CardGrid } from "@/components/CardGrid";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { MarqueeBand } from "@/components/shared/MarqueeBand";
+import { EditorialHeader } from "@/components/shared/EditorialHeader";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { CardGrid } from "@/components/shared/CardGrid";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Target,
@@ -173,8 +173,7 @@ function About() {
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="mt-7 max-w-3xl pb-1 text-[clamp(2.5rem,5.2vw,4.5rem)] font-extrabold leading-[1.06] text-gradient">
-                A small, senior team.{" "}
-                <span className="text-primary">No account managers.</span>
+                A small, senior team. <span className="text-primary">No account managers.</span>
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
@@ -531,8 +530,8 @@ function About() {
                       </span>
                     </p>
                     <p className="relative mt-5 border-t border-white/10 pt-5 text-sm leading-relaxed text-white/80">
-                      &ldquo;The team communicated clearly, worked efficiently, and delivered
-                      beyond expectations.&rdquo;
+                      &ldquo;The team communicated clearly, worked efficiently, and delivered beyond
+                      expectations.&rdquo;
                     </p>
                     <p className="relative mt-3 text-xs font-semibold uppercase tracking-widest text-[#f2545b]">
                       Kayla Kjl - verified client

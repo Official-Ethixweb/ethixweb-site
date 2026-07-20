@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
-import { SiteLayout } from "@/components/SiteLayout";
-import { Container } from "@/components/Container";
-import { Reveal } from "@/components/Reveal";
-import { GlowBlob } from "@/components/GlowBlob";
-import { HeroWebVisual } from "@/components/HeroWebVisual";
-import { MarqueeBand } from "@/components/MarqueeBand";
-import { EditorialHeader } from "@/components/EditorialHeader";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Container } from "@/components/shared/Container";
+import { Reveal } from "@/components/shared/Reveal";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { HeroWebVisual } from "@/components/shared/HeroWebVisual";
+import { MarqueeBand } from "@/components/shared/MarqueeBand";
+import { EditorialHeader } from "@/components/shared/EditorialHeader";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import {
   Wrench,
@@ -149,8 +149,7 @@ function Industries() {
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="mt-7 max-w-3xl pb-1 text-[clamp(2.5rem,5.2vw,4.5rem)] font-extrabold leading-[1.06] text-gradient">
-                Built for the businesses that{" "}
-                <span className="text-primary">build America.</span>
+                Built for the businesses that <span className="text-primary">build America.</span>
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
@@ -322,8 +321,8 @@ function IndustryBlock({
                 </p>
               </div>
               <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-                We build websites and systems that don&apos;t just look good - they&apos;re built
-                to convert visitors into paying customers while you&apos;re on the job.
+                We build websites and systems that don&apos;t just look good - they&apos;re built to
+                convert visitors into paying customers while you&apos;re on the job.
               </p>
 
               {/* Proof strip - real numbers from the case studies, linked */}

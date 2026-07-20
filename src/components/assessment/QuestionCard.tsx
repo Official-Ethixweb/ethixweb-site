@@ -1,6 +1,6 @@
 import { CheckSquare, Square, Circle, CircleDot, ListChecks } from "lucide-react";
-import type { AnswerValue, CandidateQuestion } from "@/lib/assessment-types";
-import { wordCount } from "@/lib/assessment-scoring";
+import type { AnswerValue, CandidateQuestion } from "@/lib/assessment/types";
+import { wordCount } from "@/lib/assessment/scoring";
 
 export const TYPE_LABELS: Record<CandidateQuestion["type"], string> = {
   single: "Multiple Choice",

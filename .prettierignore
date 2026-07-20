@@ -6,3 +6,5 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+# Minified three.js bundle inside - formatting explodes it ~100x in size
+public/emblem-3d.html

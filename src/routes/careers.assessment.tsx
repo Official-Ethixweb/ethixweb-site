@@ -18,10 +18,10 @@ import {
   UploadCloud,
   Video,
 } from "lucide-react";
-import { SiteLayout } from "@/components/SiteLayout";
-import { PageHero } from "@/components/PageHero";
-import { Container } from "@/components/Container";
-import { Reveal } from "@/components/Reveal";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { PageHero } from "@/components/shared/PageHero";
+import { Container } from "@/components/shared/Container";
+import { Reveal } from "@/components/shared/Reveal";
 import { ExamRoom } from "@/components/assessment/ExamRoom";
 import { useMediaRecording } from "@/hooks/useMediaRecording";
 import { JOBS, getJob } from "@/lib/careers-data";
@@ -33,7 +33,7 @@ import {
   type CandidateQuestion,
   type SubmitReason,
   type Violation,
-} from "@/lib/assessment-types";
+} from "@/lib/assessment/types";
 
 const searchSchema = z.object({
   role: z.string().optional(),

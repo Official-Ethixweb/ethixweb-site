@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MAJOR_VIOLATIONS, type Violation, type ViolationType } from "@/lib/assessment-types";
+import { MAJOR_VIOLATIONS, type Violation, type ViolationType } from "@/lib/assessment/types";
 
 // Exam-mode proctoring. Everything here is a deterrent + evidence trail, not
 // a hard guarantee (nothing in a browser is): major signals (fullscreen exit,

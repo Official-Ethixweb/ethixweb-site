@@ -2,11 +2,11 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SiteLayout } from "@/components/SiteLayout";
-import { Reveal } from "@/components/Reveal";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Container } from "@/components/Container";
-import { GlowBlob } from "@/components/GlowBlob";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Reveal } from "@/components/shared/Reveal";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { Container } from "@/components/shared/Container";
+import { GlowBlob } from "@/components/shared/GlowBlob";
 import { JOBS, HIRING_PROCESS, getJob, type Job } from "@/lib/careers-data";
 import {
   ArrowUpRight,
@@ -312,8 +312,7 @@ function JobDetail() {
                     Sound like you?
                   </h2>
                   <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-white/75">
-                    The application takes under five minutes - a resume and a short note, no
-                    essays.
+                    The application takes under five minutes - a resume and a short note, no essays.
                   </p>
                   <Link
                     to="/careers/apply"

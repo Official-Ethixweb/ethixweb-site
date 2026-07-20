@@ -2,13 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { jsonLdStringify } from "@/lib/json-ld";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SiteLayout } from "@/components/SiteLayout";
-import { Container } from "@/components/Container";
-import { Reveal } from "@/components/Reveal";
-import { GlowBlob } from "@/components/GlowBlob";
-import { HeroWebVisual } from "@/components/HeroWebVisual";
-import { MarqueeBand } from "@/components/MarqueeBand";
-import { EditorialHeader } from "@/components/EditorialHeader";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Container } from "@/components/shared/Container";
+import { Reveal } from "@/components/shared/Reveal";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { HeroWebVisual } from "@/components/shared/HeroWebVisual";
+import { MarqueeBand } from "@/components/shared/MarqueeBand";
+import { EditorialHeader } from "@/components/shared/EditorialHeader";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -261,8 +261,8 @@ function Services() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Websites, ads, SEO and tracking, handled by a senior team that actually answers
-                the phone.
+                Websites, ads, SEO and tracking, handled by a senior team that actually answers the
+                phone.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
@@ -438,8 +438,8 @@ function Services() {
                 One team for your whole growth system.
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-white/75 sm:text-lg">
-                Stop stitching together freelancers and point tools. Tell us what growth looks
-                like for you - we&apos;ll map the system that gets you there.
+                Stop stitching together freelancers and point tools. Tell us what growth looks like
+                for you - we&apos;ll map the system that gets you there.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

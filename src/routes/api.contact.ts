@@ -38,8 +38,10 @@ export const Route = createFileRoute("/api/contact")({
           return Response.json({ ok: false, error: "Invalid request body" }, { status: 400 });
         }
 
-        const { service, timeline, other, name, phone, email, company, hearAbout } =
-          body as Record<string, unknown>;
+        const { service, timeline, other, name, phone, email, company, hearAbout } = body as Record<
+          string,
+          unknown
+        >;
 
         const cleanName = typeof name === "string" ? name.trim() : "";
         const cleanEmail = typeof email === "string" ? email.trim() : "";

@@ -5,9 +5,13 @@ import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
 import { getSupabase } from "@/lib/supabase";
 import { getJob } from "@/lib/careers-data";
-import { buildCandidateProfile, fetchResumePdfBase64, generateAssessment } from "@/lib/gemini";
-import { createSessionToken } from "@/lib/assessment-session";
-import { EXAM_DURATION_MINUTES, sanitizeQuestion } from "@/lib/assessment-types";
+import {
+  buildCandidateProfile,
+  fetchResumePdfBase64,
+  generateAssessment,
+} from "@/lib/assessment/gemini";
+import { createSessionToken } from "@/lib/assessment/session";
+import { EXAM_DURATION_MINUTES, sanitizeQuestion } from "@/lib/assessment/types";
 
 const RESUME_HOST_RE = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i;
 const RETAKE_WINDOW_DAYS = 30;

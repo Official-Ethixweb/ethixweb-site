@@ -3,14 +3,14 @@ import { jsonLdStringify } from "@/lib/json-ld";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check } from "lucide-react";
-import { SiteLayout } from "@/components/SiteLayout";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { GlowBlob } from "@/components/GlowBlob";
-import { HeroWebVisual } from "@/components/HeroWebVisual";
-import { CaseStudyCard } from "@/components/CaseStudyCard";
-import { Testimonials } from "@/components/Testimonials";
-import { AnimatedStat } from "@/components/AnimatedStat";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { HeroWebVisual } from "@/components/shared/HeroWebVisual";
+import { CaseStudyCard } from "@/components/portfolio/CaseStudyCard";
+import { Testimonials } from "@/components/shared/Testimonials";
+import { AnimatedStat } from "@/components/portfolio/AnimatedStat";
 import { CASE_STUDIES, SERVICE_FILTERS } from "@/lib/portfolio-data";
 
 export const Route = createFileRoute("/portfolio")({

@@ -9,13 +9,13 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { SiteLayout } from "@/components/SiteLayout";
-import { Reveal } from "@/components/Reveal";
-import { Container } from "@/components/Container";
-import { GlowBlob } from "@/components/GlowBlob";
-import { MarqueeBand } from "@/components/MarqueeBand";
-import { RotatingText } from "@/components/RotatingText";
-import { WebSpotlight } from "@/components/WebSpotlight";
+import { SiteLayout } from "@/components/layout/SiteLayout";
+import { Reveal } from "@/components/shared/Reveal";
+import { Container } from "@/components/shared/Container";
+import { GlowBlob } from "@/components/shared/GlowBlob";
+import { MarqueeBand } from "@/components/shared/MarqueeBand";
+import { RotatingText } from "@/components/shared/RotatingText";
+import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { ArrowUpRight, Check, Clock, PenLine } from "lucide-react";
 

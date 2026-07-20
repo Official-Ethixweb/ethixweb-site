@@ -1,7 +1,7 @@
 import { CheckSquare, Square, Circle, CircleDot, ListChecks } from "lucide-react";
-import type { GadsAnswerValue, GadsCandidateQuestion } from "@/lib/gads-types";
-import { wordCount } from "@/lib/assessment-scoring";
-import { playGadsClick } from "@/lib/gads-sound";
+import type { GadsAnswerValue, GadsCandidateQuestion } from "@/lib/gads/types";
+import { wordCount } from "@/lib/assessment/scoring";
+import { playGadsClick } from "@/lib/gads/sound";
 
 export const MECHANIC_LABELS: Record<GadsCandidateQuestion["mechanic"], string> = {
   single: "Single Correct",

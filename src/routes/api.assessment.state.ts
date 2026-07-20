@@ -3,9 +3,9 @@ import type {} from "@tanstack/react-start";
 import { z } from "zod";
 import { checkRateLimitDurable, clientIp } from "@/lib/rate-limit";
 import { isSameOriginRequest } from "@/lib/origin-check";
-import { loadAssessment } from "@/lib/assessment-service";
-import { verifySessionToken } from "@/lib/assessment-session";
-import { sanitizeQuestion } from "@/lib/assessment-types";
+import { loadAssessment } from "@/lib/assessment/service";
+import { verifySessionToken } from "@/lib/assessment/session";
+import { sanitizeQuestion } from "@/lib/assessment/types";
 
 // Session restore after a refresh/crash: given the id + bearer token the
 // browser stashed at start, returns the sanitized questions, saved answers,
