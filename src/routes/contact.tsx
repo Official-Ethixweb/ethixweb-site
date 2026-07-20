@@ -8,7 +8,6 @@ import { Reveal } from "@/components/Reveal";
 import { Container } from "@/components/Container";
 import { GlowBlob } from "@/components/GlowBlob";
 import { useTheme } from "@/components/ThemeProvider";
-import { SystemConstellation } from "@/components/SystemConstellation";
 import { WebSpotlight } from "@/components/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
 import { formLabelClass, formInputClass } from "@/lib/form-styles";
@@ -843,10 +842,6 @@ function ContactBody() {
                       We've received your details and will send your personalised roadmap within one
                       business day.
                     </motion.p>
-                    <SystemConstellation
-                      nodes={stepLabels.map((label) => ({ label }))}
-                      className="mt-2 h-40 w-40 opacity-80"
-                    />
                   </motion.div>
                 )}
               </div>

@@ -611,8 +611,8 @@ function Careers() {
             <Reveal delay={0.14}>
               <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-[2.75rem] sm:leading-[1.15]">
                 If you love solving{" "}
-                <span className="text-[#f2545b]">one more interesting problem</span> before
-                logging off, you&apos;ll feel right at home here.
+                <span className="text-[#f2545b]">one more interesting problem</span> before logging
+                off, you&apos;ll feel right at home here.
               </h2>
             </Reveal>
 
@@ -632,44 +632,43 @@ function Careers() {
 
             <ManifestoLine className="mt-9">
               <p className="text-xl font-semibold leading-relaxed text-white sm:text-2xl">
-                We built this team for people who show up curious, take ownership, and
-                genuinely enjoy the craft of building good things - keep reading.
+                We built this team for people who show up curious, take ownership, and genuinely
+                enjoy the craft of building good things - keep reading.
               </p>
             </ManifestoLine>
 
             <div className="mt-8 space-y-6 text-lg leading-8 text-white/70">
               <ManifestoLine>
                 <p>
-                  We are building a team of <Hl>relentlessly curious</Hl> people. People who
-                  learn because they genuinely enjoy learning, not because someone asked them
-                  to.
+                  We are building a team of <Hl>relentlessly curious</Hl> people. People who learn
+                  because they genuinely enjoy learning, not because someone asked them to.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
-                  We value <Hl>ownership over titles</Hl>, <Hl>initiative over instructions</Hl>
-                  , and the confidence to speak up, share an idea, or respectfully push back -
+                  We value <Hl>ownership over titles</Hl>, <Hl>initiative over instructions</Hl>,
+                  and the confidence to speak up, share an idea, or respectfully push back -
                   including on us.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
-                  Technology moves fast, and we love that. We stay curious, keep experimenting,
-                  and aim to become <Hl>a little better than yesterday</Hl> on every project.
+                  Technology moves fast, and we love that. We stay curious, keep experimenting, and
+                  aim to become <Hl>a little better than yesterday</Hl> on every project.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
                   We are looking for <Hl>builders</Hl> - people who enjoy solving meaningful
-                  problems, take on responsibility with enthusiasm, and treat every hard problem
-                  as a chance to grow.
+                  problems, take on responsibility with enthusiasm, and treat every hard problem as
+                  a chance to grow.
                 </p>
               </ManifestoLine>
               <ManifestoLine>
                 <p>
                   If you are looking for a place where you will be{" "}
-                  <Hl>challenged, trusted and supported</Hl>, surrounded by people who push
-                  each other to become better every day - you will feel at home here.
+                  <Hl>challenged, trusted and supported</Hl>, surrounded by people who push each
+                  other to become better every day - you will feel at home here.
                 </p>
               </ManifestoLine>
             </div>
@@ -708,9 +707,7 @@ function Careers() {
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
                       <item.icon className="relative h-5 w-5" strokeWidth={2} />
                     </span>
-                    <h4 className="mt-5 font-display text-lg font-semibold text-white">
-                      {item.t}
-                    </h4>
+                    <h4 className="mt-5 font-display text-lg font-semibold text-white">{item.t}</h4>
                     <p className="mt-2 text-sm leading-relaxed text-white/65">{item.d}</p>
                   </motion.div>
                 </Reveal>
