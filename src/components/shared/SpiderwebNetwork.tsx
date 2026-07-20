@@ -651,11 +651,13 @@ export function SpiderwebNetwork({
               style={{
                 top: `${(-LIGHT_SHIFT_Y / VB_H) * 100}%`,
                 opacity: 0.95,
-                // Same red bloom as the dark artwork, but no brightness/saturate
-                // grade: those were tuned to seat the dark file's deeper reds,
-                // and would muddy this file's own light-mode palette.
+                // The artwork's palette is baked deep crimson red (#A31A20-
+                // #C4282E) for light mode, so no brightness/saturate grade -
+                // and the bloom is ~75% weaker than dark mode's and toned to
+                // match: a strong bright-red halo reads cheap on a light
+                // background.
                 filter:
-                  "drop-shadow(0 0 5px rgba(229,29,37,0.55)) drop-shadow(0 0 26px rgba(229,29,37,0.32))",
+                  "drop-shadow(0 0 4px rgba(173,29,36,0.22)) drop-shadow(0 0 18px rgba(173,29,36,0.12))",
               }}
             />
           </div>
