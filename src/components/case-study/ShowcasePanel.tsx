@@ -1,21 +1,79 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/shared/Reveal";
 import type { Image } from "@/data/case-studies/types";
 
-// The screen cutout in laptop-mockup-hollow.png as a % of the photo's own
-// box (measured against the original photo's 1800x1350 pixels) - lets the
-// live iframe sit exactly behind the glass at any render size, no JS needed.
-const SCREEN_RECT = { left: 27.22, top: 19.85, width: 45.61, height: 37.93 };
+/** One device frame: flat browser/OS chrome (no photo asset needed) with a
+ * live `<iframe>` of the site rendered at that device's real width, then
+ * scaled via ResizeObserver to fit however wide the frame renders - each
+ * frame genuinely shows that breakpoint's layout, not the same screenshot
+ * resized. The iframe renders slightly wider than its clipped wrapper so its
+ * native scrollbar lands outside the visible area (same trick as the
+ * laptop-photo showcase elsewhere on this page). */
+function DeviceFrame({
+  websiteUrl,
+  clientName,
+  device,
+  chrome,
+  frameWidth,
+  frameHeight,
+  className,
+}: {
+  websiteUrl: string;
+  clientName: string;
+  device: string;
+  chrome: "browser" | "none";
+  frameWidth: number;
+  frameHeight: number;
+  className?: string;
+}) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
 
-/** The "laptop in hand" showcase moment between the before/after slider and
- * Snapshot. When the case study has a live `websiteUrl`, the laptop is the
- * exact same photo as always (`laptop-mockup-hollow.png` - hand, bezel, same
- * size), just with its screen area cut out to transparent so a real
- * `<iframe>` of the site shows through, scrollable and clickable, in place
- * of the baked-in screenshot. Falls back to the plain static `image` when
- * there's no URL to embed. Panel background (#F2F1DF, sampled from the
- * reference) radial-fades into the page background on every side so it reads
- * as one continuous surface, not a boxed panel. */
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const update = () => setScale(el.getBoundingClientRect().width / frameWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [frameWidth]);
+
+  return (
+    <div
+      className={`overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-black/10 ${className ?? ""}`}
+    >
+      {chrome === "browser" && (
+        <div className="flex items-center gap-1.5 border-b border-black/5 bg-[#f3f3f3] px-3 py-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+          <span className="ml-3 flex-1 truncate rounded-md bg-white px-2 py-1 text-center text-[11px] text-neutral-400 ring-1 ring-black/5">
+            {websiteUrl.replace(/^https?:\/\//, "")}
+          </span>
+        </div>
+      )}
+      <div
+        ref={wrapRef}
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: `${frameWidth} / ${frameHeight}` }}
+      >
+        <iframe
+          src={websiteUrl}
+          title={`${device} preview of the ${clientName} website`}
+          loading="lazy"
+          className="absolute left-0 top-0 origin-top-left border-0"
+          style={{
+            width: `${frameWidth + 20}px`,
+            height: `${frameHeight}px`,
+            transform: `scale(${scale})`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function ShowcasePanel({
   image,
   websiteUrl,
@@ -25,30 +83,6 @@ export function ShowcasePanel({
   websiteUrl?: string;
   clientName: string;
 }) {
-  const hollowSrc = image.src.replace(/(\.\w+)$/, "-hollow$1");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const updateScale = () => {
-      if (containerRef.current) {
-        const width = containerRef.current.getBoundingClientRect().width;
-        // The cutout width is 46.33% of the container width
-        const cutoutWidth = width * (SCREEN_RECT.width / 100);
-        // We render the iframe at a desktop resolution width of 1440px
-        setScale(cutoutWidth / 1440);
-      }
-    };
-
-    updateScale();
-
-    const observer = new ResizeObserver(updateScale);
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section className="pb-6 sm:pb-10">
       <Reveal>
@@ -59,52 +93,47 @@ export function ShowcasePanel({
               "radial-gradient(ellipse 65% 85% at 50% 45%, #f2f1df 0%, var(--color-background) 100%)",
           }}
         >
-          <div
-            ref={containerRef}
-            className="relative mx-auto w-full max-w-[1200px]"
-            style={{ aspectRatio: `${image.width} / ${image.height}` }}
-          >
-            {websiteUrl && (
-              // Wrapper is clipped exactly to the screen cutout; the iframe
-              // itself renders 20px wider than the scale basis so its native
-              // scrollbar lands in that extra strip and gets clipped away -
-              // scrolling still works (wheel/trackpad/touch/keyboard all
-              // scroll the iframe regardless of whether its bar is visible),
-              // it just doesn't look like a "website in a box" anymore.
-              <div
-                className="absolute overflow-hidden"
-                style={{
-                  left: `${SCREEN_RECT.left}%`,
-                  top: `${SCREEN_RECT.top}%`,
-                  width: `${SCREEN_RECT.width}%`,
-                  height: `${SCREEN_RECT.height}%`,
-                }}
-              >
-                <iframe
-                  src={websiteUrl}
-                  title={`Live preview of the ${clientName} website`}
-                  loading="lazy"
-                  scrolling="yes"
-                  className="border-0 bg-white"
-                  style={{
-                    width: "1460px",
-                    height: "919px",
-                    transform: `scale(${scale})`,
-                    transformOrigin: "top left",
-                  }}
-                />
-              </div>
-            )}
+          {websiteUrl ? (
+            <div className="relative mx-auto w-full max-w-[1100px] pb-16 pr-6 sm:pb-0 sm:pr-0">
+              <DeviceFrame
+                websiteUrl={websiteUrl}
+                clientName={clientName}
+                device="Desktop"
+                chrome="browser"
+                frameWidth={1440}
+                frameHeight={900}
+                className="w-full"
+              />
+              <DeviceFrame
+                websiteUrl={websiteUrl}
+                clientName={clientName}
+                device="Tablet"
+                chrome="none"
+                frameWidth={768}
+                frameHeight={1024}
+                className="absolute -right-2 top-[8%] hidden w-[30%] sm:block"
+              />
+              <DeviceFrame
+                websiteUrl={websiteUrl}
+                clientName={clientName}
+                device="Mobile"
+                chrome="none"
+                frameWidth={390}
+                frameHeight={844}
+                className="absolute -bottom-6 -left-4 w-[26%] sm:-bottom-10 sm:w-[20%]"
+              />
+            </div>
+          ) : (
             <img
-              src={websiteUrl ? hollowSrc : image.src}
+              src={image.src}
               alt={image.alt}
               width={image.width}
               height={image.height}
               loading="lazy"
               decoding="async"
-              className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+              className="h-auto w-full max-w-[1200px] object-contain"
             />
-          </div>
+          )}
         </div>
       </Reveal>
     </section>

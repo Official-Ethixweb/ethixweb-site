@@ -166,21 +166,6 @@ export const ALL_PHASE_PLUMBING: CaseStudyDetail = {
     ],
   },
 
-  mobileFirst: {
-    intro: {
-      eyebrow: "Special focus",
-      title: "Mobile first design",
-      highlight: "design",
-      sub: "Built mobile-first, because that's where the calls come from.",
-    },
-    image: {
-      src: `${IMG}/mobile-first.jpg`,
-      alt: "A hand holding a phone showing the new site's homepage, full length",
-      width: 2000,
-      height: 1500,
-    },
-  },
-
   techStack: {
     intro: {
       eyebrow: "Tech stack",
