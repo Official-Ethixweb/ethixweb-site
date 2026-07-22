@@ -30,7 +30,8 @@ const HOLES = {
     frameWidth: 768,
     frameHeight: 1063,
   },
-  phone: { left: 8.58, top: 36.33, width: 18.19, height: 51.17, frameWidth: 390, frameHeight: 591 },
+  // Phone stays the original static photo (no live embed) - kept here only
+  // as a reference for where its screen sits, not passed to LiveScreen.
 } as const;
 
 /** Live site rendered at a device's real width, then scaled via
@@ -122,12 +123,6 @@ export function ShowcasePanel({
                 clientName={clientName}
                 device="Tablet"
                 hole={HOLES.tablet}
-              />
-              <LiveScreen
-                websiteUrl={websiteUrl}
-                clientName={clientName}
-                device="Mobile"
-                hole={HOLES.phone}
               />
               <img
                 src={DEVICES_IMAGE_HOLLOW_SRC}
