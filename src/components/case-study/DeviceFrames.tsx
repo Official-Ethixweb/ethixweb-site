@@ -44,15 +44,27 @@ export function MacBookFrame({
         </div>
       </div>
       {/* Hinge chin */}
-      <div className="relative h-[10px] rounded-b-[10px] bg-gradient-to-b from-[#d7d8da] to-[#a9abae]">
-        <div className="absolute left-1/2 top-0 h-full w-[14%] -translate-x-1/2 rounded-b-[5px] bg-[#8d8f92]" />
+      <div className="relative h-[6px] bg-gradient-to-b from-[#d7d8da] to-[#c1c2c5]">
+        <div className="absolute left-1/2 top-0 h-full w-[14%] -translate-x-1/2 bg-[#a3a5a8]" />
       </div>
-      {/* Keyboard deck suggestion - receding base, no literal keys */}
+      {/* Keyboard deck - proportional depth via padding-top (% always
+          resolves against width, giving a real height to position the key
+          rows/trackpad against), key-row texture + trackpad, no photo needed */}
       <div
-        className="mx-auto h-[16px] w-[97%] bg-gradient-to-b from-[#c9cacd] to-[#b3b4b7]"
-        style={{ clipPath: "polygon(1.5% 0, 98.5% 0, 100% 100%, 0% 100%)" }}
+        className="relative mx-auto w-[103%] bg-gradient-to-b from-[#dcdde0] to-[#b7b8bb] pt-[22%]"
+        style={{
+          clipPath: "polygon(0.5% 0, 99.5% 0, 100% 100%, 0% 100%)",
+          boxShadow: "inset 0 6px 10px -6px rgba(0,0,0,0.25)",
+        }}
       >
-        <div className="mx-auto mt-[3px] h-[3px] w-[18%] rounded-full bg-black/10" />
+        <div
+          className="absolute left-1/2 top-[14%] h-[42%] w-[88%] -translate-x-1/2 rounded-[3px] opacity-70"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(90deg, #9a9ba0 0, #9a9ba0 6.2%, transparent 6.2%, transparent 8%), repeating-linear-gradient(0deg, #9a9ba0 0, #9a9ba0 22%, transparent 22%, transparent 32%)",
+          }}
+        />
+        <div className="absolute left-1/2 top-[66%] h-[26%] w-[24%] -translate-x-1/2 rounded-[6px] bg-black/[0.08] ring-1 ring-black/10" />
       </div>
     </div>
   );

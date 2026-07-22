@@ -1,12 +1,13 @@
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowUpRight,
+  ArrowRight,
   HeartPulse,
   Hammer,
   Sailboat,
   Fish,
   Scale,
   Leaf,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -17,6 +18,7 @@ import { hasCaseStudyDetail } from "@/data/case-studies";
 import type { CaseStudy } from "@/lib/portfolio-data";
 
 const INDUSTRY_ICONS: Record<string, LucideIcon> = {
+  "Local Home Services": Wrench,
   Healthcare: HeartPulse,
   "Home & Cabinetry": Hammer,
   "Marine & Boating": Sailboat,
@@ -25,18 +27,20 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   "Wellness & DTC": Leaf,
 };
 
-/** Featured case study card. The visual zone is a forced-dark branded panel
- * (outlined monogram watermark + industry icon + year) with the study's
- * headline metric overlaid - the result is the selling point, so it's always
- * visible instead of hidden behind hover. Hovering crossfades the panel into
- * the challenge/approach story. No real client screenshots exist yet, so the
- * panel stays an honest abstract treatment, not a fabricated screenshot. */
+/** Featured case study card, following the approved "Our Work" design: the
+ * whole card is the project visual - a real screenshot when one exists, an
+ * honest branded panel when none does (never a fabricated screenshot) - with
+ * a white plate docked in the top-left corner carrying the title, and the
+ * service + year pills floating on the visual beside it. On desktop, hovering
+ * (or keyboard focus) expands the plate to reveal the story, metric tiles and
+ * the "View Case Study" CTA; below lg there is no hover, so the plate ships
+ * expanded and nothing is unreachable on touch. */
 export function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
   const reduceMotion = useReducedMotion();
   const Icon = INDUSTRY_ICONS[study.industry] ?? HeartPulse;
   const monogram = study.client.charAt(0);
-  const [heroMetric, ...restMetrics] = study.metrics;
   const hasDetail = hasCaseStudyDetail(study.slug);
+  const heroMetric = study.metrics[0];
 
   return (
     <motion.article
@@ -49,123 +53,187 @@ export function CaseStudyCard({ study, index }: { study: CaseStudy; index: numbe
       transition={{ duration: 0.5, delay: (index % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
       whileHover={reduceMotion ? undefined : { y: -5 }}
       onMouseMove={trackWebSpotlight}
-      className="premium-card group relative flex flex-col overflow-hidden rounded-3xl transition-shadow duration-300 hover:shadow-lg"
+      className="premium-card group relative h-[27rem] overflow-hidden rounded-3xl transition-shadow duration-300 hover:shadow-lg"
       style={{ transformOrigin: "center" }}
     >
-      {/* ── Visual zone: branded dark panel <-> story crossfade, fixed height.
-          Forced-dark in both themes, so colors are hardcoded. ── */}
-      <div className="relative h-60 shrink-0 overflow-hidden bg-[linear-gradient(135deg,#3a0b0d_0%,#1c0607_55%,#120405_100%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_20%_0%,rgba(157,27,32,0.35),transparent_70%)] transition-opacity duration-300 group-hover:opacity-0" />
-        <div className="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0">
-          {/* Outlined monogram watermark */}
-          <span className="absolute -right-3 bottom-0 select-none font-display text-[11rem] font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.10)]">
-            {monogram}
-          </span>
-          {/* Browser chrome hint */}
-          <div className="absolute inset-x-5 top-5 flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-white/15" />
-            <span className="h-2 w-2 rounded-full bg-white/15" />
-            <span className="h-2 w-2 rounded-full bg-white/15" />
-            <span className="ml-2 h-2 w-24 rounded-full bg-white/10" />
-            <span className="ml-auto rounded-full border border-white/15 px-2.5 py-0.5 text-[10px] font-bold tracking-widest text-white/60">
-              {study.year}
+      {/* ── Visual: full-bleed screenshot or branded dark panel.
+          Forced-dark fallback in both themes, so its colors are hardcoded. ── */}
+      <div className="absolute inset-0 overflow-hidden bg-[linear-gradient(135deg,#3a0b0d_0%,#1c0607_55%,#120405_100%)]">
+        {study.image ? (
+          <>
+            <img
+              src={study.image.src}
+              alt={study.image.alt}
+              width={study.image.width}
+              height={study.image.height}
+              loading="lazy"
+              className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            {/* Top scrim so the floating pills stay legible over busy screenshots */}
+            <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,rgba(18,4,5,0.45),transparent)]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_20%_0%,rgba(157,27,32,0.35),transparent_70%)]" />
+            <div className="absolute inset-0 grid-bg" />
+            {/* Outlined monogram watermark */}
+            <span className="absolute -right-3 bottom-0 select-none font-display text-[11rem] font-extrabold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.10)]">
+              {monogram}
             </span>
-          </div>
-          {/* Headline metric - the payoff, visible by default */}
-          {heroMetric && (
-            <div className="absolute bottom-5 left-5">
-              <AnimatedStat
-                value={heroMetric.value}
-                className="block font-display text-5xl font-extrabold text-white"
-              />
-              <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-white/60">
-                {heroMetric.label}
-              </p>
+            {/* Abstract browser-window sketch - fills the panel with a "site
+                being built" texture while staying clearly a placeholder, not
+                a fabricated screenshot */}
+            <div className="absolute -right-8 top-[32%] h-[85%] w-[66%] rotate-[4deg] rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-white/15" />
+                <span className="h-2 w-2 rounded-full bg-white/15" />
+                <span className="h-2 w-2 rounded-full bg-white/15" />
+                <span className="ml-2 h-2 w-20 rounded-full bg-white/10" />
+              </div>
+              <div className="mt-4 h-2.5 w-3/4 rounded-full bg-white/10" />
+              <div className="mt-2 h-2.5 w-1/2 rounded-full bg-white/[0.07]" />
+              <div className="mt-5 grid grid-cols-3 gap-2">
+                <div className="h-12 rounded-lg bg-white/[0.07]" />
+                <div className="h-12 rounded-lg bg-white/[0.04]" />
+                <div className="h-12 rounded-lg bg-white/[0.04]" />
+              </div>
+              <div className="mt-3 h-16 rounded-lg bg-gradient-to-br from-primary/25 to-transparent" />
             </div>
-          )}
-          <span className="absolute bottom-6 right-6 flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-white shadow-glow ring-1 ring-white/20">
-            <Icon className="h-4.5 w-4.5" strokeWidth={1.8} />
-          </span>
-        </div>
-
-        {/* Story overlay - the "detail preview" on hover/focus */}
-        <div className="absolute inset-0 flex flex-col justify-center bg-gradient-to-br from-[#1a1a1c] to-[#0d0d0f] p-6 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-white/45">
-            The challenge
-          </p>
-          <p className="mt-1.5 line-clamp-3 translate-y-1 text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-            {study.challenge}
-          </p>
-          <p className="mt-3 text-[11px] font-bold uppercase tracking-widest text-white/45">
-            Our approach
-          </p>
-          <p className="mt-1.5 line-clamp-2 translate-y-1 text-sm leading-relaxed text-white/80 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-            {study.approach}
-          </p>
-        </div>
-
+          </>
+        )}
+        {/* Bottom scrim so the metric overlay and pills stay legible on both
+            screenshots and the dark panel */}
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(0deg,rgba(18,4,5,0.8),transparent)]" />
+        {/* Headline metric - the payoff while the plate is collapsed. Fades
+            out when the plate expands (the tiles take over), and stays hidden
+            below lg where the plate is always expanded. */}
+        {heroMetric && (
+          <div className="absolute bottom-5 left-5 hidden transition-opacity duration-300 lg:block lg:group-focus-within:opacity-0 lg:group-hover:opacity-0">
+            <AnimatedStat
+              value={heroMetric.value}
+              className="block font-display text-4xl font-extrabold text-white"
+            />
+            <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-white/60">
+              {heroMetric.label}
+            </p>
+          </div>
+        )}
+        <span className="absolute bottom-5 right-5 flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-white shadow-glow ring-1 ring-white/20">
+          <Icon className="h-4.5 w-4.5" strokeWidth={1.8} />
+        </span>
         <WebSpotlight size="lg" />
       </div>
 
-      {/* ── Text zone ── */}
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          <span>{study.industry}</span>
-          <span>{study.client}</span>
-        </div>
-        <h3 className="mt-3 font-display text-xl font-bold leading-snug text-foreground transition-colors duration-300 group-hover:text-primary">
-          {study.headline}
-        </h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-          {study.impact}
-        </p>
+      {/* ── Left plate + service/year pills on the visual. The plate is a
+          full-height column: on lg it rests collapsed as a title bar (max-h
+          cap) and grows to the card's full height on hover/focus, with the
+          CTA row pinned to the bottom edge; below lg there is no hover, so
+          it ships full-height. ── */}
+      <div className="absolute inset-0 z-[5] flex justify-between gap-3">
+        <div className="relative min-w-0 flex-1 sm:max-w-[24rem]">
+          {/* Inverted corner fillets that melt the plate into the card edges -
+              same radius as rounded-br-3xl, drawn with the card token so they
+              track both themes */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-full top-0 h-6 w-6 bg-[radial-gradient(circle_at_100%_100%,transparent_23.5px,var(--card)_24px)]"
+          />
+          {/* Bottom fillet only exists while collapsed on lg - its offset must
+              match the lg:max-h cap on the plate below */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-[8.5rem] hidden h-6 w-6 bg-[radial-gradient(circle_at_100%_100%,transparent_23.5px,var(--card)_24px)] transition-opacity duration-200 lg:block lg:group-focus-within:opacity-0 lg:group-hover:opacity-0"
+          />
 
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {study.services.map((s) => (
-            <span
-              key={s}
-              className="rounded-full border border-border bg-foreground/[0.03] px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+          <div className="flex h-full max-h-full flex-col overflow-hidden rounded-br-3xl bg-card shadow-[0_24px_48px_-24px_rgba(0,0,0,0.55)] transition-[max-height] duration-500 ease-out lg:max-h-[8.5rem] lg:group-focus-within:max-h-full lg:group-hover:max-h-full">
+            <div className="px-5 pt-5 sm:px-6 sm:pt-6">
+              <h3 className="font-display text-xl font-bold leading-snug text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+                {study.client}
+              </h3>
 
-        {/* Remaining metrics + CTA - all visible, nothing reserved for hover */}
-        <div className="mt-5 flex flex-1 items-end justify-between gap-4 border-t border-border pt-4">
-          <div className="flex gap-6">
-            {restMetrics.slice(0, 2).map((m) => (
-              <div key={m.label}>
-                <AnimatedStat
-                  value={m.value}
-                  className="block font-display text-lg font-extrabold text-gradient-brand sm:text-xl"
-                />
-                <p className="mt-0.5 text-[10.5px] leading-tight text-muted-foreground">
-                  {m.label}
+              {/* Collapsed-state arrow - desktop only, swapped out once the
+                  plate expands on hover/focus */}
+              <span
+                aria-hidden="true"
+                className="mt-4 hidden h-9 w-9 items-center justify-center rounded-full border border-border text-foreground lg:inline-flex lg:group-focus-within:hidden lg:group-hover:hidden"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </span>
+            </div>
+
+            {/* Expandable detail - always open below lg, hover/focus-open on lg+ */}
+            <div className="grid flex-1 [grid-template-rows:1fr] transition-[grid-template-rows] duration-500 ease-out lg:[grid-template-rows:0fr] lg:group-focus-within:[grid-template-rows:1fr] lg:group-hover:[grid-template-rows:1fr]">
+              <div className="flex min-h-0 flex-col overflow-hidden px-5 pb-5 sm:px-6 sm:pb-6">
+                <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                  {study.impact}
                 </p>
+
+                {study.metrics.length > 0 && (
+                  <div
+                    className={`mt-4 grid grid-cols-2 gap-2 ${study.metrics.length >= 3 ? "lg:grid-cols-3" : ""}`}
+                  >
+                    {study.metrics.slice(0, 3).map((m) => (
+                      <div
+                        key={m.label}
+                        className="rounded-xl bg-foreground/[0.04] px-3 py-2.5 ring-1 ring-foreground/[0.06]"
+                      >
+                        <AnimatedStat
+                          value={m.value}
+                          className="block font-display text-base font-extrabold text-foreground"
+                        />
+                        <p className="mt-0.5 line-clamp-2 text-[10px] leading-tight text-muted-foreground">
+                          {m.label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* mt-auto pins the CTA row to the plate's bottom edge once
+                    the plate is full height; the inner mt-5 keeps a minimum
+                    gap when space is tight */}
+                {hasDetail ? (
+                  // The whole card is a stretched link to the case study
+                  // (added below), so this row is a decorative indicator, not
+                  // its own <a> - avoids nesting a second link inside the
+                  // stretched one.
+                  <div className="mt-auto">
+                    <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+                      <span className="text-sm font-bold text-foreground">View Case Study</span>
+                      <span
+                        aria-hidden="true"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform duration-300 group-hover:translate-x-0.5"
+                      >
+                        <ArrowRight className="h-4.5 w-4.5" />
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-auto">
+                    <Link
+                      to="/contact"
+                      aria-label={`Start a project like ${study.client}`}
+                      className="relative z-10 mt-5 flex items-center justify-between border-t border-border pt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                    >
+                      <span className="text-sm font-bold text-foreground">Start a project</span>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform duration-300 group-hover:translate-x-0.5">
+                        <ArrowRight className="h-4.5 w-4.5" />
+                      </span>
+                    </Link>
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
           </div>
-          {hasDetail ? (
-            // The whole card is a stretched link to the case study when one
-            // exists (added below) - this icon becomes a decorative
-            // "view case study" indicator rather than its own link, so it
-            // doesn't nest a second <a> inside the stretched one.
-            <span
-              aria-hidden="true"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"
-            >
-              <ArrowUpRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-45" />
-            </span>
-          ) : (
-            <Link
-              to="/contact"
-              aria-label={`Start a project like ${study.client}`}
-              className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              <ArrowUpRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-45" />
-            </Link>
-          )}
+        </div>
+
+        <div className="flex shrink-0 flex-col items-end gap-2 self-start p-4 xl:flex-row xl:items-center">
+          <span className="rounded-full bg-primary px-3.5 py-1.5 text-xs font-bold text-primary-foreground shadow-glow ring-1 ring-white/20">
+            {study.services[0]}
+          </span>
+          <span className="rounded-full bg-black/45 px-3.5 py-1.5 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur-sm">
+            {study.year}
+          </span>
         </div>
       </div>
 

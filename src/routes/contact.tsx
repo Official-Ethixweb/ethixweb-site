@@ -38,8 +38,8 @@ const SERVICES = [
 
 const TIMELINES = [
   { id: "asap", label: "ASAP", sub: "Under 2 weeks" },
-  { id: "month", label: "This month", sub: "2–4 weeks" },
-  { id: "quarter", label: "This quarter", sub: "1–3 months" },
+  { id: "month", label: "This month", sub: "2-4 weeks" },
+  { id: "quarter", label: "This quarter", sub: "1-3 months" },
   { id: "planning", label: "Just planning", sub: "3+ months out" },
 ] as const;
 
@@ -429,7 +429,7 @@ function ContactBody() {
                     {[
                       { i: Mail, v: "info@ethixweb.com" },
                       { i: Building2, v: "Ethixweb USA LLC · Wyoming, US" },
-                      { i: MapPin, v: "Mon–Fri · 9 AM – 5 PM" },
+                      { i: MapPin, v: "Mon-Fri · 9 AM - 5 PM" },
                     ].map(({ i: I, v }) => (
                       <div
                         key={v}

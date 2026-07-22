@@ -17,6 +17,10 @@ export interface CaseStudy {
   approach: string;
   impact: string;
   metrics: Metric[];
+  /** Real screenshot of the shipped site, shown full-bleed behind the card.
+   * Omitted = the card falls back to the branded panel treatment (we never
+   * fabricate a screenshot for work we can't show). */
+  image?: { src: string; alt: string; width: number; height: number };
 }
 
 export const SERVICE_FILTERS = [
@@ -29,6 +33,30 @@ export const SERVICE_FILTERS = [
 ] as const;
 
 export const CASE_STUDIES: CaseStudy[] = [
+  {
+    slug: "all-phase-plumbing",
+    client: "All Phase Plumbing",
+    year: "2026",
+    industry: "Local Home Services",
+    services: ["Web Design", "SEO"],
+    headline: "From invisible online to fully booked in 90 days",
+    challenge:
+      "A 35-year-old, family-run Seattle plumbing company was stuck on a generic WordPress site that didn't match how good they actually are - in a market where whoever looks trustworthy and ranks well gets the call.",
+    approach:
+      "A full digital rebuild: website redesign on a custom stack (off WordPress, onto Google Cloud), on-page SEO, Google Business Profile cleanup, and mobile-first pages that get to the call button in seconds.",
+    impact:
+      "The new site finally matches the reputation - All Phase Plumbing went from invisible online to fully booked in 90 days.",
+    metrics: [
+      { value: "90 days", label: "From invisible to fully booked" },
+      { value: "35 yrs", label: "Of reputation, finally online" },
+    ],
+    image: {
+      src: "/images/case-studies/all-phase-plumbing/after-screenshot.jpg",
+      alt: "The rebuilt All Phase Plumbing website",
+      width: 1800,
+      height: 1012,
+    },
+  },
   {
     slug: "bals-mobile-dental-hygiene",
     client: "Bals Mobile Dental Hygiene",

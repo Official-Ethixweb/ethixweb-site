@@ -221,7 +221,7 @@ html.dark {
       radial-gradient(ellipse 45% 55% at 100% 25%, rgba(24, 15, 15, 0.55), transparent 65%),
       linear-gradient(95deg, #100f18 0%, #0c0d10 45%, #0c0d10 60%, #180f0f 100%);
     background-attachment: fixed;
-    /* iOS Safari doesn't support background-attachment:fixed on body well — override below */
+    /* iOS Safari doesn't support background-attachment:fixed on body well - override below */
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";

@@ -127,12 +127,15 @@ export const ALL_PHASE_PLUMBING: CaseStudyDetail = {
     items: [
       {
         image: {
-          src: `${IMG}/spotlight-homeowner.jpg`,
+          // Pre-cropped from spotlight-homeowner.jpg to the reference
+          // design's 2:1 framing (phone large, anchored left).
+          src: `${IMG}/spotlight-homeowner-framed.jpg`,
           alt: "A phone showing the new site's homepage, resting on a stone surface",
-          width: 2000,
-          height: 1333,
+          width: 1472,
+          height: 736,
         },
         treatment: "inset",
+        focus: "left",
         card: {
           title: "Designed for the stressed homeowner at 11pm.",
           description:
@@ -146,12 +149,15 @@ export const ALL_PHASE_PLUMBING: CaseStudyDetail = {
       },
       {
         image: {
-          src: `${IMG}/spotlight-intentional.jpg`,
+          // Pre-cropped from spotlight-intentional.jpg to the reference
+          // design's 2:1 framing (phone large, anchored left).
+          src: `${IMG}/spotlight-intentional-framed.jpg`,
           alt: "A hand holding a phone showing the new site's homepage",
-          width: 2000,
-          height: 1500,
+          width: 1470,
+          height: 735,
         },
         treatment: "inset",
+        focus: "left",
         card: {
           title: "Every decision is intentional",
           description:

@@ -52,6 +52,11 @@ export type SpotlightItem = {
   /** "bleed" = full viewport-width photo, no side margins.
    * "inset" = contained photo with a visible rounded edge inside the page gutters. */
   treatment: "bleed" | "inset";
+  /** Which part of the photo to keep when the rendered box's ratio doesn't
+   * match the image and object-cover trims it (e.g. the narrower mobile
+   * box trimming a wide 2:1 asset): "left"/"top" anchor the crop to that
+   * edge, "center" (default) trims both sides evenly. */
+  focus?: "center" | "left" | "top";
   card: {
     title: string;
     description: string;

@@ -120,7 +120,7 @@ function RefundsPolicy() {
           <Reveal delay={0.18}>
             <Section title="Processing Time">
               <p>
-                Approved refunds are processed within 7–14 business days and returned to the
+                Approved refunds are processed within 7-14 business days and returned to the
                 original payment method. Stripe or PayPal processing fees are non-recoverable.
               </p>
             </Section>

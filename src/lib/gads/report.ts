@@ -50,7 +50,7 @@ export async function sendGadsCandidateConfirmation(row: GadsAssessmentRow): Pro
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: row.candidate_email,
-      subject: "Assessment Submitted Successfully – EthixWeb",
+      subject: "Assessment Submitted Successfully - EthixWeb",
       html: emailShell({
         eyebrow: "Google Ads Assessment",
         footerText: "This is an automated confirmation from EthixWeb's recruitment platform.",

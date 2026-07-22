@@ -108,7 +108,7 @@ export async function buildGadsReportPdf(
   const doc = (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.eyebrow}>GOOGLE ADS ASSESSMENT REPORT — ETHIXWEB</Text>
+        <Text style={styles.eyebrow}>GOOGLE ADS ASSESSMENT REPORT - ETHIXWEB</Text>
         <Text style={styles.title}>{row.candidate_name}</Text>
         <Text style={styles.subtitle}>{row.candidate_email}</Text>
 

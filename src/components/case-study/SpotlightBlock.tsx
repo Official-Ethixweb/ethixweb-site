@@ -15,7 +15,10 @@ export function SpotlightBlock({ item }: { item: SpotlightItem }) {
   const isBleed = item.treatment === "bleed";
 
   const card = (
-    <div className="glass-strong w-full rounded-[1.5rem] p-7 sm:w-[min(90vw,26rem)] sm:p-8">
+    // Below sm the card sits flush under the photo as the bottom half of one
+    // capsule (square top, rounded bottom); at sm+ it floats over the photo
+    // as its own fully-rounded glass panel.
+    <div className="glass-strong w-full rounded-b-[1.75rem] p-7 sm:w-[min(90vw,26rem)] sm:rounded-[1.5rem] sm:p-8">
       <h3 className="font-display text-2xl font-bold leading-snug text-foreground">
         {item.card.title}
       </h3>
@@ -36,15 +39,26 @@ export function SpotlightBlock({ item }: { item: SpotlightItem }) {
             loading="lazy"
             decoding="async"
             className={cn(
-              "aspect-[4/3] w-full object-cover sm:aspect-[21/9]",
-              !isBleed && "sm:rounded-[1.75rem]",
+              // The spotlight assets are pre-cropped to the reference
+              // design's 2:1 framing, so at sm+ the box ratio matches the
+              // image exactly and nothing gets trimmed. Below sm the 4:3
+              // box trims the sides; `focus` picks which edge to keep.
+              "aspect-[4/3] w-full object-cover sm:aspect-[2/1]",
+              item.focus === "top" && "object-top",
+              item.focus === "left" && "object-left",
+              (!item.focus || item.focus === "center") && "object-center",
+              // Rounded top on mobile (photo is the top half of the capsule),
+              // fully rounded once the card floats over it at sm+.
+              !isBleed && "rounded-t-[1.75rem] sm:rounded-[1.75rem]",
             )}
           />
           <div
             className={cn(
-              "static mt-6 flex sm:mt-0 sm:p-8 lg:p-12",
+              "static flex sm:p-8 lg:p-12",
               "sm:absolute sm:inset-0 sm:justify-end",
-              isBleed ? "sm:items-end" : "sm:items-center",
+              // Inset: card sits flush under the photo on mobile (one
+              // capsule). Bleed keeps a gap since its photo has square edges.
+              isBleed ? "mt-6 sm:mt-0 sm:items-end" : "mt-0 sm:items-center",
             )}
           >
             {card}

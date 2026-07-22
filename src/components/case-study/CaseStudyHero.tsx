@@ -61,7 +61,10 @@ export function CaseStudyHero({ study }: { study: CaseStudyDetail }) {
         </div>
 
         <Reveal delay={0.15} className="relative">
-          <div className="aspect-[4/2.55] translate-x-[50px] overflow-hidden rounded-[2rem] shadow-lg">
+          {/* The 50px right-shift is the desktop bleed-to-the-edge effect;
+           * below lg (single column) it would just push the panel off the
+           * right side of the screen, so it only applies at lg+. */}
+          <div className="aspect-[4/2.55] overflow-hidden rounded-[2rem] shadow-lg lg:translate-x-[50px]">
             <img
               src={study.heroImage.src}
               alt={study.heroImage.alt}
