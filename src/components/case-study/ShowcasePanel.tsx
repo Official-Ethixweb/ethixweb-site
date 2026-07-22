@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/shared/Reveal";
 import type { Image } from "@/data/case-studies/types";
 
@@ -51,7 +51,7 @@ function LiveScreen({
   const wrapRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
     const update = () => setScale(el.getBoundingClientRect().width / hole.frameWidth);
