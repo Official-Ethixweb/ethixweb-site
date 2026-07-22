@@ -13,6 +13,7 @@ import { Link } from "@tanstack/react-router";
 import { AnimatedStat } from "@/components/portfolio/AnimatedStat";
 import { WebSpotlight } from "@/components/shared/WebSpotlight";
 import { trackWebSpotlight } from "@/lib/web-spotlight";
+import { hasCaseStudyDetail } from "@/data/case-studies";
 import type { CaseStudy } from "@/lib/portfolio-data";
 
 const INDUSTRY_ICONS: Record<string, LucideIcon> = {
@@ -35,6 +36,7 @@ export function CaseStudyCard({ study, index }: { study: CaseStudy; index: numbe
   const Icon = INDUSTRY_ICONS[study.industry] ?? HeartPulse;
   const monogram = study.client.charAt(0);
   const [heroMetric, ...restMetrics] = study.metrics;
+  const hasDetail = hasCaseStudyDetail(study.slug);
 
   return (
     <motion.article
@@ -144,15 +146,37 @@ export function CaseStudyCard({ study, index }: { study: CaseStudy; index: numbe
               </div>
             ))}
           </div>
-          <Link
-            to="/contact"
-            aria-label={`Start a project like ${study.client}`}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            <ArrowUpRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-45" />
-          </Link>
+          {hasDetail ? (
+            // The whole card is a stretched link to the case study when one
+            // exists (added below) - this icon becomes a decorative
+            // "view case study" indicator rather than its own link, so it
+            // doesn't nest a second <a> inside the stretched one.
+            <span
+              aria-hidden="true"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"
+            >
+              <ArrowUpRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-45" />
+            </span>
+          ) : (
+            <Link
+              to="/contact"
+              aria-label={`Start a project like ${study.client}`}
+              className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            >
+              <ArrowUpRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:rotate-45" />
+            </Link>
+          )}
         </div>
       </div>
+
+      {hasDetail && (
+        <Link
+          to="/portfolio/$slug"
+          params={{ slug: study.slug }}
+          aria-label={`View case study: ${study.client}`}
+          className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+        />
+      )}
     </motion.article>
   );
 }

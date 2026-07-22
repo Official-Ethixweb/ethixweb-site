@@ -21,7 +21,9 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AiAutomationRouteImport } from './routes/ai-automation'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortfolioIndexRouteImport } from './routes/portfolio.index'
 import { Route as CareersIndexRouteImport } from './routes/careers.index'
+import { Route as PortfolioSlugRouteImport } from './routes/portfolio.$slug'
 import { Route as PoliciesTermsRouteImport } from './routes/policies.terms'
 import { Route as PoliciesRefundsRouteImport } from './routes/policies.refunds'
 import { Route as PoliciesPrivacyRouteImport } from './routes/policies.privacy'
@@ -109,10 +111,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortfolioIndexRoute = PortfolioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortfolioRoute,
+} as any)
 const CareersIndexRoute = CareersIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CareersRoute,
+} as any)
+const PortfolioSlugRoute = PortfolioSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PortfolioRoute,
 } as any)
 const PoliciesTermsRoute = PoliciesTermsRouteImport.update({
   id: '/policies/terms',
@@ -257,7 +269,7 @@ export interface FileRoutesByFullPath {
   '/graphic-design': typeof GraphicDesignRoute
   '/industries': typeof IndustriesRoute
   '/marketing': typeof MarketingRoute
-  '/portfolio': typeof PortfolioRoute
+  '/portfolio': typeof PortfolioRouteWithChildren
   '/services': typeof ServicesRoute
   '/web-development': typeof WebDevelopmentRoute
   '/api/contact': typeof ApiContactRoute
@@ -269,7 +281,9 @@ export interface FileRoutesByFullPath {
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
+  '/portfolio/$slug': typeof PortfolioSlugRoute
   '/careers/': typeof CareersIndexRoute
+  '/portfolio/': typeof PortfolioIndexRoute
   '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
   '/api/assessment/save': typeof ApiAssessmentSaveRoute
   '/api/assessment/start': typeof ApiAssessmentStartRoute
@@ -297,7 +311,6 @@ export interface FileRoutesByTo {
   '/graphic-design': typeof GraphicDesignRoute
   '/industries': typeof IndustriesRoute
   '/marketing': typeof MarketingRoute
-  '/portfolio': typeof PortfolioRoute
   '/services': typeof ServicesRoute
   '/web-development': typeof WebDevelopmentRoute
   '/api/contact': typeof ApiContactRoute
@@ -309,7 +322,9 @@ export interface FileRoutesByTo {
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
+  '/portfolio/$slug': typeof PortfolioSlugRoute
   '/careers': typeof CareersIndexRoute
+  '/portfolio': typeof PortfolioIndexRoute
   '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
   '/api/assessment/save': typeof ApiAssessmentSaveRoute
   '/api/assessment/start': typeof ApiAssessmentStartRoute
@@ -339,7 +354,7 @@ export interface FileRoutesById {
   '/graphic-design': typeof GraphicDesignRoute
   '/industries': typeof IndustriesRoute
   '/marketing': typeof MarketingRoute
-  '/portfolio': typeof PortfolioRoute
+  '/portfolio': typeof PortfolioRouteWithChildren
   '/services': typeof ServicesRoute
   '/web-development': typeof WebDevelopmentRoute
   '/api/contact': typeof ApiContactRoute
@@ -351,7 +366,9 @@ export interface FileRoutesById {
   '/policies/privacy': typeof PoliciesPrivacyRoute
   '/policies/refunds': typeof PoliciesRefundsRoute
   '/policies/terms': typeof PoliciesTermsRoute
+  '/portfolio/$slug': typeof PortfolioSlugRoute
   '/careers/': typeof CareersIndexRoute
+  '/portfolio/': typeof PortfolioIndexRoute
   '/api/assessment/recording-upload': typeof ApiAssessmentRecordingUploadRoute
   '/api/assessment/save': typeof ApiAssessmentSaveRoute
   '/api/assessment/start': typeof ApiAssessmentStartRoute
@@ -394,7 +411,9 @@ export interface FileRouteTypes {
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
+    | '/portfolio/$slug'
     | '/careers/'
+    | '/portfolio/'
     | '/api/assessment/recording-upload'
     | '/api/assessment/save'
     | '/api/assessment/start'
@@ -422,7 +441,6 @@ export interface FileRouteTypes {
     | '/graphic-design'
     | '/industries'
     | '/marketing'
-    | '/portfolio'
     | '/services'
     | '/web-development'
     | '/api/contact'
@@ -434,7 +452,9 @@ export interface FileRouteTypes {
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
+    | '/portfolio/$slug'
     | '/careers'
+    | '/portfolio'
     | '/api/assessment/recording-upload'
     | '/api/assessment/save'
     | '/api/assessment/start'
@@ -475,7 +495,9 @@ export interface FileRouteTypes {
     | '/policies/privacy'
     | '/policies/refunds'
     | '/policies/terms'
+    | '/portfolio/$slug'
     | '/careers/'
+    | '/portfolio/'
     | '/api/assessment/recording-upload'
     | '/api/assessment/save'
     | '/api/assessment/start'
@@ -505,7 +527,7 @@ export interface RootRouteChildren {
   GraphicDesignRoute: typeof GraphicDesignRoute
   IndustriesRoute: typeof IndustriesRoute
   MarketingRoute: typeof MarketingRoute
-  PortfolioRoute: typeof PortfolioRoute
+  PortfolioRoute: typeof PortfolioRouteWithChildren
   ServicesRoute: typeof ServicesRoute
   WebDevelopmentRoute: typeof WebDevelopmentRoute
   ApiContactRoute: typeof ApiContactRoute
@@ -618,12 +640,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portfolio/': {
+      id: '/portfolio/'
+      path: '/'
+      fullPath: '/portfolio/'
+      preLoaderRoute: typeof PortfolioIndexRouteImport
+      parentRoute: typeof PortfolioRoute
+    }
     '/careers/': {
       id: '/careers/'
       path: '/'
       fullPath: '/careers/'
       preLoaderRoute: typeof CareersIndexRouteImport
       parentRoute: typeof CareersRoute
+    }
+    '/portfolio/$slug': {
+      id: '/portfolio/$slug'
+      path: '/$slug'
+      fullPath: '/portfolio/$slug'
+      preLoaderRoute: typeof PortfolioSlugRouteImport
+      parentRoute: typeof PortfolioRoute
     }
     '/policies/terms': {
       id: '/policies/terms'
@@ -829,6 +865,20 @@ const CareersRouteChildren: CareersRouteChildren = {
 const CareersRouteWithChildren =
   CareersRoute._addFileChildren(CareersRouteChildren)
 
+interface PortfolioRouteChildren {
+  PortfolioSlugRoute: typeof PortfolioSlugRoute
+  PortfolioIndexRoute: typeof PortfolioIndexRoute
+}
+
+const PortfolioRouteChildren: PortfolioRouteChildren = {
+  PortfolioSlugRoute: PortfolioSlugRoute,
+  PortfolioIndexRoute: PortfolioIndexRoute,
+}
+
+const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(
+  PortfolioRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -839,7 +889,7 @@ const rootRouteChildren: RootRouteChildren = {
   GraphicDesignRoute: GraphicDesignRoute,
   IndustriesRoute: IndustriesRoute,
   MarketingRoute: MarketingRoute,
-  PortfolioRoute: PortfolioRoute,
+  PortfolioRoute: PortfolioRouteWithChildren,
   ServicesRoute: ServicesRoute,
   WebDevelopmentRoute: WebDevelopmentRoute,
   ApiContactRoute: ApiContactRoute,
